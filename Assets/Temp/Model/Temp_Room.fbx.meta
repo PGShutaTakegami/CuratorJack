@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 25ebb3d367874d446b0ea4cc448cf1c7
+guid: 253a1fb15f5a9ab4dbbc3d0035de8d25
 ModelImporter:
   serializedVersion: 24300
   internalIDToNameTable: []
@@ -7,8 +7,23 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: M_TMP_TableWood
-    second: {fileID: 2100000, guid: fe3d199c6976d9b4c909fd6d813ae1b5, type: 2}
+      name: M_Ceiling
+    second: {fileID: 2100000, guid: fc2e53c4c82010642ade06b668e855ee, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Floor
+    second: {fileID: 2100000, guid: 42925bb493fb10b40a631c9a5756262a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_GlassFrame
+    second: {fileID: 2100000, guid: 1b620b2f4e8f0e24894674b0e6e8c797, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: M_Wall
+    second: {fileID: 2100000, guid: 62c98bf5ce78ef347aee236a9ea73755, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
