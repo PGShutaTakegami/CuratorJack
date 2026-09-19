@@ -1,0 +1,19 @@
+{
+  "name": "com.environmentswitcher",
+  "version": "0.1.0",
+  "displayName": "Environment Switcher",
+  "description": "Dev / Staging / Release environment switcher with Inspector-like settings window.",
+  "unity": "6000.0",
+  "license": "SEE LICENSE IN LICENSE",
+  "dependencies": {
+    "com.unity.ugui": "1.0.0"
+  },
+  "keywords": [
+    "environment",
+    "define",
+    "dev",
+    "staging",
+    "release",
+    "debug"
+  ]
+}

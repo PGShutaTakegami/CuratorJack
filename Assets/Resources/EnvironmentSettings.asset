@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f0dd77b5f818cd48be22637bb08945d, type: 3}
+  m_Name: EnvironmentSettings
+  m_EditorClassIdentifier: EnvironmentSwitcher::EnvironmentSwitcher.EnvironmentSettings
+  activeEnvironment: 0
+  environments:
+  - environment: 0
+    displayName: Development
+    defineSymbol: ENV_DEV
+    apiBaseUrl: https://dev.example.local
+    enableDebugLog: 1
+    enableCrashReporting: 0
+    useAnalyticsSandbox: 1
+    analyticsAppId: analytics-dev
+    useIapSandbox: 1
+    isolateSaveData: 1
+    customValues: []
+  - environment: 1
+    displayName: Staging
+    defineSymbol: ENV_STG
+    apiBaseUrl: https://stg.example.local
+    enableDebugLog: 1
+    enableCrashReporting: 1
+    useAnalyticsSandbox: 1
+    analyticsAppId: analytics-stg
+    useIapSandbox: 1
+    isolateSaveData: 1
+    customValues: []
+  - environment: 2
+    displayName: Release
+    defineSymbol: ENV_RELEASE
+    apiBaseUrl: https://api.example.com
+    enableDebugLog: 0
+    enableCrashReporting: 1
+    useAnalyticsSandbox: 0
+    analyticsAppId: analytics-prod
+    useIapSandbox: 0
+    isolateSaveData: 1
+    customValues: []
+  devDebug:
+    enableOverlay: 1
+    buttonLabel: DEBUG
+    buttonPosition: {x: 16, y: 16}
+    buttonSize: {x: 120, y: 48}
+    panelSize: {x: 360, y: 420}
+    enableSceneChange: 1
+    enableQuitGame: 1
+    enableSaveClear: 1
+    enableLogFile: 1
+    enableFpsMemory: 1
+    enableOnScreenLog: 1
+    scrollSensitivity: 40
+  enableNetwork: 1

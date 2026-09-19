@@ -826,7 +826,11 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: ENV_DEV;ENV_NETWORK
+    Standalone: ENV_DEV;ENV_NETWORK
+    WebGL: ENV_DEV;ENV_NETWORK
+    iPhone: ENV_DEV;ENV_NETWORK
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
