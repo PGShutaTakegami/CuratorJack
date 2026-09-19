@@ -1,0 +1,18 @@
+﻿{
+  "name": "EnvironmentSwitcher.Editor",
+  "rootNamespace": "EnvironmentSwitcher.Editor",
+  "references": [
+    "EnvironmentSwitcher"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
