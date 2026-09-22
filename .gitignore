@@ -89,5 +89,5 @@ InitTestScene*.unity*
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
 # Local-only — keep on disk, never commit
-Uloop/
+.uloop/
 .cursor/
