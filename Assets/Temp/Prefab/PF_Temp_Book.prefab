@@ -22,31 +22,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.9851416
+      value: -2.148
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.187
+      value: 2.303
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.3240204
+      value: 0.205
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.975413
+      value: 0.955654
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: -0.19533534
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.22038487
+      value: 0.21592051
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0.044134084
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -174,7 +174,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_Name
-      value: Book
+      value: PF_Temp_Book
       objectReference: {fileID: 0}
     - target: {fileID: 1944604115279440906, guid: 168c625a1d6e28d428dbbe099fe778a3, type: 3}
       propertyPath: m_DirtyAABB
