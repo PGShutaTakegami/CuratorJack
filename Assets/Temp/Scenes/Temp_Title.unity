@@ -985,7 +985,7 @@ PrefabInstance:
     - target: {fileID: 6418497684617466579, guid: cfe6332efefc57340a4e4eb91e224cfe, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 4300000, guid: af1cc81cabe0e4841ab36445879ad88c, type: 2}
+      objectReference: {fileID: 4300000, guid: f0df43fa0067da84fb2b2329dee7451a, type: 2}
     - target: {fileID: 6418497684617466579, guid: cfe6332efefc57340a4e4eb91e224cfe, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -1040,6 +1040,11 @@ Animation:
   m_AnimatePhysics: 0
   m_UpdateMode: 0
   m_CullingType: 0
+--- !u!137 &1793444722 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6418497684617466579, guid: cfe6332efefc57340a4e4eb91e224cfe, type: 3}
+  m_PrefabInstance: {fileID: 1660012835}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1815235785 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 25ebb3d367874d446b0ea4cc448cf1c7, type: 3}
@@ -1095,15 +1100,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TitleSelectManager
   splineContainer: {fileID: 1504874069}
+  monitorScreenRenderer: {fileID: 1793444722}
   slideSpeed: 3
   selectOptions:
   - targetObject: {fileID: 1954221564}
+    monitorSprite: {fileID: 21300000, guid: 23f6e3d12a5c5aa4a97ea5393be6c400, type: 3}
   - targetObject: {fileID: 56503550865605987}
+    monitorSprite: {fileID: 21300000, guid: 6362f75594f491a48b89d1df705bb4ec, type: 3}
   - targetObject: {fileID: 5323470163952437290}
+    monitorSprite: {fileID: 21300000, guid: ce3b3717e58452a4791202f27037ce94, type: 3}
   - targetObject: {fileID: 8572845527921182567}
+    monitorSprite: {fileID: 21300000, guid: c75f4bbc28c9e8f47b6acb90170b417e, type: 3}
   - targetObject: {fileID: 615701662}
+    monitorSprite: {fileID: 21300000, guid: 4616c945ead9c7b41aef42a471c269b4, type: 3}
   - targetObject: {fileID: 1372316285}
+    monitorSprite: {fileID: 21300000, guid: 6e76c49699958e44aa13eb1f5a3354e7, type: 3}
   humanMonitorSceneName: HumanMonitorScene
+  monitorDefaultSprite: {fileID: 21300000, guid: 4490f4d807da07b4c91d2589e6b528a5, type: 3}
 --- !u!1 &2037203278
 GameObject:
   m_ObjectHideFlags: 0
