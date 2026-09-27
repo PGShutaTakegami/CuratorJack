@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.Splines;
 using Unity.Mathematics;
 
@@ -52,15 +53,20 @@ public class TitleSelectManager : MonoBehaviour
     struct SelectOption
     {
         public GameObject targetObject;
+        [FormerlySerializedAs("monitorSprite2D")] public Sprite monitorSprite;
     }
 
     [SerializeField] private SplineContainer splineContainer;
+
+    [SerializeField] private Renderer monitorScreenRenderer;
 
     [SerializeField] private float slideSpeed = 3f;
 
     [SerializeField] private SelectOption[] selectOptions;
 
     [SerializeField] private string humanMonitorSceneName = "HumanMonitorScene";
+
+    [SerializeField] private Sprite monitorDefaultSprite;
 
     TitleSelect currentSelect = TitleSelect.OnePlay;
 
@@ -77,6 +83,8 @@ public class TitleSelectManager : MonoBehaviour
 
     const float StickThreshold = 0.5f;
     float previousStickX;
+
+    MonitorScreenFader monitorFader;
 
     /// <summary>
     /// 現在の選択状態
@@ -122,10 +130,17 @@ public class TitleSelectManager : MonoBehaviour
         targetIndex = currentIndex;
 
         ApplyPositions(currentOffset);
+
+        if (monitorScreenRenderer != null)
+        {
+            monitorFader = new MonitorScreenFader(monitorScreenRenderer, monitorDefaultSprite);
+            monitorFader.ShowImmediate(ResolveMonitorSprite(currentIndex));
+        }
     }
 
     void Update()
     {
+
         if (IsTitleSelectStopped)
         {
             // 表示中はスティック閾値だけ同期し、入力・移動は止める
@@ -135,6 +150,7 @@ public class TitleSelectManager : MonoBehaviour
             {
                 isMoving = false;
                 ApplyPositions(currentOffset);
+                monitorFader?.ShowImmediate(ResolveMonitorSprite(currentIndex));
             }
             return;
         }
@@ -288,6 +304,7 @@ public class TitleSelectManager : MonoBehaviour
         moveDistance = 1f / count;
         movedAmount = 0f;
         isMoving = true;
+        monitorFader?.BeginTransition(ResolveMonitorSprite(targetIndex));
     }
 
     void TickMove(float deltaTime)
@@ -303,11 +320,13 @@ public class TitleSelectManager : MonoBehaviour
             currentSelect = (TitleSelect)currentIndex;
             isMoving = false;
             ApplyPositions(currentOffset);
+            monitorFader?.CompleteTransition();
             return;
         }
 
         currentOffset = Normalize01(moveStartOffset + moveDirection * movedAmount);
         ApplyPositions(currentOffset);
+        monitorFader?.SetProgress(movedAmount / moveDistance);
     }
 
     void ApplyPositions(float offset)
@@ -327,6 +346,15 @@ public class TitleSelectManager : MonoBehaviour
             pos.y = optionHeights[i];
             go.transform.position = pos;
         }
+    }
+
+    /// <summary>
+    /// 項目の画像を返す。未割り当てなら既定画像（それも無ければ null = 黒）
+    /// </summary>
+    Sprite ResolveMonitorSprite(int index)
+    {
+        Sprite sprite = selectOptions[index].monitorSprite;
+        return sprite != null ? sprite : monitorDefaultSprite;
     }
 
     static float Normalize01(float value)
