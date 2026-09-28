@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -18,7 +19,7 @@ public class TitleSelectManager : MonoBehaviour
         /// <summary>
         /// シングルプレイ
         /// </summary>
-        OnePlay = 0,
+        SinglePlay = 0,
 
         /// <summary>
         /// マルチプレイ(2~4人プレイ)
@@ -68,7 +69,11 @@ public class TitleSelectManager : MonoBehaviour
 
     [SerializeField] private Sprite monitorDefaultSprite;
 
-    TitleSelect currentSelect = TitleSelect.OnePlay;
+    [SerializeField] private MonitorZoomCamera monitorZoomCamera;
+
+    [SerializeField] private CanvasGroupFader titleUiFader;
+
+    TitleSelect currentSelect = TitleSelect.SinglePlay;
 
     float[] optionHeights;
     float currentOffset;
@@ -80,6 +85,7 @@ public class TitleSelectManager : MonoBehaviour
     int moveDirection;
     bool isMoving;
     bool isLoadingHumanMonitor;
+    bool isSceneTransitioning;
 
     const float StickThreshold = 0.5f;
     float previousStickX;
@@ -102,9 +108,19 @@ public class TitleSelectManager : MonoBehaviour
     public bool IsMoving => isMoving;
 
     /// <summary>
-    /// HumanMonitorScene 表示中は Title 選択を停止する
+    /// モニターとの遷移中・HumanMonitorScene 表示中は Title 選択を停止する
     /// </summary>
-    public bool IsTitleSelectStopped => isLoadingHumanMonitor || IsHumanMonitorSceneLoaded();
+    public bool IsTitleSelectStopped => isSceneTransitioning || isLoadingHumanMonitor || IsHumanMonitorSceneLoaded();
+
+    void OnEnable()
+    {
+        SceneTransitionEvents.ReturnToTitleRequested += BeginReturnFromMonitor;
+    }
+
+    void OnDisable()
+    {
+        SceneTransitionEvents.ReturnToTitleRequested -= BeginReturnFromMonitor;
+    }
 
     void Start()
     {
@@ -125,7 +141,7 @@ public class TitleSelectManager : MonoBehaviour
         CacheHeights();
 
         currentIndex = 0;
-        currentSelect = TitleSelect.OnePlay;
+        currentSelect = TitleSelect.SinglePlay;
         currentOffset = 0f;
         targetIndex = currentIndex;
 
@@ -195,18 +211,18 @@ public class TitleSelectManager : MonoBehaviour
         if (ReadConfirmInput())
         {
             previousStickX = stickX;
-            TryLoadHumanMonitorScene();
+            BeginMonitorTransition();
             return;
         }
 
-        // +1: Book 方向（D / →）  -1: Quit 方向（A / ←）
+        // 右入力（D / →）: Quit 方向  左入力（A / ←）: Book 方向
         int input = ReadNavigateInput(stickX);
         previousStickX = stickX;
 
         if (input > 0)
-            BeginMove(+1, -1);
-        else if (input < 0)
             BeginMove(-1, +1);
+        else if (input < 0)
+            BeginMove(+1, -1);
     }
 
     /// <summary>
@@ -265,11 +281,102 @@ public class TitleSelectManager : MonoBehaviour
         return false;
     }
 
-    void TryLoadHumanMonitorScene()
+    /// <summary>
+    /// タイトル UI をフェードアウト → カメラをモニター正面へズーム → HumanMonitorScene を読み込む
+    /// </summary>
+    void BeginMonitorTransition()
     {
-        if (currentSelect == TitleSelect.Quit)
+        if (IsHumanMonitorSceneLoaded())
             return;
 
+        isSceneTransitioning = true;
+        FadeOutTitleUi(() => ZoomToMonitor(() =>
+        {
+            isSceneTransitioning = false;
+            TryLoadHumanMonitorScene();
+        }));
+    }
+
+    /// <summary>
+    /// HumanMonitorScene をアンロード → カメラを元の位置へ戻す → タイトル UI をフェードイン（行きの逆順）。
+    /// 選択中の項目はそのまま維持する。
+    /// </summary>
+    void BeginReturnFromMonitor()
+    {
+        if (isSceneTransitioning)
+            return;
+
+        isSceneTransitioning = true;
+        UnloadHumanMonitorScene(() => ReturnCameraFromMonitor(() => FadeInTitleUi(() =>
+        {
+            isSceneTransitioning = false;
+        })));
+    }
+
+    void UnloadHumanMonitorScene(Action onCompleted)
+    {
+        if (!IsHumanMonitorSceneLoaded())
+        {
+            onCompleted();
+            return;
+        }
+
+        var operation = SceneManager.UnloadSceneAsync(humanMonitorSceneName);
+        if (operation == null)
+        {
+            onCompleted();
+            return;
+        }
+
+        operation.completed += _ => onCompleted();
+    }
+
+    void ReturnCameraFromMonitor(Action onCompleted)
+    {
+        if (monitorZoomCamera == null)
+        {
+            onCompleted();
+            return;
+        }
+
+        monitorZoomCamera.ReturnToOrigin(onCompleted);
+    }
+
+    void FadeInTitleUi(Action onCompleted)
+    {
+        if (titleUiFader == null)
+        {
+            onCompleted();
+            return;
+        }
+
+        titleUiFader.FadeIn(onCompleted);
+    }
+
+    void FadeOutTitleUi(Action onCompleted)
+    {
+        if (titleUiFader == null)
+        {
+            onCompleted();
+            return;
+        }
+
+        titleUiFader.FadeOut(onCompleted);
+    }
+
+    void ZoomToMonitor(Action onCompleted)
+    {
+        if (monitorZoomCamera == null || monitorScreenRenderer == null)
+        {
+            onCompleted();
+            return;
+        }
+
+        monitorZoomCamera.Play(monitorScreenRenderer, onCompleted);
+    }
+
+    void TryLoadHumanMonitorScene()
+    {
         if (string.IsNullOrEmpty(humanMonitorSceneName))
         {
             Debug.LogError($"{nameof(TitleSelectManager)}: HumanMonitor シーン名が空です。", this);
@@ -281,6 +388,7 @@ public class TitleSelectManager : MonoBehaviour
             return;
 
         isLoadingHumanMonitor = true;
+        TitleSelectionContext.Set(currentSelect);
         var operation = SceneManager.LoadSceneAsync(humanMonitorSceneName, LoadSceneMode.Additive);
         if (operation == null)
         {
@@ -289,7 +397,30 @@ public class TitleSelectManager : MonoBehaviour
             return;
         }
 
-        operation.completed += _ => isLoadingHumanMonitor = false;
+        operation.completed += _ =>
+        {
+            isLoadingHumanMonitor = false;
+            AlignLoadedSceneCamera(SceneManager.GetSceneByName(humanMonitorSceneName));
+        };
+    }
+
+    /// <summary>
+    /// 読み込んだシーンのカメラを、ズーム後のタイトルカメラと同じ位置・回転・画角にする
+    /// </summary>
+    void AlignLoadedSceneCamera(Scene scene)
+    {
+        if (monitorZoomCamera == null || monitorZoomCamera.TargetCamera == null || !scene.IsValid())
+            return;
+
+        Camera source = monitorZoomCamera.TargetCamera;
+        foreach (GameObject root in scene.GetRootGameObjects())
+        {
+            foreach (Camera camera in root.GetComponentsInChildren<Camera>(true))
+            {
+                camera.transform.SetPositionAndRotation(source.transform.position, source.transform.rotation);
+                camera.fieldOfView = source.fieldOfView;
+            }
+        }
     }
 
     /// <summary>
