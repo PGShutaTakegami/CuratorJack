@@ -23,6 +23,8 @@ public class MonitorManager : MonoBehaviour
     /// </summary>
     public bool IsReturning { get; private set; }
 
+    GameObject activeCanvas;
+
     void Awake()
     {
         ShowCanvas(TitleSelectionContext.HasSelection ? TitleSelectionContext.Selected : fallbackSelect);
@@ -30,8 +32,22 @@ public class MonitorManager : MonoBehaviour
 
     void Update()
     {
-        if (!IsReturning && ReadBackInput())
+        if (!IsReturning && ReadBackInput() && !HandleBackInActiveCanvas())
             ReturnToTitle();
+    }
+
+    bool HandleBackInActiveCanvas()
+    {
+        if (activeCanvas == null)
+            return false;
+
+        foreach (IBackInputHandler handler in activeCanvas.GetComponentsInChildren<IBackInputHandler>())
+        {
+            if (handler.HandleBack())
+                return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -61,6 +77,7 @@ public class MonitorManager : MonoBehaviour
         if (selectedCanvas == null)
             return;
 
+        activeCanvas = index >= 0 && index < selectedCanvas.Length ? selectedCanvas[index] : null;
         for (int i = 0; i < selectedCanvas.Length; i++)
         {
             if (selectedCanvas[i] != null)

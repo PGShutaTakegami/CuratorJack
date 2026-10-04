@@ -62,14 +62,14 @@ namespace EnvironmentSwitcher
                 return;
             }
 
-            _showPerf = EnvironmentRuntime.Current == GameEnvironment.Development
+            _showPerf = EnvironmentRuntime.IsDevelopmentFamily
                         && EnvironmentRuntime.Settings != null
                         && EnvironmentRuntime.Settings.DevDebug.enableFpsMemory;
 
-            _showNetworkHud = EnvironmentRuntime.Current == GameEnvironment.Development;
+            _showNetworkHud = EnvironmentRuntime.IsDevelopmentFamily;
 
             bool showLog = true;
-            if (EnvironmentRuntime.Current == GameEnvironment.Development
+            if (EnvironmentRuntime.IsDevelopmentFamily
                 && EnvironmentRuntime.Settings != null)
             {
                 showLog = EnvironmentRuntime.Settings.DevDebug.enableOnScreenLog;
@@ -125,10 +125,10 @@ namespace EnvironmentSwitcher
                 FontStyle.Bold,
                 new Vector2(1f, 0f),
                 new Vector2(-16f, 16f),
-                new Vector2(120f, 36f),
+                new Vector2(240f, 36f),
                 envColor);
             _envText.alignment = TextAnchor.LowerRight;
-            _envText.text = EnvironmentRuntime.Current == GameEnvironment.Staging ? "Stg" : "Dev";
+            _envText.text = EnvironmentRuntime.Current.ToShortLabel();
 
             // 左上: FPS / メモリ（枠なし）
             if (_showPerf)
@@ -326,7 +326,7 @@ namespace EnvironmentSwitcher
 
         private static bool ShouldShow(GameEnvironment environment)
         {
-            return environment == GameEnvironment.Development
+            return environment.IsDevelopmentFamily()
                    || environment == GameEnvironment.Staging;
         }
 

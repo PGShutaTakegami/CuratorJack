@@ -16,6 +16,7 @@ public class ButtonManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     Image image;
     Button button;
     Sprite defaultSprite;
+    bool isPinned;
 
     /// <summary>
     /// 選択中かどうか
@@ -66,10 +67,24 @@ public class ButtonManager : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void SetSelected(bool selected)
     {
         IsSelected = selected;
+        RefreshSprite();
+    }
+
+    /// <summary>
+    /// カーソルの有無に関係なく switchSprite を表示し続ける（人数選択などの決定済み表示）
+    /// </summary>
+    public void SetPinned(bool pinned)
+    {
+        isPinned = pinned;
+        RefreshSprite();
+    }
+
+    void RefreshSprite()
+    {
         if (image == null)
             return;
 
-        image.sprite = selected && switchSprite != null ? switchSprite : defaultSprite;
+        image.sprite = (IsSelected || isPinned) && switchSprite != null ? switchSprite : defaultSprite;
     }
 
     public void OnPointerEnter(PointerEventData eventData)

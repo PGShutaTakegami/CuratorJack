@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f0dd77b5f818cd48be22637bb08945d, type: 3}
   m_Name: EnvironmentSettings
   m_EditorClassIdentifier: EnvironmentSwitcher::EnvironmentSwitcher.EnvironmentSettings
-  activeEnvironment: 0
+  activeEnvironment: 3
   environments:
   - environment: 0
     displayName: Development
@@ -45,6 +45,39 @@ MonoBehaviour:
     useAnalyticsSandbox: 0
     analyticsAppId: analytics-prod
     useIapSandbox: 0
+    isolateSaveData: 1
+    customValues: []
+  - environment: 3
+    displayName: Local
+    defineSymbol: ENV_LOCAL
+    apiBaseUrl: https://dev.example.local
+    enableDebugLog: 1
+    enableCrashReporting: 0
+    useAnalyticsSandbox: 1
+    analyticsAppId: analytics-dev
+    useIapSandbox: 1
+    isolateSaveData: 1
+    customValues: []
+  - environment: 4
+    displayName: LocalNet
+    defineSymbol: ENV_LOCALNET
+    apiBaseUrl: https://dev.example.local
+    enableDebugLog: 1
+    enableCrashReporting: 0
+    useAnalyticsSandbox: 1
+    analyticsAppId: analytics-dev
+    useIapSandbox: 1
+    isolateSaveData: 1
+    customValues: []
+  - environment: 5
+    displayName: OnlineNet
+    defineSymbol: ENV_ONLINENET
+    apiBaseUrl: https://dev.example.local
+    enableDebugLog: 1
+    enableCrashReporting: 0
+    useAnalyticsSandbox: 1
+    analyticsAppId: analytics-dev
+    useIapSandbox: 1
     isolateSaveData: 1
     customValues: []
   devDebug:

@@ -52,7 +52,10 @@ namespace EnvironmentSwitcher
                 analyticsAppId = "analytics-prod",
                 useIapSandbox = false,
                 isolateSaveData = true
-            }
+            },
+            CreateDevelopmentExtension(GameEnvironment.Local, "ENV_LOCAL"),
+            CreateDevelopmentExtension(GameEnvironment.LocalNet, "ENV_LOCALNET"),
+            CreateDevelopmentExtension(GameEnvironment.OnlineNet, "ENV_ONLINENET")
         };
 
         [SerializeField] private DevDebugSettings devDebug = new DevDebugSettings();
@@ -97,6 +100,24 @@ namespace EnvironmentSwitcher
         public EnvironmentEntry GetActiveEntry()
         {
             return FindEntry(activeEnvironment);
+        }
+
+        /// <summary>Development と同じ設定値を持つ追加版エントリ。</summary>
+        private static EnvironmentEntry CreateDevelopmentExtension(GameEnvironment environment, string defineSymbol)
+        {
+            return new EnvironmentEntry
+            {
+                environment = environment,
+                displayName = environment.ToString(),
+                defineSymbol = defineSymbol,
+                apiBaseUrl = "https://dev.example.local",
+                enableDebugLog = true,
+                enableCrashReporting = false,
+                useAnalyticsSandbox = true,
+                analyticsAppId = "analytics-dev",
+                useIapSandbox = true,
+                isolateSaveData = true
+            };
         }
 
         public IEnumerable<string> GetManagedDefineSymbols()
