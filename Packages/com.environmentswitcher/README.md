@@ -68,7 +68,12 @@ Apply 時は Domain Reload（再コンパイル）が走ります。Inspector �
 | Development | `ENV_DEV` |
 | Staging | `ENV_STG` |
 | Release | `ENV_RELEASE` |
+| Local（Dev 追加版） | `ENV_DEV` + `ENV_LOCAL` |
+| LocalNet（Dev 追加版） | `ENV_DEV` + `ENV_LOCALNET` |
+| OnlineNet（Dev 追加版） | `ENV_DEV` + `ENV_ONLINENET` |
 | ネット通信 ON | `ENV_NETWORK` |
+
+Local / LocalNet / OnlineNet は Development の追加版です。Dev の機能（DEBUG パネル、FPS/ログ表示、ログファイル、ログレベル）をすべて引き継ぎ、`EnvironmentRuntime.NetworkMode` で通信方式（Local / LocalNet / OnlineNet）を参照できます。Dev 判定には `EnvironmentRuntime.IsDevelopmentFamily` を使ってください。
 
 `EnvironmentRuntime.Current` は **コンパイル済み Define を最優先** し、Define が無い場合のみ `EnvironmentSettings.ActiveEnvironment` を参照します。
 

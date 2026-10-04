@@ -194,6 +194,62 @@ MonoBehaviour:
       m_LigatureGlyphID: 1370
     - m_ComponentGlyphIDs: 95040000cd0400009b040000
       m_LigatureGlyphID: 1369
+    - m_ComponentGlyphIDs: 7e040000cd0400009b040000
+      m_LigatureGlyphID: 1363
+    - m_ComponentGlyphIDs: 3100000052000000
+      m_LigatureGlyphID: 649
+    - m_ComponentGlyphIDs: 37000000280000002f000000
+      m_LigatureGlyphID: 13392
+    - m_ComponentGlyphIDs: 37000000480000004f000000
+      m_LigatureGlyphID: 650
+    - m_ComponentGlyphIDs: 3700000025000000
+      m_LigatureGlyphID: 13456
+    - m_ComponentGlyphIDs: a204000074040000
+      m_LigatureGlyphID: 12795
+    - m_ComponentGlyphIDs: a2040000cd040000
+      m_LigatureGlyphID: 1372
+    - m_ComponentGlyphIDs: bb040000d6040000a2040000c5040000
+      m_LigatureGlyphID: 1379
+    - m_ComponentGlyphIDs: 432c0000212c0000
+      m_LigatureGlyphID: 1415
+    - m_ComponentGlyphIDs: 432c00004b2c0000
+      m_LigatureGlyphID: 1397
+    - m_ComponentGlyphIDs: 4a2c0000422c0000402c00004b2c0000
+      m_LigatureGlyphID: 1392
+    - m_ComponentGlyphIDs: 4a2c00004c2c0000112c0000
+      m_LigatureGlyphID: 1405
+    - m_ComponentGlyphIDs: 4a2c00004c2c0000122c0000
+      m_LigatureGlyphID: 1409
+    - m_ComponentGlyphIDs: 4a2c00004b2c0000
+      m_LigatureGlyphID: 1398
+    - m_ComponentGlyphIDs: 4a2c0000462c0000
+      m_LigatureGlyphID: 1394
+    - m_ComponentGlyphIDs: 4a2c00004c2c0000
+      m_LigatureGlyphID: 1401
+    - m_ComponentGlyphIDs: 2904000074040000
+      m_LigatureGlyphID: 12784
+    - m_ComponentGlyphIDs: 4d2c0000522c0000
+      m_LigatureGlyphID: 1411
+    - m_ComponentGlyphIDs: 4c2c0000482c00004d2c0000
+      m_LigatureGlyphID: 13430
+    - m_ComponentGlyphIDs: 4c2c00004c2c0000122c0000
+      m_LigatureGlyphID: 1406
+    - m_ComponentGlyphIDs: 4c2c00004c2c0000112c0000
+      m_LigatureGlyphID: 1402
+    - m_ComponentGlyphIDs: 4c2c0000122c0000
+      m_LigatureGlyphID: 1408
+    - m_ComponentGlyphIDs: 4c2c0000412c0000
+      m_LigatureGlyphID: 1419
+    - m_ComponentGlyphIDs: 4c2c0000112c0000
+      m_LigatureGlyphID: 1404
+    - m_ComponentGlyphIDs: 4c2c0000522c0000
+      m_LigatureGlyphID: 1413
+    - m_ComponentGlyphIDs: 4c2c00004c2c0000
+      m_LigatureGlyphID: 1399
+    - m_ComponentGlyphIDs: 4c2c00004b2c0000
+      m_LigatureGlyphID: 1396
+    - m_ComponentGlyphIDs: 4c2c0000462c0000
+      m_LigatureGlyphID: 1393
     m_GlyphPairAdjustmentRecords: []
     m_MarkToBaseAdjustmentRecords: []
     m_MarkToMarkAdjustmentRecords: []

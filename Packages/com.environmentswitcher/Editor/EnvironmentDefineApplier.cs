@@ -51,6 +51,20 @@ namespace EnvironmentSwitcher.Editor
             managed.Add(NetworkDefineSymbol);
 
             string activeSymbol = entry.defineSymbol.Trim();
+            List<string> activeSymbols = new List<string> { activeSymbol };
+            GameEnvironment? baseEnvironment = environment.GetBaseEnvironment();
+            if (baseEnvironment.HasValue)
+            {
+                EnvironmentEntry baseEntry = settings.FindEntry(baseEnvironment.Value);
+                if (baseEntry == null || string.IsNullOrWhiteSpace(baseEntry.defineSymbol))
+                {
+                    message = $"{environment} の元環境 {baseEnvironment.Value} の設定エントリがありません。";
+                    return false;
+                }
+
+                activeSymbols.Insert(0, baseEntry.defineSymbol.Trim());
+            }
+
             int updatedTargets = 0;
 
             for (int i = 0; i < TargetBuildTargets.Length; i++)
@@ -65,9 +79,12 @@ namespace EnvironmentSwitcher.Editor
                     .Where(d => !managed.Contains(d))
                     .ToList();
 
-                if (!defines.Contains(activeSymbol))
+                for (int s = 0; s < activeSymbols.Count; s++)
                 {
-                    defines.Add(activeSymbol);
+                    if (!defines.Contains(activeSymbols[s]))
+                    {
+                        defines.Add(activeSymbols[s]);
+                    }
                 }
 
                 if (settings.EnableNetwork && !defines.Contains(NetworkDefineSymbol))
@@ -88,7 +105,7 @@ namespace EnvironmentSwitcher.Editor
                 ? $"{NetworkDefineSymbol} ON"
                 : $"{NetworkDefineSymbol} OFF";
             message =
-                $"{entry.displayName} に切替（シンボル: {activeSymbol}, {networkLabel} / {updatedTargets} ターゲット）。再コンパイルされます。";
+                $"{entry.displayName} に切替（シンボル: {string.Join(", ", activeSymbols)}, {networkLabel} / {updatedTargets} ターゲット）。再コンパイルされます。";
             return true;
         }
 
@@ -109,6 +126,7 @@ namespace EnvironmentSwitcher.Editor
 
             HashSet<string> defines = new HashSet<string>(SplitDefines(raw), StringComparer.Ordinal);
             IReadOnlyList<EnvironmentEntry> entries = settings.Environments;
+            GameEnvironment? baseMatch = null;
             for (int i = 0; i < entries.Count; i++)
             {
                 EnvironmentEntry entry = entries[i];
@@ -117,13 +135,24 @@ namespace EnvironmentSwitcher.Editor
                     continue;
                 }
 
-                if (defines.Contains(entry.defineSymbol.Trim()))
+                if (!defines.Contains(entry.defineSymbol.Trim()))
+                {
+                    continue;
+                }
+
+                // 追加版は元環境の Define も併せ持つため、追加版の一致を優先する
+                if (entry.environment.IsDevelopmentExtension())
                 {
                     return entry.environment;
                 }
+
+                if (!baseMatch.HasValue)
+                {
+                    baseMatch = entry.environment;
+                }
             }
 
-            return null;
+            return baseMatch;
         }
 
         private static bool TryGetDefines(NamedBuildTarget target, out string defines)

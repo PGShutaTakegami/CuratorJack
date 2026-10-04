@@ -41,6 +41,12 @@ namespace EnvironmentSwitcher
                 return GameEnvironment.Release;
 #elif ENV_STG
                 return GameEnvironment.Staging;
+#elif ENV_LOCAL
+                return GameEnvironment.Local;
+#elif ENV_LOCALNET
+                return GameEnvironment.LocalNet;
+#elif ENV_ONLINENET
+                return GameEnvironment.OnlineNet;
 #elif ENV_DEV
                 return GameEnvironment.Development;
 #else
@@ -64,6 +70,12 @@ namespace EnvironmentSwitcher
         }
 
         public static bool Is(GameEnvironment environment) => Current == environment;
+
+        /// <summary>Development とその追加版（Local / LocalNet / OnlineNet）か。</summary>
+        public static bool IsDevelopmentFamily => Current.IsDevelopmentFamily();
+
+        /// <summary>現在環境のマルチプレイ通信方式。</summary>
+        public static EnvironmentNetworkMode NetworkMode => Current.ToNetworkMode();
 
         public static string ApiBaseUrl
         {
@@ -128,19 +140,17 @@ namespace EnvironmentSwitcher
         {
             Debug.unityLogger.logEnabled = true;
 
-            switch (Current)
+            if (IsDevelopmentFamily)
             {
-                case GameEnvironment.Development:
-                    Debug.unityLogger.filterLogType = LogType.Log;
-                    break;
-
-                case GameEnvironment.Staging:
-                    Debug.unityLogger.filterLogType = LogType.Warning;
-                    break;
-
-                default:
-                    Debug.unityLogger.filterLogType = LogType.Error;
-                    break;
+                Debug.unityLogger.filterLogType = LogType.Log;
+            }
+            else if (Current == GameEnvironment.Staging)
+            {
+                Debug.unityLogger.filterLogType = LogType.Warning;
+            }
+            else
+            {
+                Debug.unityLogger.filterLogType = LogType.Error;
             }
         }
 
@@ -165,7 +175,7 @@ namespace EnvironmentSwitcher
 
         private static void ApplyLogFilePolicy()
         {
-            bool wantFile = Current == GameEnvironment.Development
+            bool wantFile = IsDevelopmentFamily
                             && Settings != null
                             && Settings.DevDebug.enableLogFile;
             EnvironmentLogFile.SetEnabled(wantFile);

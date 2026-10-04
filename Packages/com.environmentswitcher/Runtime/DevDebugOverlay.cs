@@ -39,7 +39,7 @@ namespace EnvironmentSwitcher
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap()
         {
-            if (!EnvironmentRuntime.Is(GameEnvironment.Development))
+            if (!EnvironmentRuntime.IsDevelopmentFamily)
             {
                 return;
             }
@@ -72,7 +72,7 @@ namespace EnvironmentSwitcher
 
         private void Start()
         {
-            if (!EnvironmentRuntime.Is(GameEnvironment.Development))
+            if (!EnvironmentRuntime.IsDevelopmentFamily)
             {
                 Destroy(gameObject);
                 return;
