@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using EnvironmentSwitcher;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -110,7 +109,7 @@ public class RoomLobbyController : MonoBehaviour
     {
         isEnteringRoom = true;
         Debug.Log(message);
-        SceneManager.LoadScene(gameSceneName);
+        SceneFader.LoadScene(gameSceneName);
     }
 
     void HandleCapacityChanged(int capacity)
