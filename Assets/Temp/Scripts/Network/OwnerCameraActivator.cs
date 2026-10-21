@@ -3,6 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// プレイヤーに内蔵されたカメラ / AudioListener を、自分のプレイヤーのものだけ有効にする。
+/// ホストが持つ CPU のプレイヤーは自分のものではないため、持ち主ではなく自分の接続のプレイヤーかで判断する。
 /// </summary>
 public class OwnerCameraActivator : NetworkBehaviour
 {
@@ -18,7 +19,7 @@ public class OwnerCameraActivator : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        SetActive(IsOwner);
+        SetActive(IsLocalPlayer);
     }
 
     public override void OnNetworkDespawn()

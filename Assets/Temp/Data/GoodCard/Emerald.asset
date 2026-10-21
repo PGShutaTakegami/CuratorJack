@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
+  m_Name: Emerald
+  m_EditorClassIdentifier: Assembly-CSharp::CardData
+  parameter:
+    cardName: "\u30A8\u30E1\u30E9\u30EB\u30C9"
+    englishName: Emerald
+    cardSprite: {fileID: 21300000, guid: 4bf89e0012414d349943e659039da2b8, type: 3}
+    discription: "\u5B9D\u77F3\u30AB\u30FC\u30C9\u306E\u30A8\u30E1\u30E9\u30EB\u30C9\n\u5B9D\u77F3\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u306F\u4F4E\u54C1\u8CEA\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u5272\u3068\u3042\u308A\u3075\u308C\u3066\u3044\u308B"
+    initialPrice: 20
+  rarity: 0

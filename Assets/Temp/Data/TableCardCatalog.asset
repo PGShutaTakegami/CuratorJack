@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc87f7c00cc4d454c91d61dc0942d3c5, type: 3}
+  m_Name: TableCardCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::TableCardCatalog
+  entries:
+  - sprite: {fileID: 21300000, guid: 99116a517f8bc2042bf1eeecf436d1b7, type: 3}
+    prefab: {fileID: 4053109741445058245, guid: 24bdfa1cd11e90b4687fdd93e1874d06, type: 3}
+  - sprite: {fileID: 21300000, guid: 3bc72bb5b71431547b079e9d8493fa73, type: 3}
+    prefab: {fileID: 4368440905289956177, guid: e0926e1bebe2fdd45b3477c9dc9d8a45, type: 3}
+  - sprite: {fileID: 21300000, guid: 024fd7c590cab554a9a21e9902fbe7fc, type: 3}
+    prefab: {fileID: 4596225500532824988, guid: d0936b363be301c4caf0fb128a37e2a1, type: 3}
+  - sprite: {fileID: 21300000, guid: 2af91cd28e3170843a45a5f9ff4dd0e4, type: 3}
+    prefab: {fileID: 878539625615930505, guid: 7f54fe086de90d941ab1676c0e8e75b7, type: 3}
+  - sprite: {fileID: 21300000, guid: 4bf89e0012414d349943e659039da2b8, type: 3}
+    prefab: {fileID: 8647358748003642174, guid: 57f888420f9b6fc44a18279b821e976b, type: 3}
+  - sprite: {fileID: 21300000, guid: c7fdf347e63a0814ab933d4ebe1ad4bc, type: 3}
+    prefab: {fileID: 586503530003353619, guid: 4f26bc23a16be8545949fcee14600686, type: 3}
+  - sprite: {fileID: 21300000, guid: 4e14edd6a865ea141879cbdf2463de7b, type: 3}
+    prefab: {fileID: 3875372614856368392, guid: fed261e0698d43e4cadeaaeb2374a458, type: 3}
+  - sprite: {fileID: 21300000, guid: e802270a61e5514458f6c81ec9651e9a, type: 3}
+    prefab: {fileID: 2477359037960526232, guid: aa4bb24f56ff6414ab69e99c02547c1a, type: 3}
+  - sprite: {fileID: 21300000, guid: 2b993b9002cc3d248a6af7425fb4344e, type: 3}
+    prefab: {fileID: 5169479528298398504, guid: 2e90ab1a0e6804946b4057f70188f89f, type: 3}
+  - sprite: {fileID: 21300000, guid: aace13cf7f1b0f7458f18e151007ec93, type: 3}
+    prefab: {fileID: 4425913730430308289, guid: fbf9f44bbb422cd428e1a46c3d1503ff, type: 3}
+  fallback: {fileID: 5169479528298398504, guid: 2e90ab1a0e6804946b4057f70188f89f, type: 3}

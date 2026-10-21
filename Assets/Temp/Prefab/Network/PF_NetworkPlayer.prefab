@@ -262,7 +262,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2458875050305151686, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
       propertyPath: field of view
-      value: 75
+      value: 85
       objectReference: {fileID: 0}
     - target: {fileID: 2526860279916984770, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1544,9 +1544,6 @@ PrefabInstance:
       addedObject: {fileID: 436206703482447348}
     - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7988621082346873913}
-    - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7575066763856452419}
     - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
       insertIndex: -1
@@ -1554,6 +1551,18 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7892452583209227070}
+    - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7240632077356784128}
+    - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8569389216308254136}
+    - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2239781947919059623}
+    - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5154608683011458969}
   m_SourcePrefab: {fileID: 100100000, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
 --- !u!1 &7984306069283608379 stripped
 GameObject:
@@ -1600,18 +1609,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkSessionPlayer
   ShowTopMostFoldoutHeaderGroup: 1
---- !u!114 &7988621082346873913
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7984306069283608379}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 920e0c964dddcdd4d86d82592e3cc7c0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerPushInput
 --- !u!114 &7575066763856452419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1653,6 +1650,55 @@ MonoBehaviour:
   offset: {x: 0, y: 0.9, z: 0}
   fontSize: 6
   color: {r: 1, g: 0.85, b: 0.35, a: 1}
+  font: {fileID: 11400000, guid: a8c59cf6b6b40344c938927f7fe2879d, type: 2}
+--- !u!114 &7240632077356784128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7984306069283608379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 318e613e68b57b9488a9a4de9e7a09d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerReadyReporter
+--- !u!114 &8569389216308254136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7984306069283608379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6311b07c538dd1443a476cfdeeffe177, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerGameStartReporter
+--- !u!114 &2239781947919059623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7984306069283608379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5045d78c1196ce544952d95d07ea5227, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTurnReporter
+--- !u!114 &5154608683011458969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7984306069283608379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f16bd4e06c232b47a6567a4e0aeec9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerNameReporter
 --- !u!4 &8927231750670987032 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5792768713495776756, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}

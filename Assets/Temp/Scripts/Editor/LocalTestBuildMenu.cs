@@ -1,15 +1,17 @@
+using System;
+using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 /// <summary>
 /// ローカルテスト用の追加ウィンドウとして起動するビルドを作成する。
-/// スクリプトやシーンを変更したら作り直す。
+/// 再生開始時は LocalTestAutoBuild が変更を検知して自動で作り直す。
 /// </summary>
 public static class LocalTestBuildMenu
 {
     [MenuItem("Tools/CJ/Local テストビルドを作成")]
-    static void Build()
+    static void BuildFromMenu()
     {
         if (EditorApplication.isPlayingOrWillChangePlaymode)
         {
@@ -17,6 +19,11 @@ public static class LocalTestBuildMenu
             return;
         }
 
+        Build();
+    }
+
+    public static bool Build()
+    {
         var options = new BuildPlayerOptions
         {
             scenes = LocalTestBuildPaths.Scenes,
@@ -27,8 +34,14 @@ public static class LocalTestBuildMenu
 
         BuildReport report = BuildPipeline.BuildPlayer(options);
         if (report.summary.result == BuildResult.Succeeded)
+        {
+            // ビルド中に書き換わったプロジェクト内のファイルを「ビルドより新しい変更」と誤判定しないよう、完了時刻を記録する
+            File.SetLastWriteTimeUtc(LocalTestBuildPaths.ExecutablePath, DateTime.UtcNow);
             Debug.Log($"[LocalTest] テストビルドを作成しました: {LocalTestBuildPaths.ExecutablePath}（{report.summary.totalTime:mm\\:ss}）");
-        else
-            Debug.LogError($"[LocalTest] テストビルドに失敗しました: {report.summary.result}（エラー {report.summary.totalErrors} 件）");
+            return true;
+        }
+
+        Debug.LogError($"[LocalTest] テストビルドに失敗しました: {report.summary.result}（エラー {report.summary.totalErrors} 件）");
+        return false;
     }
 }

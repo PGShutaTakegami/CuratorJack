@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using EnvironmentSwitcher;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
@@ -24,20 +23,33 @@ public class RoomLobbyController : MonoBehaviour
     [Tooltip("部屋一覧を更新する間隔（秒）")]
     [SerializeField] private float refreshInterval = 0.5f;
 
-    IRoomDirectory directory;
+    [Tooltip("OnlineNet で部屋一覧を更新する間隔（秒）。Lobby サービスの回数制限を超えないよう長めにする")]
+    [SerializeField] private float onlineRefreshInterval = 3f;
+
+    IRoomCatalog catalog;
+    IReadOnlyList<RoomInfo> fetchedRooms = new List<RoomInfo>();
+    float activeRefreshInterval;
     float refreshTimer;
     bool isEnteringRoom;
+    bool isFetching;
 
     void Awake()
     {
-        if (EnvironmentRuntime.NetworkMode != EnvironmentNetworkMode.Local)
+        switch (EnvironmentRuntime.NetworkMode)
         {
-            Debug.LogWarning($"[Room] 部屋一覧は Local 環境のみ対応です（現在: {EnvironmentRuntime.Current}）");
-            enabled = false;
-            return;
+            case EnvironmentNetworkMode.Local:
+                catalog = new LocalRoomCatalog();
+                activeRefreshInterval = refreshInterval;
+                break;
+            case EnvironmentNetworkMode.OnlineNet:
+                catalog = new OnlineRoomCatalog();
+                activeRefreshInterval = onlineRefreshInterval;
+                break;
+            default:
+                Debug.LogWarning($"[Room] 部屋一覧は Local / OnlineNet 環境のみ対応です（現在: {EnvironmentRuntime.Current}）");
+                enabled = false;
+                break;
         }
-
-        directory = new LocalFileRoomDirectory();
     }
 
     void OnEnable()
@@ -62,7 +74,7 @@ public class RoomLobbyController : MonoBehaviour
     void Update()
     {
         refreshTimer += Time.unscaledDeltaTime;
-        if (refreshTimer < refreshInterval)
+        if (refreshTimer < activeRefreshInterval)
             return;
 
         refreshTimer = 0f;
@@ -86,9 +98,9 @@ public class RoomLobbyController : MonoBehaviour
 
     void CreateRoom(int capacity, string message)
     {
-        RoomInfo room = LocalRoomFactory.Create(capacity, $"{capacity}人部屋 #{Random.Range(1000, 10000)}", message);
+        RoomInfo room = catalog.CreateRoom(capacity, $"{capacity}人部屋 #{Random.Range(1000, 10000)}", message);
         RoomConnectionContext.SetHost(room);
-        EnterRoom($"[Room] 部屋を作成します: {room.roomName}（定員 {capacity} 人, port={room.port}）");
+        EnterRoom($"[Room] 部屋を作成します: {room.roomName}（定員 {capacity} 人）");
     }
 
     void JoinRoom(RoomInfo room)
@@ -110,19 +122,44 @@ public class RoomLobbyController : MonoBehaviour
     {
         isEnteringRoom = true;
         Debug.Log(message);
-        SceneManager.LoadScene(gameSceneName);
+        SceneFader.LoadScene(gameSceneName);
     }
 
+    /// <summary>人数を切り替えただけでは取得し直さず、前回取得した一覧を絞り込み直す（OnlineNet の回数制限対策）。</summary>
     void HandleCapacityChanged(int capacity)
     {
-        RefreshList();
+        ShowRooms();
     }
 
-    void RefreshList()
+    async void RefreshList()
+    {
+        if (isFetching)
+            return;
+
+        isFetching = true;
+        try
+        {
+            fetchedRooms = await catalog.FetchRoomsAsync();
+        }
+        catch (System.Exception exception)
+        {
+            Debug.LogWarning($"[Room] 部屋一覧を取得できませんでした: {exception.Message}");
+            return;
+        }
+        finally
+        {
+            isFetching = false;
+        }
+
+        if (this != null)
+            ShowRooms();
+    }
+
+    void ShowRooms()
     {
         int capacity = capacitySelector.SelectedCapacity;
         var visibleRooms = new List<RoomInfo>();
-        foreach (RoomInfo room in directory.FetchRooms())
+        foreach (RoomInfo room in fetchedRooms)
         {
             if (room.capacity == capacity)
                 visibleRooms.Add(room);
