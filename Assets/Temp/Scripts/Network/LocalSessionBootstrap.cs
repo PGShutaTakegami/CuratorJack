@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using EnvironmentSwitcher;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
@@ -10,8 +11,10 @@ using UnityEngine.SceneManagement;
 /// Local 環境のとき、同じ PC 内（127.0.0.1）でセッションを開始する。
 /// ロビーで部屋を選んで来た場合はその部屋のホスト / クライアントになり、入れなければロビーへ戻る。
 /// 部屋を経由しない場合は既存ホストへの参加を先に試し、見つからなければ自分がホストになる。
+/// リトライでは、ホストは同じ部屋を立て直し、クライアントは立て直されるまで入り直しを続ける。
+/// 部屋主にキックされたときは、ホストの引き継ぎをせずにロビーへ戻る。
 /// </summary>
-public class LocalSessionBootstrap : MonoBehaviour
+public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
 {
     [SerializeField] private NetworkManager networkManager;
 
@@ -53,10 +56,15 @@ public class LocalSessionBootstrap : MonoBehaviour
     [Tooltip("相手の応答が途絶えてから切断とみなすまでの時間（ミリ秒）")]
     [SerializeField] private int disconnectTimeoutMS = 3000;
 
+    [Tooltip("リトライしたクライアントが、ホストが部屋を立て直すのを待つ秒数")]
+    [SerializeField] private float rematchWaitSeconds = 60f;
+
     readonly List<ulong> roomMembers = new List<ulong>();
     ulong localMemberId;
     RoomInfo joinedRoom;
     bool isWatchingHost;
+
+    public bool IsActive { get; private set; }
 
     IEnumerator Start()
     {
@@ -65,6 +73,8 @@ public class LocalSessionBootstrap : MonoBehaviour
 
         if (!EnvironmentNetwork.TryBeginRequest("LocalSession"))
             yield break;
+
+        IsActive = true;
 
         if (offlinePlaceholder != null)
             offlinePlaceholder.SetActive(false);
@@ -84,6 +94,7 @@ public class LocalSessionBootstrap : MonoBehaviour
         transport.SetConnectionData(room.address, (ushort)room.port);
         sessionService.Bind(networkManager, room.capacity);
         readyRoster.SetTotal(room.capacity);
+        bool isRematch = RematchContext.TryTake(out _);
 
         if (role == RoomConnectionContext.Role.Host)
         {
@@ -101,7 +112,11 @@ public class LocalSessionBootstrap : MonoBehaviour
             yield break;
         }
 
-        yield return TryJoin();
+        if (isRematch)
+            yield return JoinRematch();
+        else
+            yield return TryJoin();
+
         if (networkManager.IsConnectedClient)
         {
             WatchHost(room);
@@ -110,8 +125,24 @@ public class LocalSessionBootstrap : MonoBehaviour
             yield break;
         }
 
-        EnvironmentNetwork.LogError($"部屋に入れませんでした: {(IsRejectedAsFull() ? "満員です" : "接続できませんでした")}");
+        string reason = IsRejectedAsFull() ? "満員です" : isRematch ? "ホストが部屋を立て直しませんでした" : "接続できませんでした";
+        EnvironmentNetwork.LogError($"部屋に入れませんでした: {reason}");
         ReturnToLobby();
+    }
+
+    /// <summary>ホストより先にリトライしたときは、前のゲームのホストに断られるため、立て直されるまで入り直しを続ける。</summary>
+    IEnumerator JoinRematch()
+    {
+        Debug.Log("[Session] ホストが部屋を立て直すのを待っています");
+        float deadline = Time.realtimeSinceStartup + rematchWaitSeconds;
+        while (Time.realtimeSinceStartup < deadline)
+        {
+            yield return TryJoin();
+            if (networkManager.IsConnectedClient || IsRejectedAsFull())
+                yield break;
+
+            yield return new WaitForSecondsRealtime(hostRecoveryInterval);
+        }
     }
 
     IEnumerator RunAutoSession()
@@ -160,33 +191,9 @@ public class LocalSessionBootstrap : MonoBehaviour
         return !string.IsNullOrEmpty(reason) && reason.Contains(PlayerSessionService.SessionFullReason);
     }
 
-    /// <summary>スタートできるのはホストだけ。押されたらホストのプレイヤーから全員へ開始を通知する。</summary>
     void AllowHostStart()
     {
-        startGate.AllowLocalStart(() =>
-        {
-            if (TryGetHostPlayer(out NetworkSessionPlayer player))
-                player.AnnounceGameStart();
-        });
-        AllowHostSelectSeller();
-    }
-
-    /// <summary>出品者を決めるのはホストだけ。決めたらホストのプレイヤーから全員へ通知する。</summary>
-    void AllowHostSelectSeller()
-    {
-        var random = new System.Random();
-        sellerSelector.AllowLocalSelect(() =>
-        {
-            if (TryGetHostPlayer(out NetworkSessionPlayer player))
-                player.AnnounceSeller(SellerSelectionPolicy.Choose(playerRegistry.PlayerNumbers, random));
-        });
-    }
-
-    bool TryGetHostPlayer(out NetworkSessionPlayer player)
-    {
-        player = null;
-        NetworkObject hostPlayer = networkManager.LocalClient?.PlayerObject;
-        return hostPlayer != null && hostPlayer.TryGetComponent(out player);
+        new HostGameAuthority(networkManager, startGate, sellerSelector, playerRegistry).Grant();
     }
 
     void BeginHostingRoom(RoomInfo room)
@@ -216,6 +223,14 @@ public class LocalSessionBootstrap : MonoBehaviour
 
         if (networkManager.ShutdownInProgress)
             return;
+
+        if (PlayerSessionService.WasKicked(networkManager))
+        {
+            isWatchingHost = false;
+            EnvironmentNetwork.LogError("部屋主にキックされたため、ロビーへ戻ります");
+            ReturnToLobby();
+            return;
+        }
 
         if (networkManager.IsClient)
         {
@@ -278,10 +293,47 @@ public class LocalSessionBootstrap : MonoBehaviour
         ReturnToLobby();
     }
 
+    /// <summary>ゲームが終わったら、ホストが抜けても引き継がずリザルトに残す。</summary>
+    public void FinishMatch()
+    {
+        isWatchingHost = false;
+        StopAllCoroutines();
+    }
+
+    /// <summary>クライアントは部屋の ID を目印に残す（ホストはそのまま同じ部屋を立て直す）。</summary>
+    public Task PrepareRetryAsync()
+    {
+        if (RoomConnectionContext.HasRoom && RoomConnectionContext.CurrentRole == RoomConnectionContext.Role.Client)
+            RematchContext.Set(RoomConnectionContext.Room.roomId);
+        Destroy(networkManager.gameObject);
+        return Task.CompletedTask;
+    }
+
+    public Task PrepareTitleAsync()
+    {
+        RoomConnectionContext.Clear();
+        RematchContext.Clear();
+        Destroy(networkManager.gameObject);
+        return Task.CompletedTask;
+    }
+
+    /// <summary>自分から抜けるため、切断でホストの引き継ぎが始まらないよう見張りを止めてから抜ける。</summary>
+    public Task PrepareLeaveRoomAsync()
+    {
+        isWatchingHost = false;
+        StopAllCoroutines();
+        RoomConnectionContext.Clear();
+        RematchContext.Clear();
+        TitleSelectionContext.Set(TitleSelectManager.TitleSelect.MultiPlay);
+        Destroy(networkManager.gameObject);
+        return Task.CompletedTask;
+    }
+
     /// <summary>NetworkManager はシーンをまたいで残るため、破棄してから MultiPlay 画面へ戻る。</summary>
     void ReturnToLobby()
     {
         RoomConnectionContext.Clear();
+        RematchContext.Clear();
         TitleSelectionContext.Set(TitleSelectManager.TitleSelect.MultiPlay);
         Destroy(networkManager.gameObject);
         SceneManager.LoadScene(lobbySceneName);

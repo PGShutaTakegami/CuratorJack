@@ -15,7 +15,16 @@ public class GoodsCardDeck : MonoBehaviour
     [Tooltip("最初のドローで、最初の出品者以外に来る最高レアリティの上限枚数")]
     [SerializeField] private int firstDrawMaxHighest = 1;
 
-    readonly System.Random random = new System.Random();
+    System.Random random = new System.Random();
+
+    /// <summary>ドローで来る可能性のあるグッズカード（一覧表示用）</summary>
+    public System.Collections.Generic.IReadOnlyList<CardData> Goods => goods;
+
+    /// <summary>引くカードの乱数をシードからやり直す（全員の画面で同じカードにするため）</summary>
+    public void Reseed(int seed)
+    {
+        random = new System.Random(seed);
+    }
 
     /// <summary>最初のドローの条件（最初の出品者か）が決まるには、出品者が決まっている必要がある</summary>
     public bool CanBeginFirstDraw => sellerSelector.CurrentSeller != PlayerRegistry.NoPlayer;

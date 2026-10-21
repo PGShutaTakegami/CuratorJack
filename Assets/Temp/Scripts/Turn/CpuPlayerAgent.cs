@@ -5,13 +5,16 @@ using UnityEngine;
 /// <summary>
 /// コンピューターの操作役（仮の思考）。
 /// 出品：ランダムなグッズを選び、ときどきバフデバフを付ける（付けたら一定の確率で増額する）。
-/// 購入：払えるなら一定の確率で購入する（見送り権がなければ払える限り購入する）。
-/// オークション：自分なりの上限額までは間をおいて入札し、上回られて上限を超えるなら降りる。
+/// オークション：払えるなら一定の確率で参加し、参加しないなら降りる。参加したら自分なりの上限額までは間をおいて入札し、
+/// 上回られて上限を超えるなら降りる（見送り権がなければ必ず参加し、所持コインまで入札する）。
+/// 入札額は自分と同じく、0 からレアリティの刻みで変えて選べる額（刻みの倍数）だけを使う。
+/// 操作は窓口（IPlayerCommands）へ送る（ネットワークでは切断した人の代わりにホストで動き、操作は全員へ配られる）。
 /// </summary>
 public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
 {
     [SerializeField] private Vector2 thinkSeconds = new Vector2(0.6f, 1.6f);
 
+    [Tooltip("払えるときにオークションに参加する確率（参加しなければ降りる）")]
     [Range(0f, 1f)]
     [SerializeField] private float buyChance = 0.6f;
 
@@ -26,19 +29,19 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
     [SerializeField] private Vector2 valuationRate = new Vector2(1.2f, 2f);
 
     GameManager game;
+    IPlayerCommands commands;
     Coroutine running;
 
     public int PlayerNumber { get; private set; }
 
-    public void Initialize(int playerNumber, GameManager gameManager)
+    public void Initialize(int playerNumber, GameManager gameManager, IPlayerCommands playerCommands)
     {
         PlayerNumber = playerNumber;
         game = gameManager;
+        commands = playerCommands;
     }
 
     public void BeginListing(ListingSession session) => Run(Listing(session));
-
-    public void BeginPurchase(PurchaseSession session) => Run(Purchase(session));
 
     public void BeginAuction(AuctionModel auction)
     {
@@ -67,38 +70,41 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
             yield break;
 
         yield return Think();
-        HandCard[] goods = me.Hand.Where(card => card.IsGoods).ToArray();
-        if (goods.Length == 0)
-            yield break;
-        session.TrySelectGoods(goods[Random.Range(0, goods.Length)]);
+        if (session.Goods == null)
+        {
+            HandCard[] goods = me.Hand.Where(card => card.IsGoods).ToArray();
+            if (goods.Length == 0)
+                yield break;
+            commands.SelectGoods(PlayerNumber, goods[Random.Range(0, goods.Length)]);
+        }
 
         HandCard[] buffs = me.Hand.Where(card => !card.IsGoods).ToArray();
-        if (buffs.Length > 0 && Random.value < buffChance)
+        if (session.CanAttachBuffs && buffs.Length > 0 && Random.value < buffChance)
         {
             yield return Think();
-            session.TryAttachBuff(buffs[Random.Range(0, buffs.Length)]);
-            session.TrySetRaise(Random.value < raiseChance);
+            commands.AttachBuff(PlayerNumber, buffs[Random.Range(0, buffs.Length)]);
+            commands.SetRaise(PlayerNumber, Random.value < raiseChance);
         }
 
         yield return Think();
-        session.TryConfirm();
-    }
-
-    IEnumerator Purchase(PurchaseSession session)
-    {
-        yield return Think();
-        if (!game.TryGet(PlayerNumber, out PlayerState me))
-            yield break;
-
-        bool wantsToBuy = session.CanBuy(PlayerNumber) && (me.PassRights == 0 || Random.value < buyChance);
-        session.TryDecide(PlayerNumber, wantsToBuy);
+        commands.Confirm(PlayerNumber);
     }
 
     IEnumerator Auction(AuctionModel auction)
     {
-        int valuation = Mathf.Min(
-            auction.CoinsOf(PlayerNumber),
-            Mathf.RoundToInt(auction.Listing.MinPrice * Random.Range(valuationRate.x, valuationRate.y)));
+        bool mustStay = game.TryGet(PlayerNumber, out PlayerState me) && me.PassRights == 0;
+        int coins = auction.CoinsOf(PlayerNumber);
+        bool joins = coins >= auction.Listing.MinPrice && (mustStay || Random.value < buyChance);
+        int valuation = mustStay
+            ? coins
+            : Mathf.Min(coins, Mathf.RoundToInt(auction.Listing.MinPrice * Random.Range(valuationRate.x, valuationRate.y)));
+
+        if (!joins)
+        {
+            yield return Think();
+            commands.Fold(PlayerNumber);
+            yield break;
+        }
 
         while (auction.IsActive(PlayerNumber))
         {
@@ -110,11 +116,11 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
             if (isLeading)
                 continue;
 
-            int next = Mathf.Max(auction.LowestSelectable(PlayerNumber), auction.HighestBid + auction.Listing.BidStep);
+            int next = auction.Listing.RoundUpToStep(Mathf.Max(auction.LowestSelectable(PlayerNumber), auction.HighestBid + 1));
             if (next <= valuation && auction.CanBid(PlayerNumber, next))
-                auction.TryBid(PlayerNumber, next);
+                commands.Bid(PlayerNumber, next);
             else
-                auction.TryFold(PlayerNumber);
+                commands.Fold(PlayerNumber);
         }
     }
 }

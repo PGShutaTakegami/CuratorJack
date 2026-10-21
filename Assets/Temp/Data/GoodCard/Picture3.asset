@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Picture3
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   parameter:
-    cardName: Picture3
+    cardName: "\u5091\u4F5C"
+    englishName: Masterpiece
     cardSprite: {fileID: 21300000, guid: c7fdf347e63a0814ab933d4ebe1ad4bc, type: 3}
     discription: "\u7D75\u753B\u30AB\u30FC\u30C9\u306E\u4EBA\u7269\u753B\n\u7D75\u753B\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u306F\u6700\u9AD8\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u30ED\u30DC\u30C3\u30C8\u306E\u6642\u4EE3\u3092\u8A2A\u308C\u3055\u305B\u308B\u304D\u3063\u304B\u3051\u3068\u306A\u3063\u305F\u30ED\u30DC\u30C3\u30C8\u3092\u958B\u767A\u3057\u305F\u535A\u58EB\u304C\u63CF\u304B\u308C\u3066\u3044\u308B"
     initialPrice: 45

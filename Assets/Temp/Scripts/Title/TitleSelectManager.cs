@@ -259,14 +259,14 @@ public class TitleSelectManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 確定入力（Space / Enter / 左クリック / Xbox A）
+    /// 確定入力（Space / Enter / 左クリック / Xbox A）。Alt+Enter は画面の切り替えに使うため除く
     /// </summary>
     bool ReadConfirmInput()
     {
         var keyboard = Keyboard.current;
         if (keyboard != null)
         {
-            if (keyboard.spaceKey.wasPressedThisFrame || keyboard.enterKey.wasPressedThisFrame)
+            if (keyboard.spaceKey.wasPressedThisFrame || (keyboard.enterKey.wasPressedThisFrame && !DisplayModeToggle.IsAltHeld(keyboard)))
                 return true;
         }
 

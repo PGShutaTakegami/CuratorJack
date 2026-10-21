@@ -14,5 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   parameter:
     cardName: "\u6295\u3052\u58F2\u308A"
-    cardSprite: {fileID: 0}
+    englishName: 
+    cardSprite: {fileID: 21300000, guid: dfad7f93573e6344ebf73b4c8d7f0f70, type: 3}
     discription: "\u4ED8\u4E0E\u3055\u308C\u305F\u3082\u306E\u306F\u6B21\u306E\u51FA\u54C1\u6700\u4F4E\u958B\u59CB\u4FA1\u683C\u304C\u30E9\u30F3\u30C0\u30E0\u3067-1~-5\u3067\u4E0B\u304C\u308B"
+    initialPrice: 0
+  rarity: 0
+  effect: 5

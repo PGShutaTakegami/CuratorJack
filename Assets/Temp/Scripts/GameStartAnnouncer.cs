@@ -51,16 +51,21 @@ public class GameStartAnnouncer : MonoBehaviour
         }
     }
 
-    /// <summary>告知を 1 つ表示して消す（ゲーム途中の告知用）。</summary>
+    /// <summary>
+    /// 告知を 1 つ表示して消す（ゲーム途中の告知用）。
+    /// messages にない告知（同じ背景の中の文字）も表示でき、消えたら非表示に戻す。
+    /// </summary>
     public IEnumerator Show(GameObject message)
     {
         yield return ShowMessage(message);
+        message.SetActive(false);
     }
 
     IEnumerator ShowMessage(GameObject message)
     {
         foreach (GameObject other in messages)
-            other.SetActive(other == message);
+            other.SetActive(false);
+        message.SetActive(true);
 
         panel.GetComponent<CanvasGroup>().alpha = 0f;
         panel.gameObject.SetActive(true);

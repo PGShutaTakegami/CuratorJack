@@ -9,10 +9,7 @@ public interface IPlayerAgent
     /// <summary>出品者として、出品する商品を決める</summary>
     void BeginListing(ListingSession session);
 
-    /// <summary>購入者として、購入するか見送るかを決める</summary>
-    void BeginPurchase(PurchaseSession session);
-
-    /// <summary>オークションが始まった（参加していないプレイヤーにも通知する）</summary>
+    /// <summary>オークションが始まった。参加者は入札するか降りるかを選ぶ（参加していないプレイヤーにも通知する）</summary>
     void BeginAuction(AuctionModel auction);
 
     /// <summary>今の手続きが終わった。操作をやめる</summary>

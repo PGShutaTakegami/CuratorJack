@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// プレイヤーの頭の近くに、一定時間だけ文字を表示する（入札額・死亡の × など）。
+/// プレイヤーの頭の近くに文字を表示する（一定時間だけ：入札額など／消さずに：死亡の × など）。
 /// 表示位置は頭からテーブル中央へ forwardOffset、上へ upOffset ずらした所。
 /// </summary>
 public class PlayerLabelBoard : MonoBehaviour
@@ -30,12 +30,26 @@ public class PlayerLabelBoard : MonoBehaviour
     readonly Dictionary<int, WorldLabel> labels = new Dictionary<int, WorldLabel>();
     readonly Dictionary<int, Coroutine> hiding = new Dictionary<int, Coroutine>();
 
+    /// <summary>showSeconds だけ表示する</summary>
     public void Show(int playerNumber, string message)
     {
-        if (!registry.TryGet(playerNumber, out Transform player))
-            return;
+        if (TryPlace(playerNumber, message, out WorldLabel label))
+            hiding[playerNumber] = StartCoroutine(HideLater(label));
+    }
 
-        if (!labels.TryGetValue(playerNumber, out WorldLabel label))
+    /// <summary>消さずに表示し続ける（脱落の × など）</summary>
+    public void Pin(int playerNumber, string message)
+    {
+        TryPlace(playerNumber, message, out _);
+    }
+
+    bool TryPlace(int playerNumber, string message, out WorldLabel label)
+    {
+        label = null;
+        if (!registry.TryGet(playerNumber, out Transform player))
+            return false;
+
+        if (!labels.TryGetValue(playerNumber, out label))
         {
             label = WorldLabel.Create($"Label_Player{playerNumber}", transform, font, fontSize, color);
             labels[playerNumber] = label;
@@ -49,7 +63,8 @@ public class PlayerLabelBoard : MonoBehaviour
 
         if (hiding.TryGetValue(playerNumber, out Coroutine running) && running != null)
             StopCoroutine(running);
-        hiding[playerNumber] = StartCoroutine(HideLater(label));
+        hiding.Remove(playerNumber);
+        return true;
     }
 
     public void HideAll()

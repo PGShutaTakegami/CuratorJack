@@ -2,12 +2,13 @@ using System;
 using System.Collections.Generic;
 
 /// <summary>
-/// 出品者の順番（時計回り）と、1 周したかどうかを管理する。死んでいるプレイヤーは飛ばす。
+/// 出品者の順番（最初は時計回り、逆転で向きが反対になる）と、1 周したかどうかを管理する。死んでいるプレイヤーは飛ばす。
 /// </summary>
 public sealed class TurnOrder
 {
     readonly List<int> clockwise;
     readonly HashSet<int> soldThisRound = new HashSet<int>();
+    int direction = 1;
 
     /// <param name="clockwisePlayers">時計回りに並べたプレイヤー番号</param>
     public TurnOrder(IEnumerable<int> clockwisePlayers)
@@ -17,13 +18,20 @@ public sealed class TurnOrder
 
     public IReadOnlyList<int> Clockwise => clockwise;
 
-    /// <summary>current の次（時計回り）の生きているプレイヤー。いなければ PlayerRegistry.NoPlayer。</summary>
+    /// <summary>反時計回りに回っているか</summary>
+    public bool IsReversed => direction < 0;
+
+    /// <summary>出品ターンの回る向きを逆にする</summary>
+    public void Reverse() => direction = -direction;
+
+    /// <summary>current の次（今の向き）の生きているプレイヤー。いなければ PlayerRegistry.NoPlayer。</summary>
     public int NextAlive(int current, Func<int, bool> isAlive)
     {
         int start = clockwise.IndexOf(current);
-        for (int step = 1; step <= clockwise.Count; step++)
+        int count = clockwise.Count;
+        for (int step = 1; step <= count; step++)
         {
-            int candidate = clockwise[(start + step + clockwise.Count) % clockwise.Count];
+            int candidate = clockwise[((start + step * direction) % count + count) % count];
             if (isAlive(candidate))
                 return candidate;
         }

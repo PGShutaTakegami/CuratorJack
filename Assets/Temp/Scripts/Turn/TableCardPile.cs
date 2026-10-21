@@ -53,20 +53,30 @@ public class TableCardPile : MonoBehaviour
     /// <summary>カードを置き、置いたカードを返す（対応するカードがなければ null）</summary>
     public TableCard Place(Sprite sprite)
     {
+        Facing = SeatFacing();
+        TableCard card = PlaceAt(sprite, mat.bounds.center, mat.bounds.max.y, Facing, count);
+        if (card != null)
+            count++;
+        return card;
+    }
+
+    /// <summary>
+    /// マットの山と同じ重ね方（少しずらし・少し回す）で、center の周りの surfaceY の面に layer 枚目として置く。
+    /// facing はカードの上（forward）の向き。対応するカードがなければ null
+    /// </summary>
+    public TableCard PlaceAt(Sprite sprite, Vector3 center, float surfaceY, Quaternion facing, int layer)
+    {
         TableCard prefab = catalog.Find(sprite);
         if (prefab == null)
             return null;
 
-        Facing = SeatFacing();
-        Bounds bounds = mat.bounds;
         float direction = Random.Range(0f, Mathf.PI * 2f);
         Vector2 offset = new Vector2(Mathf.Cos(direction), Mathf.Sin(direction)) * Random.Range(positionJitter.x, positionJitter.y);
-        Vector3 position = new Vector3(bounds.center.x + offset.x, TopHeight, bounds.center.z + offset.y);
-        Quaternion rotation = Facing * Quaternion.Euler(0f, Random.Range(-angleJitter, angleJitter), 0f);
+        Vector3 position = new Vector3(center.x + offset.x, surfaceY + surfaceOffset + layer * layerStep, center.z + offset.y);
+        Quaternion rotation = facing * Quaternion.Euler(0f, Random.Range(-angleJitter, angleJitter), 0f);
 
         TableCard card = Instantiate(prefab, position, rotation, transform);
-        card.FadeIn(fadeSeconds, count);
-        count++;
+        card.FadeIn(fadeSeconds, layer);
         return card;
     }
 }

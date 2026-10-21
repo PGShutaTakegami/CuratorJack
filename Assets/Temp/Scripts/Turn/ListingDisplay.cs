@@ -6,7 +6,8 @@ using UnityEngine;
 /// 出品中の商品を、テーブル中央のマットに表示する。カードのオブジェクトをマットに置いて残し、
 /// カメラで真上から見せてから、最低出品額をカードの手前（自分の席の側）に、自分から読める向きで
 /// テーブルに寝かせてフェードで表示し、カメラが席へ戻るのと同時に席の方へ起こす（出品の間だけ）。
-/// バフデバフカードが付いているかは他の人に分からないよう表示しない。
+/// 最低出品額は数字のみで、増額・値引きしていれば「初期価格+増額-値引き額」と表示する。
+/// どのバフデバフカードが付いているかは他の人に分からないよう表示しない。
 /// </summary>
 public class ListingDisplay : MonoBehaviour
 {
@@ -62,7 +63,7 @@ public class ListingDisplay : MonoBehaviour
         pricePosition.y = pile.TopHeight + priceLift;
 
         label.SetAlpha(0f);
-        label.Show(pricePosition, Quaternion.LookRotation(Vector3.down, -toSeat), $"最低 {listing.MinPrice}");
+        label.Show(pricePosition, Quaternion.LookRotation(Vector3.down, -toSeat), PriceText(listing));
         for (float elapsed = 0f; elapsed < priceFadeSeconds; elapsed += Time.deltaTime)
         {
             label.SetAlpha(elapsed / priceFadeSeconds);
@@ -74,6 +75,20 @@ public class ListingDisplay : MonoBehaviour
         if (cameraShot.TryGetReturnPosition(out Vector3 seat))
             StartCoroutine(StandLabel(seat, cameraShot.MoveSeconds));
         yield return cameraShot.Return();
+    }
+
+    /// <summary>最低出品額の数字。増額・値引きしていれば「初期価格+増額-値引き額」で表す</summary>
+    static string PriceText(Listing listing)
+    {
+        if (listing.Raise == 0 && listing.Discount == 0)
+            return listing.MinPrice.ToString();
+
+        string text = listing.BasePrice.ToString();
+        if (listing.Raise > 0)
+            text += $"+{listing.Raise}";
+        if (listing.Discount > 0)
+            text += $"-{listing.Discount}";
+        return text;
     }
 
     /// <summary>寝かせた文字を、下端を軸に席のカメラ（seat）の方へ起こす</summary>

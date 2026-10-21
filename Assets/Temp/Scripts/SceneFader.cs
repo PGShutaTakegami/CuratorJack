@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -27,11 +29,19 @@ public class SceneFader : MonoBehaviour
     /// </summary>
     public static void LoadScene(string sceneName)
     {
+        LoadScene(sceneName, null);
+    }
+
+    /// <summary>
+    /// フェードアウトで画面が隠れてから beforeLoad（接続の片付けなど）の完了を待ち、シーンを読み込む。
+    /// </summary>
+    public static void LoadScene(string sceneName, Func<Task> beforeLoad)
+    {
         if (IsFading)
             return;
 
         current = Create();
-        current.StartCoroutine(current.Run(sceneName));
+        current.StartCoroutine(current.Run(sceneName, beforeLoad));
     }
 
     static SceneFader Create()
@@ -61,9 +71,19 @@ public class SceneFader : MonoBehaviour
         return fader;
     }
 
-    IEnumerator Run(string sceneName)
+    IEnumerator Run(string sceneName, Func<Task> beforeLoad)
     {
         yield return Fade(0f, 1f, FadeOutDuration);
+
+        if (beforeLoad != null)
+        {
+            Task task = beforeLoad();
+            while (!task.IsCompleted)
+                yield return null;
+
+            if (task.IsFaulted)
+                Debug.LogException(task.Exception);
+        }
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName);
         while (operation != null && !operation.isDone)

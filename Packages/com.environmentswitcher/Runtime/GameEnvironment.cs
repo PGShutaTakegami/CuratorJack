@@ -46,6 +46,7 @@
                 : (GameEnvironment?)null;
         }
 
+        /// <summary>Staging / Release は配布して別々の PC で遊ぶため、オンライン（OnlineNet）で通信する。</summary>
         public static EnvironmentNetworkMode ToNetworkMode(this GameEnvironment environment)
         {
             switch (environment)
@@ -55,6 +56,8 @@
                 case GameEnvironment.LocalNet:
                     return EnvironmentNetworkMode.LocalNet;
                 case GameEnvironment.OnlineNet:
+                case GameEnvironment.Staging:
+                case GameEnvironment.Release:
                     return EnvironmentNetworkMode.OnlineNet;
                 default:
                     return EnvironmentNetworkMode.None;

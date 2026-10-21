@@ -107,7 +107,7 @@ PlayerSettings:
   xboxEnableKinectAutoTracking: 0
   xboxEnableFitness: 0
   visibleInBackground: 1
-  allowFullscreenSwitch: 1
+  allowFullscreenSwitch: 0
   fullscreenMode: 1
   xboxSpeechDB: 0
   xboxEnableHeadOrientation: 0
@@ -145,7 +145,8 @@ PlayerSettings:
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
   bundleVersion: 0.1.0
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -830,10 +831,10 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: ENV_DEV;ENV_LOCAL;ENV_NETWORK
-    Standalone: ENV_DEV;ENV_LOCAL;ENV_NETWORK
-    WebGL: ENV_DEV;ENV_LOCAL;ENV_NETWORK
-    iPhone: ENV_DEV;ENV_LOCAL;ENV_NETWORK
+    Android: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
+    Standalone: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
+    WebGL: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
+    iPhone: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

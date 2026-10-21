@@ -5,19 +5,28 @@ using System.Collections.Generic;
 /// 出品者が出品する商品を決める手続き。
 /// 最初にグッズカードを 1 枚選び（選んだ時点で手札から消費）、そのあとバフデバフカードを付けるか選び（押した時点で消費）、確定する。
 /// バフデバフカードを付けた場合は、最低出品額を増額するか（YES / NO）も選べる。
+/// 横やりがかかっているとバフデバフカードは付けられず、投げ売りがかかっていると最低出品額が値引き額だけ下がる。
 /// </summary>
 public sealed class ListingSession
 {
     readonly GameManager game;
     readonly List<HandCard> buffs = new List<HandCard>();
 
-    public ListingSession(GameManager game, int seller)
+    public ListingSession(GameManager game, int seller, bool canAttachBuffs = true, int discount = 0)
     {
         this.game = game;
         Seller = seller;
+        CanAttachBuffs = canAttachBuffs;
+        Discount = discount;
     }
 
     public int Seller { get; }
+
+    /// <summary>バフデバフカードを付けられるか（横やりがかかっていると false）</summary>
+    public bool CanAttachBuffs { get; }
+
+    /// <summary>投げ売りで最低出品額から引く額</summary>
+    public int Discount { get; }
 
     public HandCard Goods { get; private set; }
 
@@ -32,7 +41,7 @@ public sealed class ListingSession
     public bool IsRaised { get; private set; }
 
     /// <summary>今の選択で確定したときの最低出品額</summary>
-    public int MinPrice => Goods == null ? 0 : Listing.InitialPriceOf(Goods) + (IsRaised ? Listing.PriceRaise : 0);
+    public int MinPrice => Goods == null ? 0 : Listing.PriceOf(Listing.InitialPriceOf(Goods), IsRaised ? Listing.PriceRaise : 0, Discount);
 
     public bool CanConfirm => Goods != null && !IsConfirmed;
 
@@ -50,7 +59,7 @@ public sealed class ListingSession
 
     public bool TryAttachBuff(HandCard card)
     {
-        if (IsConfirmed || Goods == null || card.IsGoods || !game.RemoveFromHand(Seller, card))
+        if (IsConfirmed || Goods == null || !CanAttachBuffs || card.IsGoods || !game.RemoveFromHand(Seller, card))
             return false;
 
         buffs.Add(card);
@@ -80,6 +89,6 @@ public sealed class ListingSession
 
     public Listing ToListing()
     {
-        return new Listing(Seller, Goods, buffs.ToArray(), IsRaised);
+        return new Listing(Seller, Goods, buffs.ToArray(), IsRaised, Discount);
     }
 }

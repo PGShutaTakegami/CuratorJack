@@ -38,7 +38,7 @@ public class PlayerTurnReporter : MonoBehaviour
         registeredNumber = playerNumber;
         registry.Register(playerNumber, transform);
 
-        if (player.IsOwner)
+        if (player.IsLocalPlayer)
             registry.SetLocalPlayer(playerNumber);
     }
 

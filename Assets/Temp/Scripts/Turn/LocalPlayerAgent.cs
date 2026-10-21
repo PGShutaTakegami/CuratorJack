@@ -6,7 +6,8 @@ using UnityEngine.InputSystem;
 /// 自分（この画面を操作している人）の操作役。画面の UI と手札のクリックを、進行中の手続きへつなぐ。
 /// 手札は出品者として出品する商品を決めているときだけ使える（それ以外は見る・広げるだけ）。
 /// 出品の確定ボタンは出品できる間、手札を広げているときだけ画面の右端に表示する。
-/// オークションでは W/S か ↑/↓ で金額を変え、入札ボタンで入札する。
+/// オークションでは金額を 0 から W/S か ↑/↓ で指定し（長押しで連続して変わる）、入札できる額のときだけ入札ボタンで入札する。
+/// ポーズ画面を開いている間は金額のキー操作を受け付けない（メニューの選択と重ならないように）。脱落した後は出品を受け持たない。
 /// </summary>
 public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
 {
@@ -16,26 +17,34 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
 
     [SerializeField] private LocalHandPresenter hand;
 
+    [Tooltip("状態の表示に出す自分の名前")]
+    [SerializeField] private PlayerNameDirectory names;
+
+    [Tooltip("開いている間は金額のキー操作を受け付けない")]
+    [SerializeField] private PauseMenu pause;
+
     ListingSession listing;
-    PurchaseSession purchase;
     AuctionModel auction;
+    IPlayerCommands commands;
     int amount;
+    readonly KeyRepeat raiseKey = new KeyRepeat();
+    readonly KeyRepeat lowerKey = new KeyRepeat();
 
     public int PlayerNumber { get; private set; } = PlayerRegistry.NoPlayer;
 
-    public void Initialize(int playerNumber)
+    /// <param name="playerCommands">操作を送る窓口（反映は窓口が行うため、ここでは手続きを直接書き換えない）</param>
+    public void Initialize(int playerNumber, IPlayerCommands playerCommands)
     {
         PlayerNumber = playerNumber;
+        commands = playerCommands;
     }
 
     void Awake()
     {
-        ui.ConfirmClicked += () => listing?.TryConfirm();
-        ui.BidClicked += () => auction?.TryBid(PlayerNumber, amount);
-        ui.BuyClicked += () => Decide(true);
-        ui.PassClicked += () => Decide(false);
+        ui.ConfirmClicked += HandleConfirm;
+        ui.BidClicked += HandleBid;
         ui.FoldClicked += HandleFold;
-        ui.RaiseClicked += raise => listing?.TrySetRaise(raise);
+        ui.RaiseClicked += HandleRaise;
         hand.CardClicked += HandleCardClicked;
         game.PlayerDied += HandlePlayerDied;
     }
@@ -56,21 +65,12 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
     public void BeginListing(ListingSession session)
     {
         EndPhase();
+        if (!game.IsAlive(PlayerNumber))
+            return;
+
         listing = session;
         listing.Changed += RefreshListing;
         RefreshListing();
-    }
-
-    public void BeginPurchase(PurchaseSession session)
-    {
-        EndPhase();
-        purchase = session;
-        bool canBuy = session.CanBuy(PlayerNumber);
-        hand.Collapse();
-        ui.ShowPurchase(true, canBuy);
-        ui.SetPrompt(canBuy
-            ? $"{session.Listing.Goods.DisplayName}（最低 {session.Listing.MinPrice}）を購入しますか？"
-            : $"{session.Listing.Goods.DisplayName}（最低 {session.Listing.MinPrice}）はコインが足りないため見送るしかありません");
     }
 
     public void BeginAuction(AuctionModel model)
@@ -83,7 +83,8 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         }
 
         auction = model;
-        amount = DefaultAmount();
+        amount = 0;
+        hand.Collapse();
         ui.ShowAuction(true);
         RefreshAuction();
     }
@@ -93,12 +94,10 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         if (listing != null)
             listing.Changed -= RefreshListing;
         listing = null;
-        purchase = null;
         auction = null;
         ui.ShowConfirm(false, false);
         ui.SetBidInteractable(false);
         ui.ShowRaise(false, false);
-        ui.ShowPurchase(false, false);
         ui.ShowAuction(false);
         ui.SetPrompt(string.Empty);
     }
@@ -106,7 +105,7 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
     void Update()
     {
         if (game.TryGet(PlayerNumber, out PlayerState me))
-            ui.SetStatus($"Player{PlayerNumber}  コイン {me.Coins}  見送り権 {me.PassRights}  落札 {me.Collection.Count}{(me.IsAlive ? string.Empty : "  （観戦中）")}");
+            ui.SetStatus($"{names.NameOf(PlayerNumber)}  コイン {me.Coins}  落札 {me.Collection.Count}{(me.IsAlive ? string.Empty : "  （観戦中）")}");
 
         if (listing != null)
         {
@@ -127,13 +126,17 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         }
 
         Keyboard keyboard = Keyboard.current;
-        if (keyboard != null)
+        if (keyboard != null && !ui.IsAuctionHidden && !pause.IsOpen)
         {
-            int step = auction.Listing.BidStep;
-            if (keyboard.wKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame)
-                amount += step;
-            if (keyboard.sKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame)
-                amount -= step;
+            int ups = raiseKey.Tick(
+                keyboard.wKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame,
+                keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed,
+                Time.deltaTime);
+            int downs = lowerKey.Tick(
+                keyboard.sKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame,
+                keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed,
+                Time.deltaTime);
+            amount += (ups - downs) * auction.Listing.BidStep;
         }
         RefreshAuction();
     }
@@ -144,24 +147,35 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
             return;
 
         if (listing.Goods == null)
-            listing.TrySelectGoods(card);
+            commands.SelectGoods(PlayerNumber, card);
+        else if (!listing.CanAttachBuffs && !card.IsGoods)
+            hand.Shake(card);
         else
-            listing.TryAttachBuff(card);
+            commands.AttachBuff(PlayerNumber, card);
     }
 
-    void Decide(bool buy)
+    void HandleConfirm()
     {
-        if (purchase == null || !purchase.TryDecide(PlayerNumber, buy) || !game.IsAlive(PlayerNumber))
-            return;
+        if (listing != null)
+            commands.Confirm(PlayerNumber);
+    }
 
-        ui.ShowPurchase(false, false);
-        ui.SetPrompt(buy ? "購入者がそろうのを待っています" : "見送りました");
-        purchase = null;
+    void HandleRaise(bool raise)
+    {
+        if (listing != null)
+            commands.SetRaise(PlayerNumber, raise);
+    }
+
+    void HandleBid()
+    {
+        if (auction != null)
+            commands.Bid(PlayerNumber, amount);
     }
 
     void HandleFold()
     {
-        auction?.TryFold(PlayerNumber);
+        if (auction != null)
+            commands.Fold(PlayerNumber);
     }
 
     void RefreshListing()
@@ -175,28 +189,28 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         ui.ShowRaise(listing.CanRaise, listing.IsRaised);
         if (listing.Goods == null)
             ui.SetPrompt("手札を広げて、出品するグッズカードを選んでください");
+        else if (!listing.CanAttachBuffs)
+            ui.SetPrompt($"{listing.Goods.DisplayName}（最低 {listing.MinPrice}）を出品します。横やりでバフデバフカードは付けられません。確定してください");
         else if (!listing.CanRaise)
             ui.SetPrompt($"{listing.Goods.DisplayName}（最低 {listing.MinPrice}）を出品します。バフデバフカードを使うならクリック、決まったら確定");
         else
             ui.SetPrompt($"{listing.Goods.DisplayName}（最低 {listing.MinPrice}）を出品します。増額するか選んで確定");
     }
 
-    int DefaultAmount() => SelectableFloor();
-
-    /// <summary>選べる金額の下限。最低出品額・自分の前回の額に加え、今の最高額を 1 刻み上回る額（所持コインが上限）。</summary>
-    int SelectableFloor()
-    {
-        int floor = auction.LowestSelectable(PlayerNumber);
-        if (auction.HighestBid > 0)
-            floor = Mathf.Max(floor, auction.HighestBid + auction.Listing.BidStep);
-        return Mathf.Min(floor, auction.CoinsOf(PlayerNumber));
-    }
-
+    /// <summary>金額は 0〜（所持コイン + 前借りできる額）の範囲で自由に指定させ、入札できる額かどうかはボタンの可否で示す</summary>
     void RefreshAuction()
     {
-        amount = Mathf.Clamp(amount, SelectableFloor(), Mathf.Max(SelectableFloor(), auction.CoinsOf(PlayerNumber)));
+        int highest = auction.HighestSelectable(PlayerNumber);
+        amount = Mathf.Clamp(amount, 0, highest);
         ui.SetBidInteractable(auction.CanBid(PlayerNumber, amount));
-        ui.SetAuction(amount, $"最低 {auction.Listing.MinPrice} / 最高額 {auction.HighestBid} / 自分 {auction.BidOf(PlayerNumber)} / 所持 {auction.CoinsOf(PlayerNumber)}");
-        ui.SetPrompt("W/S か ↑/↓ で金額を変えて入札。降りると見送り権を使います");
+        ui.SetAuction(amount, $"最低 {auction.Listing.MinPrice} / 最高額 {auction.HighestBid} / 自分 {auction.BidOf(PlayerNumber)} / 所持 {auction.CoinsOf(PlayerNumber)}（{highest} まで入札可）");
+        if (highest < auction.Listing.MinPrice)
+            ui.SetPrompt("コインが足りないため降りるしかありません（見送り権を使います）");
+        else if (!auction.CanAfford(PlayerNumber, amount))
+            ui.SetPrompt($"所持コインを超えています。この額で落札して払えないと、見送り権を {auction.ShortfallPenalty} 枚失います");
+        else if (auction.IsLeading(PlayerNumber))
+            ui.SetPrompt("最高額です。さらに金額を上げて入札することもできます");
+        else
+            ui.SetPrompt("W/S か ↑/↓ で金額を指定して入札するか、降りるかを選んでください（降りると見送り権を使います）");
     }
 }

@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: Jar1
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   parameter:
-    cardName: Jar1
+    cardName: "\u7C97\u672B\u306A\u58FA"
+    englishName: Shabby Jar
     cardSprite: {fileID: 21300000, guid: 3bc72bb5b71431547b079e9d8493fa73, type: 3}
     discription: "\u9AA8\u8463\u54C1\u30AB\u30FC\u30C9\u306E\u307C\u308D\u307C\u308D\u306E\u58FA\n\u9AA8\u8463\u54C1\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u306F\u4F4E\u54C1\u8CEA\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u52A3\u5316\u3057\u3066\u3044\u308B"
     initialPrice: 5
+  rarity: 0

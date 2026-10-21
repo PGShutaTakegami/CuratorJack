@@ -1,0 +1,133 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffa302fe71f764f4f8464c345ab9ca1c, type: 3}
+  m_Name: GameLanguageTable
+  m_EditorClassIdentifier: Assembly-CSharp::LanguageTable
+  entries:
+  - key: game.status.line
+    japanese: "Player{0}  \u30B3\u30A4\u30F3 {1}  \u898B\u9001\u308A\u6A29 {2}  \u843D\u672D
+      {3}{4}"
+    english: Player{0}  Coins {1}  Passes {2}  Wins {3}{4}
+  - key: game.status.spectating_suffix
+    japanese: "  \uFF08\u89B3\u6226\u4E2D\uFF09"
+    english: '  (Spectating)'
+  - key: game.you
+    japanese: "\u3042\u306A\u305F"
+    english: You
+  - key: game.player
+    japanese: Player{0}
+    english: Player{0}
+  - key: game.rarity.low
+    japanese: "\u4F4E"
+    english: Low
+  - key: game.rarity.middle
+    japanese: "\u4E2D"
+    english: Mid
+  - key: game.rarity.high
+    japanese: "\u9AD8"
+    english: High
+  - key: game.prompt.spectating
+    japanese: "\u30AA\u30FC\u30AF\u30B7\u30E7\u30F3\u3092\u89B3\u6226\u4E2D"
+    english: Spectating the auction
+  - key: game.prompt.choose_goods
+    japanese: "\u624B\u672D\u3092\u5E83\u3052\u3066\u3001\u51FA\u54C1\u3059\u308B\u30B0\u30C3\u30BA\u30AB\u30FC\u30C9\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044"
+    english: Spread your hand and choose a goods card to list
+  - key: game.prompt.attach_buff
+    japanese: "{0}\uFF08\u6700\u4F4E {1}\uFF09\u3092\u51FA\u54C1\u3057\u307E\u3059\u3002\u30D0\u30D5\u30C7\u30D0\u30D5\u30AB\u30FC\u30C9\u3092\u4F7F\u3046\u306A\u3089\u30AF\u30EA\u30C3\u30AF\u3001\u6C7A\u307E\u3063\u305F\u3089\u78BA\u5B9A"
+    english: Listing {0} (min {1}). Click to attach a buff/debuff, then confirm
+  - key: game.prompt.choose_raise
+    japanese: "{0}\uFF08\u6700\u4F4E {1}\uFF09\u3092\u51FA\u54C1\u3057\u307E\u3059\u3002\u5897\u984D\u3059\u308B\u304B\u9078\u3093\u3067\u78BA\u5B9A"
+    english: Listing {0} (min {1}). Choose whether to raise, then confirm
+  - key: game.prompt.highest
+    japanese: "\u6700\u9AD8\u984D\u3067\u3059\u3002\u4ED6\u306E\u30D7\u30EC\u30A4\u30E4\u30FC\u304C\u4E0A\u56DE\u3063\u305F\u3089\u3001\u307E\u305F\u5165\u672D\u3067\u304D\u307E\u3059"
+    english: You are the highest bidder. You can bid again if someone outbids you
+  - key: game.prompt.must_pass
+    japanese: "\u30B3\u30A4\u30F3\u304C\u8DB3\u308A\u306A\u3044\u305F\u3081\u964D\u308A\u308B\u3057\u304B\u3042\u308A\u307E\u305B\u3093\uFF08\u898B\u9001\u308A\u6A29\u3092\u4F7F\u3044\u307E\u3059\uFF09"
+    english: "Not enough coins \u2014 you must pass (uses a pass right)"
+  - key: game.prompt.bid_or_pass
+    japanese: "W/S \u304B \u2191/\u2193 \u3067\u91D1\u984D\u3092\u6307\u5B9A\u3057\u3066\u5165\u672D\u3059\u308B\u304B\u3001\u964D\u308A\u308B\u304B\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044\uFF08\u964D\u308A\u308B\u3068\u898B\u9001\u308A\u6A29\u3092\u4F7F\u3044\u307E\u3059\uFF09"
+    english: "Use W/S or \u2191/\u2193 to set an amount and bid, or pass (passing
+      uses a pass right)"
+  - key: game.auction.summary
+    japanese: "\u6700\u4F4E {0} / \u6700\u9AD8\u984D {1} / \u81EA\u5206 {2} / \u6240\u6301
+      {3}"
+    english: Min {0} / High {1} / You {2} / Coins {3}
+  - key: game.auction.pass
+    japanese: "\u964D\u308A\u308B"
+    english: Pass
+  - key: game.auction.no_bids
+    japanese: "\u5165\u672D\u306A\u3057"
+    english: No bids
+  - key: game.auction.highest_of
+    japanese: "\u6700\u9AD8\u984D {0}\uFF08{1}\uFF09"
+    english: High {0} ({1})
+  - key: game.auction.in_progress
+    japanese: "\u30AA\u30FC\u30AF\u30B7\u30E7\u30F3\u4E2D\uFF1A{0}\uFF08\u6700\u4F4E
+      {1}\uFF09\u3000{2}\u3000\u6B8B\u308A {3} \u4EBA"
+    english: 'Auction: {0} (min {1})  {2}  {3} left'
+  - key: game.turn.header
+    japanese: "\u30E9\u30A6\u30F3\u30C9 {0}\u3000{1} \u306E\u30BF\u30FC\u30F3"
+    english: "Round {0} \u2014 turn of {1}"
+  - key: game.turn.seller_turn
+    japanese: "\u51FA\u54C1\u8005\u306E\u756A\u3067\u3059"
+    english: Seller's turn
+  - key: game.turn.round_end
+    japanese: "\u30E9\u30A6\u30F3\u30C9 {0} \u7D42\u4E86"
+    english: Round {0} ended
+  - key: game.turn.draw_phase
+    japanese: "\u30C9\u30ED\u30FC\u30D5\u30A7\u30FC\u30BA\uFF08\u751F\u304D\u3066\u3044\u308B\u5168\u54E1\u304C
+      1 \u679A\u305A\u3064\u5F15\u304D\u307E\u3059\uFF09"
+    english: Draw phase (each living player draws one)
+  - key: game.turn.choosing_goods
+    japanese: "{0} \u304C\u51FA\u54C1\u3059\u308B\u5546\u54C1\u3092\u9078\u3093\u3067\u3044\u307E\u3059"
+    english: '{0} is choosing a listing'
+  - key: game.turn.seller_no_goods
+    japanese: "{0} \u306F\u51FA\u54C1\u3067\u304D\u308B\u30B0\u30C3\u30BA\u304C\u306A\u3044\u305F\u3081\u898B\u9001\u308A\u6A29\u3092\u4F7F\u3044\u307E\u3057\u305F"
+    english: '{0} had no goods to list and used a pass right'
+  - key: game.turn.no_buyer
+    japanese: "\u843D\u672D\u8005\u304C\u3044\u307E\u305B\u3093\u3067\u3057\u305F\uFF08{0}
+      \u306F\u6D88\u8CBB\uFF09"
+    english: No winner ({0} is discarded)
+  - key: game.turn.purchased
+    japanese: "{0} \u304C {1} \u3092 {2} \u30B3\u30A4\u30F3\u3067\u8CFC\u5165\u3057\u307E\u3057\u305F"
+    english: '{0} bought {1} for {2} coins'
+  - key: game.turn.dropped_out
+    japanese: "{0} \u304C\u8131\u843D\u3057\u307E\u3057\u305F"
+    english: '{0} dropped out'
+  - key: game.result.no_winner
+    japanese: "\u52DD\u8005\u306A\u3057"
+    english: No winner
+  - key: game.result.winner
+    japanese: "\u52DD\u8005 {0}"
+    english: Winner {0}
+  - key: game.result.ended
+    japanese: "\u30B2\u30FC\u30E0\u7D42\u4E86\u3000{0}"
+    english: "Game over \u2014 {0}"
+  - key: game.result.alive
+    japanese: "\u751F\u5B58"
+    english: Alive
+  - key: game.result.dropout_order
+    japanese: "{0}\u756A\u76EE\u306B\u8131\u843D"
+    english: Dropped out #{0}
+  - key: game.result.rank_line
+    japanese: "{0}\u4F4D\u3000{1}\u3000{2}\u3000\uFF08\u30B3\u30A4\u30F3 {3}\u3000\u843D\u672D
+      {4}\uFF09"
+    english: '#{0}  {1}  {2}  (Coins {3}  Wins {4})'
+  - key: game.ui.confirm
+    japanese: "\u78BA\u5B9A"
+    english: Confirm
+  - key: game.ui.bid
+    japanese: "\u5165\u672D"
+    english: Bid
+  - key: game.ui.pass
+    japanese: "\u964D\u308A\u308B"
+    english: Pass

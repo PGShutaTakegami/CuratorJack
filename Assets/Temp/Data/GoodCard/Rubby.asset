@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Rubby
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   parameter:
-    cardName: Rubby
+    cardName: "\u30EB\u30D3\u30FC"
+    englishName: Ruby
     cardSprite: {fileID: 21300000, guid: aace13cf7f1b0f7458f18e151007ec93, type: 3}
     discription: "\u5B9D\u77F3\u30AB\u30FC\u30C9\u306E\u30EB\u30D3\u30FC\n\u5B9D\u77F3\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u306F\u4E2D\u54C1\u8CEA\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u8F1D\u3044\u3066\u898B\u3048\u308B"
-    initialPrice: 10
+    initialPrice: 30
   rarity: 1
+  effect: 0

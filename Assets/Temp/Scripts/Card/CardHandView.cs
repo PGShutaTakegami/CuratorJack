@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /// <summary>
 /// 開かれている手札を表示する。シーンに置いたカードを初期の手札とし、足りない分はプレハブを複製する。
 /// 新しいカードほど右・手前に置き、普段は重ねて左へ並べる。カードを引くと画面の右外から右端へスライドし、
-/// 既存の手札は左へずれる。カードをクリックすると画面下部の中央で横一列に広げ、カード以外の場所を押すと戻す。
+/// 既存の手札は左へずれる。カードをクリックすると画面下部の中央に広げ、カード以外の場所を押すと戻す。
+/// 広げたときは 1 列に spreadColumns 枚まで、spreadRows 列までを 1 ページとして並べ、それより多ければページを切り替えて見せる。
+/// 広げているときは、カーソルの下のカードに情報（CardInfoOverlay）を重ねる。
 /// </summary>
 public class CardHandView : MonoBehaviour, IPointerClickHandler
 {
@@ -34,12 +37,30 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
     [Tooltip("カードを 1 枚引くときのスライドにかける秒数")]
     [SerializeField] private float drawDuration = 0.4f;
 
-    [Tooltip("広げたときに元の大きさで並べる最大枚数。これより多いと、この枚数分の幅に収まるようにカードを縮める")]
-    [SerializeField] private int fullSizeSpreadCount = 5;
+    [Tooltip("広げたときに 1 列に並べる最大枚数")]
+    [FormerlySerializedAs("fullSizeSpreadCount")]
+    [SerializeField] private int spreadColumns = 5;
+
+    [Tooltip("広げたときの 1 ページの列の数。入りきらない分は次のページにする")]
+    [SerializeField] private int spreadRows = 2;
+
+    [Tooltip("広げたときに画面上端から空けておく高さ（上部のバーの分）。列が入りきらないときはカードを縮める")]
+    [SerializeField] private float spreadTopMargin = 150f;
+
+    [Tooltip("使えないカードを押したときに震わせる秒数")]
+    [SerializeField] private float shakeDuration = 0.35f;
+
+    [Tooltip("震わせるときの最大の傾き（度）")]
+    [SerializeField] private float shakeAngle = 8f;
+
+    [Tooltip("1 秒あたりに震わせる回数")]
+    [SerializeField] private float shakeFrequency = 18f;
 
     [Tooltip("シーンに置いてある手札（古い順。後ろほど右・手前）")]
     [SerializeField] private List<Image> cards = new List<Image>();
 
+    readonly Dictionary<Image, float> shakeElapsed = new Dictionary<Image, float>();
+    readonly List<Image> shakingCards = new List<Image>();
     readonly List<Vector2> moveFrom = new List<Vector2>();
     readonly List<Vector2> moveTo = new List<Vector2>();
     float scaleFrom = 1f;
@@ -48,10 +69,18 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
     float currentMoveDuration;
     float moveElapsed;
     bool isMoving;
+    Image hovered;
+    int spreadPage;
 
     public IReadOnlyList<Image> Cards => cards;
 
     public bool IsSpread { get; private set; }
+
+    /// <summary>広げたときに表示しているページ（0 から）</summary>
+    public int SpreadPage => CreateSpreadLayout().Page;
+
+    /// <summary>広げたときのページ数</summary>
+    public int SpreadPageCount => CreateSpreadLayout().PageCount;
 
     public bool IsMoving => isMoving;
 
@@ -91,6 +120,7 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
         if (!cards.Remove(card))
             return;
 
+        shakeElapsed.Remove(card);
         Destroy(card.gameObject);
         MoveToCurrentLayout(moveDuration);
     }
@@ -118,10 +148,54 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
         return null;
     }
 
+    /// <summary>広げる・重ねる。広げるときは最初のページから見せる</summary>
     public void SetSpread(bool spread)
     {
         IsSpread = spread;
+        if (spread)
+            spreadPage = 0;
         MoveToCurrentLayout(moveDuration);
+    }
+
+    /// <summary>広げているときに、表示するページを切り替える（範囲外なら何もしない）</summary>
+    public void ShowSpreadPage(int page)
+    {
+        if (!IsSpread || page < 0 || page >= SpreadPageCount || page == SpreadPage)
+            return;
+
+        spreadPage = page;
+        MoveToCurrentLayout(moveDuration);
+    }
+
+    /// <summary>カードを左右に傾けて震わせる。位置は並びの移動が動かすため、傾きだけを使う。</summary>
+    public void Shake(Image card)
+    {
+        if (cards.Contains(card))
+            shakeElapsed[card] = 0f;
+    }
+
+    void UpdateShake()
+    {
+        if (shakeElapsed.Count == 0)
+            return;
+
+        shakingCards.Clear();
+        shakingCards.AddRange(shakeElapsed.Keys);
+        foreach (Image card in shakingCards)
+        {
+            float elapsed = shakeElapsed[card] + Time.unscaledDeltaTime;
+            float progress = shakeDuration > 0f ? elapsed / shakeDuration : 1f;
+            if (progress >= 1f)
+            {
+                card.rectTransform.localRotation = Quaternion.identity;
+                shakeElapsed.Remove(card);
+                continue;
+            }
+
+            float angle = Mathf.Sin(elapsed * shakeFrequency * Mathf.PI * 2f) * shakeAngle * (1f - progress);
+            card.rectTransform.localRotation = Quaternion.Euler(0f, 0f, angle);
+            shakeElapsed[card] = elapsed;
+        }
     }
 
     Image CreateCard()
@@ -156,28 +230,29 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
         isMoving = true;
     }
 
-    /// <summary>広げたときの列の右上（ワールド座標）。広げていなくても、広げたときの位置を返す。</summary>
+    /// <summary>広げたときの表示中のページの一番上の列の右上（ワールド座標）。広げていなくても、広げたときの位置を返す。</summary>
     public Vector3 SpreadTopRight()
     {
         var self = (RectTransform)transform;
-        Vector2 cardSize = cardPrefab.rectTransform.sizeDelta * SpreadScale();
-        Vector2 last = CreateSpreadLayout().PositionAt(Mathf.Max(0, cards.Count - 1));
-        return self.TransformPoint(self.rect.center + last + cardSize * 0.5f);
+        return self.TransformPoint(self.rect.center + CreateSpreadLayout().TopRight());
     }
 
     float TargetScale() => IsSpread ? SpreadScale() : 1f;
 
-    /// <summary>広げたときは、fullSizeSpreadCount 枚より多ければその枚数分の幅に収まるように縮める。</summary>
+    /// <summary>広げたときの大きさ。1 ページ分の列が画面（上部のバーの下まで）の幅と高さに収まらないときだけ縮める。</summary>
     float SpreadScale()
     {
-        int count = cards.Count;
-        if (count <= fullSizeSpreadCount)
-            return 1f;
+        Rect screenRect = ((RectTransform)transform.parent).rect;
+        Vector2 card = cardPrefab.rectTransform.sizeDelta;
+        int onPage = Mathf.Min(cards.Count, spreadColumns * spreadRows);
+        int rows = CardSpreadLayout.RowsFor(onPage, spreadColumns, spreadRows);
+        int columns = Mathf.Clamp(onPage, 1, spreadColumns);
 
-        float cardWidth = cardPrefab.rectTransform.sizeDelta.x;
-        float fullRow = fullSizeSpreadCount * cardWidth + (fullSizeSpreadCount - 1) * spreadSpacing;
-        float row = count * cardWidth + (count - 1) * spreadSpacing;
-        return fullRow / row;
+        float width = columns * card.x + (columns - 1) * spreadSpacing;
+        float height = rows * card.y + (rows - 1) * spreadSpacing;
+        float maxWidth = screenRect.width - spreadMargin * 2f;
+        float maxHeight = screenRect.height - spreadMargin - spreadTopMargin;
+        return Mathf.Min(1f, maxWidth / width, maxHeight / height);
     }
 
     /// <summary>画面サイズは変わりうるため、使うたびに親の矩形から下部中央の位置を求める。</summary>
@@ -190,7 +265,8 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
         Vector2 center = ScreenToLocal(new Vector2(screenRect.center.x, screenRect.yMin + spreadMargin + cardSize.y * 0.5f));
 
         float maxRowWidth = screenRect.width - spreadMargin * 2f;
-        return new CardSpreadLayout(center, cardSize.x, spreadSpacing * scale, maxRowWidth, cards.Count);
+        return new CardSpreadLayout(center, cardSize, spreadSpacing * scale, maxRowWidth,
+            spreadColumns, spreadRows, cards.Count, spreadPage, screenRect.width);
     }
 
     float OffscreenRightX()
@@ -208,14 +284,81 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
             return false;
 
         Vector2 position = mouse.position.ReadValue();
+        return CardAt(position) == null && !IsOverSpecial(hovered, position) && !IsOverOtherSelectable(position);
+    }
+
+    Camera EventCamera()
+    {
         Canvas canvas = GetComponentInParent<Canvas>();
-        Camera eventCamera = canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
-        foreach (Image card in cards)
+        return canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera;
+    }
+
+    /// <summary>画面上の位置にあるカード（手前のものを優先）。なければ null。</summary>
+    Image CardAt(Vector2 screenPosition)
+    {
+        Camera eventCamera = EventCamera();
+        for (int i = cards.Count - 1; i >= 0; i--)
         {
-            if (RectTransformUtility.RectangleContainsScreenPoint(card.rectTransform, position, eventCamera))
-                return false;
+            if (RectTransformUtility.RectangleContainsScreenPoint(cards[i].rectTransform, screenPosition, eventCamera))
+                return cards[i];
         }
-        return !IsOverOtherSelectable(position);
+        return null;
+    }
+
+    /// <summary>
+    /// 広げていて止まっているときだけ、カーソルの下のカードに情報を重ねる（カードは手前に出す）。
+    /// スペシャルカードはカードの上側に出し、下に別の列があるときは下側に出す。
+    /// スペシャルカードへカーソルを移しても、そのカードの情報は消さずにスペシャルカードの詳細を出す。
+    /// </summary>
+    void UpdateHover()
+    {
+        Mouse mouse = Mouse.current;
+        bool canHover = IsSpread && !isMoving && mouse != null;
+        Vector2 position = canHover ? mouse.position.ReadValue() : Vector2.zero;
+        bool onSpecial = canHover && IsOverSpecial(hovered, position);
+        Image next = !canHover ? null : onSpecial ? hovered : CardAt(position);
+
+        if (next != hovered)
+        {
+            SetInfoVisible(hovered, false);
+            RestoreDrawOrder();
+            hovered = next;
+            if (hovered != null)
+            {
+                OverlayOf(hovered)?.SetSpecialBelow(CreateSpreadLayout().HasRowBelow(cards.IndexOf(hovered)));
+                hovered.transform.SetAsLastSibling();
+            }
+            SetInfoVisible(hovered, true);
+        }
+
+        CardInfoOverlay overlay = OverlayOf(hovered);
+        if (overlay != null)
+            overlay.SetSpecialFocused(onSpecial);
+    }
+
+    /// <summary>カーソルの下のカードを手前に出していたのを、手札の並び順（後ろほど手前）に戻す</summary>
+    void RestoreDrawOrder()
+    {
+        foreach (Image card in cards)
+            card.transform.SetAsLastSibling();
+    }
+
+    bool IsOverSpecial(Image card, Vector2 screenPosition)
+    {
+        CardInfoOverlay overlay = OverlayOf(card);
+        return overlay != null && overlay.SpecialContains(screenPosition, EventCamera());
+    }
+
+    static CardInfoOverlay OverlayOf(Image card)
+    {
+        return card != null ? card.GetComponentInChildren<CardInfoOverlay>(true) : null;
+    }
+
+    static void SetInfoVisible(Image card, bool visible)
+    {
+        CardInfoOverlay overlay = OverlayOf(card);
+        if (overlay != null)
+            overlay.SetVisible(visible);
     }
 
     /// <summary>手札以外のボタンなど押せる UI の上か（確定ボタンなどを押しても手札を閉じない）</summary>
@@ -248,6 +391,9 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
     {
         if (IsSpread && IsPressedOutsideCards())
             SetSpread(false);
+
+        UpdateHover();
+        UpdateShake();
 
         if (!isMoving)
             return;

@@ -1,18 +1,18 @@
 using UnityEngine;
 
 /// <summary>
-/// ホストから届いたゲーム開始の通知を、シーンの GameStartGate へ伝える。
+/// ホストから届いたゲーム開始の通知を、シーンの NetworkMatchBootstrap へ伝える（ターンの進行を始めてからゲームを開始する）。
 /// </summary>
 [RequireComponent(typeof(NetworkSessionPlayer))]
 public class PlayerGameStartReporter : MonoBehaviour
 {
     NetworkSessionPlayer player;
-    GameStartGate startGate;
+    NetworkMatchBootstrap match;
 
     void Awake()
     {
         player = GetComponent<NetworkSessionPlayer>();
-        startGate = FindFirstObjectByType<GameStartGate>();
+        match = FindFirstObjectByType<NetworkMatchBootstrap>();
         player.GameStarted += HandleGameStarted;
     }
 
@@ -21,9 +21,9 @@ public class PlayerGameStartReporter : MonoBehaviour
         player.GameStarted -= HandleGameStarted;
     }
 
-    void HandleGameStarted()
+    void HandleGameStarted(int seed)
     {
-        if (startGate != null)
-            startGate.NotifyStarted();
+        if (match != null)
+            match.Begin(seed);
     }
 }

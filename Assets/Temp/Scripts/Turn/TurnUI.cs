@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ターン中に使う画面の UI（状態表示・案内・進行状況・出品の確定ボタン・購入/見送りボタン・オークションの金額と入札・勝利表示）。
+/// ターン中に使う画面の UI（状態表示・案内・進行状況・出品の確定ボタン・オークションの金額と入札/降りる・勝利表示とリトライ/タイトル）。
 /// 表示と押された通知だけを受け持ち、判断は操作役（LocalPlayerAgent）が行う。
 /// </summary>
 public class TurnUI : MonoBehaviour
@@ -40,15 +40,15 @@ public class TurnUI : MonoBehaviour
     [Tooltip("クリックで 0 と +5 を巻いて切り替えるリール")]
     [SerializeField] private ReelToggleView raiseReel;
 
-    [SerializeField] private GameObject purchasePanel;
-
-    [SerializeField] private Button buyButton;
-
-    [SerializeField] private Button passButton;
-
     [SerializeField] private GameObject auctionPanel;
 
-    [SerializeField] private TMP_Text amountText;
+    [Tooltip("入札 UI のフェードに使う。演出中は消して操作も受け付けない")]
+    [SerializeField] private CanvasGroup auctionGroup;
+
+    [SerializeField] private float auctionFadeSeconds = 0.3f;
+
+    [Tooltip("入札する金額。リールの枠を桁の数だけ横に並べ、増えたら上から下へ、減ったら下から上へ巻く")]
+    [SerializeField] private ReelNumberView amountReels;
 
     [SerializeField] private TMP_Text auctionInfoText;
 
@@ -61,14 +61,20 @@ public class TurnUI : MonoBehaviour
 
     [SerializeField] private TMP_Text victoryText;
 
+    [Tooltip("リザルトから同じ顔ぶれでもう一度遊ぶ")]
+    [SerializeField] private Button retryButton;
+
+    [Tooltip("リザルトからタイトルへ戻る")]
+    [SerializeField] private Button titleButton;
+
     public event Action ConfirmClicked;
+
+    public event Action RetryClicked;
+
+    public event Action TitleClicked;
 
     /// <summary>増額の選択が押された（YES なら true）</summary>
     public event Action<bool> RaiseClicked;
-
-    public event Action BuyClicked;
-
-    public event Action PassClicked;
 
     public event Action FoldClicked;
 
@@ -78,15 +84,14 @@ public class TurnUI : MonoBehaviour
     {
         confirmButton.onClick.AddListener(() => ConfirmClicked?.Invoke());
         bidButton.onClick.AddListener(() => BidClicked?.Invoke());
-        buyButton.onClick.AddListener(() => BuyClicked?.Invoke());
-        passButton.onClick.AddListener(() => PassClicked?.Invoke());
         foldButton.onClick.AddListener(() => FoldClicked?.Invoke());
+        retryButton.onClick.AddListener(() => RetryClicked?.Invoke());
+        titleButton.onClick.AddListener(() => TitleClicked?.Invoke());
         raiseReel.Clicked += () => RaiseClicked?.Invoke(!isRaised);
 
         ShowConfirm(false, false);
         SetBidInteractable(false);
         ShowRaise(false, false);
-        ShowPurchase(false, false);
         ShowAuction(false);
         victoryPanel.SetActive(false);
         SetPrompt(string.Empty);
@@ -100,15 +105,31 @@ public class TurnUI : MonoBehaviour
     public void SetPrompt(string text) => promptText.text = text;
 
     bool confirmRevealed;
+    bool auctionHidden;
+
+    /// <summary>入札 UI を演出のために消している間（フェード中も含む）。この間は金額の操作も受け付けない</summary>
+    public bool IsAuctionHidden => auctionHidden || auctionGroup.alpha < 1f;
 
     void Update()
     {
-        if (!confirmButton.gameObject.activeSelf)
-            return;
+        if (auctionPanel.activeSelf)
+            auctionGroup.alpha = Fade(auctionGroup.alpha, auctionHidden ? 0f : 1f, auctionFadeSeconds);
 
-        float target = confirmRevealed ? 1f : 0f;
-        float speed = confirmFadeSeconds > 0f ? Time.deltaTime / confirmFadeSeconds : 1f;
-        confirmGroup.alpha = Mathf.MoveTowards(confirmGroup.alpha, target, speed);
+        if (confirmButton.gameObject.activeSelf)
+            confirmGroup.alpha = Fade(confirmGroup.alpha, confirmRevealed ? 1f : 0f, confirmFadeSeconds);
+    }
+
+    static float Fade(float alpha, float target, float seconds)
+    {
+        return Mathf.MoveTowards(alpha, target, seconds > 0f ? Time.deltaTime / seconds : 1f);
+    }
+
+    /// <summary>入札 UI をフェードで消す / 出す（消している間は押せない）</summary>
+    public void HideAuction(bool hidden)
+    {
+        auctionHidden = hidden;
+        auctionGroup.interactable = !hidden;
+        auctionGroup.blocksRaycasts = !hidden;
     }
 
     /// <summary>出品できる間だけ確定ボタンを有効にする。表示されるのは RevealConfirm で手札を広げている間だけ</summary>
@@ -166,20 +187,21 @@ public class TurnUI : MonoBehaviour
         isRaised = raised;
     }
 
-    public void ShowPurchase(bool visible, bool canBuy)
-    {
-        purchasePanel.SetActive(visible);
-        buyButton.interactable = canBuy;
-    }
+    bool amountShown;
 
+    /// <summary>入札 UI を開く / 閉じる。演出で消している最中なら消えたまま開き、演出の後にフェードで出る</summary>
     public void ShowAuction(bool visible)
     {
         auctionPanel.SetActive(visible);
+        auctionGroup.alpha = auctionHidden ? 0f : 1f;
+        amountShown = false;
     }
 
+    /// <summary>金額は、オークションを開いて最初の表示だけ巻かずに出し、その後は変わるたびに巻く</summary>
     public void SetAuction(int amount, string info)
     {
-        amountText.text = amount.ToString();
+        amountReels.SetValue(amount, amountShown);
+        amountShown = true;
         auctionInfoText.text = info;
     }
 
@@ -187,6 +209,14 @@ public class TurnUI : MonoBehaviour
     public void ShowVictory(string title, string winner, string results)
     {
         victoryText.text = $"<size=140>{title}</size>\n<size=70>{winner}</size>\n\n<size=40>{results}</size>";
+        SetResultButtonsInteractable(true);
         victoryPanel.SetActive(true);
+    }
+
+    /// <summary>リトライ / タイトルを押したあと、遷移が終わるまで二重に押せないようにする</summary>
+    public void SetResultButtonsInteractable(bool interactable)
+    {
+        retryButton.interactable = interactable;
+        titleButton.interactable = interactable;
     }
 }

@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Picture1
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   parameter:
-    cardName: Picture1
+    cardName: "\u8D0B\u4F5C"
+    englishName: Forgery
     cardSprite: {fileID: 21300000, guid: e802270a61e5514458f6c81ec9651e9a, type: 3}
     discription: "\u7D75\u753B\u30AB\u30FC\u30C9\u306E\u98A8\u666F\u753B(\u8D0B\u4F5C)\n\u7D75\u753B\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u306F\u4F4E\u54C1\u8CEA\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u304B\u3064\u3066\u4EBA\u9593\u304C\u66F8\u3044\u305F\u7D75\u3092\u30ED\u30DC\u30C3\u30C8\u304C\u8907\u88FD\u3057\u305F\u3082\u306E"
     initialPrice: 15

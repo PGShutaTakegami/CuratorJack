@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Jar3
   m_EditorClassIdentifier: Assembly-CSharp::CardData
   parameter:
-    cardName: Jar3
+    cardName: "\u8C6A\u83EF\u306A\u58FA"
+    englishName: Luxurious Jar
     cardSprite: {fileID: 21300000, guid: 99116a517f8bc2042bf1eeecf436d1b7, type: 3}
     discription: "\u9AA8\u8463\u54C1\u30AB\u30FC\u30C9\u306E\u8C6A\u83EF\u306A\u58FA\n\u9AA8\u8463\u54C1\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u306F\u6700\u9AD8\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u512A\u96C5\u306A\u6C17\u54C1\u304C\u611F\u3058\u3089\u308C\u308B"
     initialPrice: 30

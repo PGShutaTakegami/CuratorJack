@@ -44,7 +44,7 @@ public class PlayerReadyReporter : MonoBehaviour
         reportedNumber = playerNumber;
         Report();
 
-        if (playerNumber != NetworkSessionPlayer.UnassignedNumber && player.IsOwner && !isLocalHandler)
+        if (playerNumber != NetworkSessionPlayer.UnassignedNumber && player.IsLocalPlayer && !isLocalHandler)
         {
             roster.SetLocalReadyHandler(player.RequestReady);
             isLocalHandler = true;

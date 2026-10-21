@@ -35,12 +35,12 @@ public class LeftRightKeyButtonSelector : MonoBehaviour
     }
 
     /// <summary>
-    /// 決定入力（Space / Enter / Xbox A）。マウスの左クリックはボタン側のクリック処理で扱う
+    /// 決定入力（Space / Enter / Xbox A）。マウスの左クリックはボタン側のクリック処理で扱い、Alt+Enter は画面の切り替えに使うため除く
     /// </summary>
     static bool IsSubmitPressed()
     {
         var keyboard = Keyboard.current;
-        if (keyboard != null && (keyboard.spaceKey.wasPressedThisFrame || keyboard.enterKey.wasPressedThisFrame))
+        if (keyboard != null && (keyboard.spaceKey.wasPressedThisFrame || (keyboard.enterKey.wasPressedThisFrame && !DisplayModeToggle.IsAltHeld(keyboard))))
             return true;
 
         var gamepad = Gamepad.current;

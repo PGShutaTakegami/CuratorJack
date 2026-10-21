@@ -34,6 +34,13 @@ public class LocalHandPresenter : MonoBehaviour
             view.SetSpread(false);
     }
 
+    /// <summary>手札のカードを震わせる（使えないカードを押したときの合図）</summary>
+    public void Shake(HandCard card)
+    {
+        if (shown.TryGetValue(card, out Image image))
+            view.Shake(image);
+    }
+
     void Awake()
     {
         game.HandCardAdded += HandleAdded;
@@ -61,6 +68,7 @@ public class LocalHandPresenter : MonoBehaviour
             manager.SetKind(card.Kind);
             if (card.Data != null)
                 manager.SetData(card.Data);
+            manager.SetSpecial(card.Special);
         }
         shown[card] = image;
     }
