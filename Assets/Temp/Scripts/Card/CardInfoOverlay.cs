@@ -45,6 +45,9 @@ public class CardInfoOverlay : MonoBehaviour
 
     public bool IsVisible => root.activeSelf;
 
+    /// <summary>付いているスペシャルカードを出す範囲（表示していないときは非アクティブ）</summary>
+    public RectTransform SpecialRect => specialPreview.rectTransform;
+
     void Awake()
     {
         root.SetActive(false);

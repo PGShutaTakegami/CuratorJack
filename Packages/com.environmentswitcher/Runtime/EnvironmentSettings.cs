@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace EnvironmentSwitcher
@@ -55,7 +55,7 @@ namespace EnvironmentSwitcher
             },
             CreateDevelopmentExtension(GameEnvironment.Local, "ENV_LOCAL"),
             CreateDevelopmentExtension(GameEnvironment.LocalNet, "ENV_LOCALNET"),
-            CreateDevelopmentExtension(GameEnvironment.OnlineNet, "ENV_ONLINENET")
+            CreateStagingExtension(GameEnvironment.OnlineNet, "ENV_ONLINENET")
         };
 
         [SerializeField] private DevDebugSettings devDebug = new DevDebugSettings();
@@ -115,6 +115,24 @@ namespace EnvironmentSwitcher
                 enableCrashReporting = false,
                 useAnalyticsSandbox = true,
                 analyticsAppId = "analytics-dev",
+                useIapSandbox = true,
+                isolateSaveData = true
+            };
+        }
+
+        /// <summary>Staging と同じ設定値を持つ追加版エントリ。</summary>
+        private static EnvironmentEntry CreateStagingExtension(GameEnvironment environment, string defineSymbol)
+        {
+            return new EnvironmentEntry
+            {
+                environment = environment,
+                displayName = environment.ToString(),
+                defineSymbol = defineSymbol,
+                apiBaseUrl = "https://stg.example.local",
+                enableDebugLog = true,
+                enableCrashReporting = true,
+                useAnalyticsSandbox = true,
+                analyticsAppId = "analytics-stg",
                 useIapSandbox = true,
                 isolateSaveData = true
             };

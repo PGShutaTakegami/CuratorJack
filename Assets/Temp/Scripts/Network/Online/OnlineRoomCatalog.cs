@@ -51,19 +51,34 @@ public sealed class OnlineRoomCatalog : IRoomCatalog
         };
     }
 
-    /// <summary>直前の部屋（previousRoomId）を作り直した部屋を探す。まだ無ければ null。</summary>
+    /// <summary>
+    /// 直前の部屋（previousRoomId）を作り直した部屋を探す。まだ無ければ null。
+    /// 同時に複数作られたときは、全員が同じ部屋へ集まるよう最も先に作られた部屋を返す。
+    /// </summary>
     public async Task<string> FindRematchRoomIdAsync(string previousRoomId)
     {
         await OnlineServices.EnsureSignedInAsync();
         QuerySessionsResults results = await MultiplayerService.Instance.QuerySessionsAsync(new QuerySessionsOptions());
 
+        ISessionInfo earliest = null;
         foreach (ISessionInfo session in results.Sessions)
         {
-            if (!session.IsLocked && PropertyOf(session, RematchKey) == previousRoomId)
-                return session.Id;
+            if (session.IsLocked || PropertyOf(session, RematchKey) != previousRoomId)
+                continue;
+
+            if (earliest == null || IsEarlier(session, earliest))
+                earliest = session;
         }
 
-        return null;
+        return earliest?.Id;
+    }
+
+    static bool IsEarlier(ISessionInfo session, ISessionInfo other)
+    {
+        if (session.Created != other.Created)
+            return session.Created < other.Created;
+
+        return string.CompareOrdinal(session.Id, other.Id) < 0;
     }
 
     static string MessageOf(ISessionInfo session) => PropertyOf(session, MessageKey);

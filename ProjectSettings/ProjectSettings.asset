@@ -838,10 +838,10 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
-    Standalone: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
-    WebGL: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
-    iPhone: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
+    Android: ENV_DEV;ENV_LOCAL;ENV_NETWORK
+    Standalone: ENV_DEV;ENV_LOCAL;ENV_NETWORK
+    WebGL: ENV_DEV;ENV_LOCAL;ENV_NETWORK
+    iPhone: ENV_DEV;ENV_LOCAL;ENV_NETWORK
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

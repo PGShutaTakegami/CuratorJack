@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 画面を黒くフェードアウトしてからシーンを読み込み、読み込み後にフェードインする。
+/// 黒くなったあとの片付けと読み込みの間は LoadingScreen を表示し、読み込み後は LoadingScreen のフェードアウトで明ける。
 /// 黒幕はシーンをまたいで残すため、実行時に生成して DontDestroyOnLoad にする。
 /// </summary>
 public class SceneFader : MonoBehaviour
@@ -21,6 +22,7 @@ public class SceneFader : MonoBehaviour
     static SceneFader current;
 
     CanvasGroup canvasGroup;
+    IDisposable loadingRequest;
 
     public static bool IsFading => current != null;
 
@@ -75,6 +77,11 @@ public class SceneFader : MonoBehaviour
     {
         yield return Fade(0f, 1f, FadeOutDuration);
 
+        bool coveredByLoading = LoadingScreen.IsReady;
+        loadingRequest = LoadingScreen.Request();
+        if (coveredByLoading)
+            canvasGroup.alpha = 0f;
+
         if (beforeLoad != null)
         {
             Task task = beforeLoad();
@@ -90,10 +97,21 @@ public class SceneFader : MonoBehaviour
             yield return null;
 
         yield return WaitUntilFramesSettle();
-        yield return Fade(1f, 0f, FadeInDuration);
+        ReleaseLoading();
+
+        if (coveredByLoading)
+            yield return new WaitForSecondsRealtime(FadeInDuration);
+        else
+            yield return Fade(1f, 0f, FadeInDuration);
 
         current = null;
         Destroy(gameObject);
+    }
+
+    void ReleaseLoading()
+    {
+        loadingRequest?.Dispose();
+        loadingRequest = null;
     }
 
     /// <summary>読み込み直後は初期化でフレームが重く、そのまま明けるとフェードインが一瞬で終わるため、落ち着くまで待つ。</summary>
@@ -122,6 +140,7 @@ public class SceneFader : MonoBehaviour
 
     void OnDestroy()
     {
+        ReleaseLoading();
         if (current == this)
             current = null;
     }

@@ -6,7 +6,7 @@ Unity 6 向け UPM パッケージ。Development / Staging / Release の 3 環�
 
 - **環境切替** — Dev / Stg / Prod を選択し、Define を一括適用
 - **環境ごとの設定** — API URL、クラッシュレポート、解析/IAP サンドボックス、セーブ分離
-- **実行時 UI** — 環境バッジ、FPS/メモリ（Dev）、画面ログ（Dev/Stg）、ネットワーク状態
+- **実行時 UI** — 環境バッジ、FPS/メモリ（Dev）、画面ログ（Dev）、ネットワーク状態
 - **Dev DEBUG パネル** — シーン変更、終了、セーブ初期化などの標準機能 + ゲーム側拡張
 - **Production ガード** — Release ビルド時の Define 不整合・Dev シンボル残存を検出
 - **ネット通信フラグ** — `ENV_NETWORK` と Settings を連動（通信自体はゲーム側で実装）
@@ -70,10 +70,14 @@ Apply 時は Domain Reload（再コンパイル）が走ります。Inspector �
 | Release | `ENV_RELEASE` |
 | Local（Dev 追加版） | `ENV_DEV` + `ENV_LOCAL` |
 | LocalNet（Dev 追加版） | `ENV_DEV` + `ENV_LOCALNET` |
-| OnlineNet（Dev 追加版） | `ENV_DEV` + `ENV_ONLINENET` |
+| OnlineNet（Stg 追加版） | `ENV_STG` + `ENV_ONLINENET` |
 | ネット通信 ON | `ENV_NETWORK` |
 
-Local / LocalNet / OnlineNet は Development の追加版です。Dev の機能（DEBUG パネル、FPS/ログ表示、ログファイル、ログレベル）をすべて引き継ぎ、`EnvironmentRuntime.NetworkMode` で通信方式（Local / LocalNet / OnlineNet）を参照できます。Dev 判定には `EnvironmentRuntime.IsDevelopmentFamily` を使ってください。
+Local / LocalNet は Development の追加版です。Dev の機能（DEBUG パネル、FPS/ログ表示、ログファイル、ログレベル）をすべて引き継ぎます。Dev 判定には `EnvironmentRuntime.IsDevelopmentFamily` を使ってください。
+
+OnlineNet は Staging の追加版です。Stg と同じ扱い（右下に `Stg` と出すのみ、ログレベル Warning 以上）です。Stg 判定には `EnvironmentRuntime.IsStagingFamily` を使ってください。
+
+いずれも `EnvironmentRuntime.NetworkMode` で通信方式（Local / LocalNet / OnlineNet）を参照できます。
 
 `EnvironmentRuntime.Current` は **コンパイル済み Define を最優先** し、Define が無い場合のみ `EnvironmentSettings.ActiveEnvironment` を参照します。
 
@@ -83,7 +87,7 @@ Local / LocalNet / OnlineNet は Development の追加版です。Dev の機能�
 |---|---|---|---|
 | 右下 | `Dev` / `Stg` テキスト | 同左 | 表示なし |
 | 左上 | FPS / メモリ / ネット状態 | なし | なし |
-| 右上 | 直近ログ | 直近ログ | なし |
+| 右上 | 直近ログ | なし | なし |
 | DEBUG ボタン | あり（設定で OFF 可） | なし | なし（ガードで破棄） |
 | Unity ログレベル | Log 以上 | Warning 以上 | Error のみ |
 | セーブ分離 | `EnvironmentSave.Key()` | 同左 | 同左 |

@@ -1,4 +1,4 @@
-﻿namespace EnvironmentSwitcher
+namespace EnvironmentSwitcher
 {
     public enum GameEnvironment
     {
@@ -20,8 +20,8 @@
     }
 
     /// <summary>
-    /// Local / LocalNet / OnlineNet は Development の追加版として扱う。
-    /// Dev の機能（DEBUG パネル・ログ等）をすべて引き継ぎ、通信方式だけが加わる。
+    /// Local / LocalNet は Development の追加版、OnlineNet は Staging の追加版として扱う。
+    /// 元環境の機能（Dev なら DEBUG パネル・ログ等、Stg なら右下の表示のみ）をすべて引き継ぎ、通信方式だけが加わる。
     /// </summary>
     public static class GameEnvironmentExtensions
     {
@@ -34,16 +34,34 @@
         public static bool IsDevelopmentExtension(this GameEnvironment environment)
         {
             return environment == GameEnvironment.Local
-                   || environment == GameEnvironment.LocalNet
-                   || environment == GameEnvironment.OnlineNet;
+                   || environment == GameEnvironment.LocalNet;
+        }
+
+        public static bool IsStagingFamily(this GameEnvironment environment)
+        {
+            return environment == GameEnvironment.Staging
+                   || environment.IsStagingExtension();
+        }
+
+        public static bool IsStagingExtension(this GameEnvironment environment)
+        {
+            return environment == GameEnvironment.OnlineNet;
         }
 
         /// <summary>Define を併用する元環境。追加版でなければ null。</summary>
         public static GameEnvironment? GetBaseEnvironment(this GameEnvironment environment)
         {
-            return environment.IsDevelopmentExtension()
-                ? GameEnvironment.Development
-                : (GameEnvironment?)null;
+            if (environment.IsDevelopmentExtension())
+            {
+                return GameEnvironment.Development;
+            }
+
+            if (environment.IsStagingExtension())
+            {
+                return GameEnvironment.Staging;
+            }
+
+            return null;
         }
 
         /// <summary>Staging / Release は配布して別々の PC で遊ぶため、オンライン（OnlineNet）で通信する。</summary>
@@ -64,12 +82,13 @@
             }
         }
 
-        /// <summary>HUD 表示用の短いラベル（例: Dev / Dev:Local / Stg）。</summary>
+        /// <summary>HUD 表示用の短いラベル（例: Dev / Dev:Local / Stg）。Stg の追加版も Stg と表示する。</summary>
         public static string ToShortLabel(this GameEnvironment environment)
         {
             switch (environment)
             {
                 case GameEnvironment.Staging:
+                case GameEnvironment.OnlineNet:
                     return "Stg";
                 case GameEnvironment.Release:
                     return "Prod";

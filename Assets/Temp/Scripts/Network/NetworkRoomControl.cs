@@ -5,7 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 
 /// <summary>
-/// マルチプレイのルーム設定。人数と待ち時間は NetworkRoomState で全員へ同期し、変えられるのはホストだけ。
+/// マルチプレイのルーム設定。人数・待ち時間・VC の ON/OFF は NetworkRoomState で全員へ同期し、変えられるのは部屋主（部屋主待ちでないホスト）だけ。
 /// キックはゲーム開始前なら切断だけ、ゲーム中はリタイアを全員へ配ってから切断する（CPU は開始前なら外して空き枠に戻し、ゲーム中はリタイアだけ）。
 /// 空き枠はホストがゲーム開始前に CPU で埋められる。
 /// 部屋にいるプレイヤー（参加・退出・名前・CPU への切り替え）が変わったら知らせる。
@@ -42,9 +42,16 @@ public class NetworkRoomControl : MonoBehaviour, IRoomControl
 
     public bool CanFillWithCpu => IsHost;
 
+    public bool IsVoiceChatOn => IsActive && roomState.IsVoiceChatOn;
+
+    public bool CanChangeVoiceChat => IsHost;
+
+    /// <summary>この部屋の VC のチャンネル名。決まるまでは空</summary>
+    public string VoiceChannel => IsActive ? roomState.VoiceChannel : string.Empty;
+
     public event Action Changed;
 
-    bool IsHost => NetworkManager.Singleton != null && NetworkManager.Singleton.IsServer;
+    bool IsHost => roomState.IsLocalOwner;
 
     void OnEnable()
     {
@@ -74,6 +81,12 @@ public class NetworkRoomControl : MonoBehaviour, IRoomControl
     {
         if (IsHost && !startGate.HasStarted)
             roomState.SetWaitSeconds(seconds);
+    }
+
+    public void SetVoiceChat(bool on)
+    {
+        if (IsHost && !startGate.HasStarted)
+            roomState.SetVoiceChat(on);
     }
 
     public bool FillWithCpu() => IsHost && !startGate.HasStarted && sessionService.TryAddCpu();

@@ -420,8 +420,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Price
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: de4f139583ed22a4aa854bed89cab17c, type: 2}
-  m_sharedMaterial: {fileID: 8717345301868090461, guid: de4f139583ed22a4aa854bed89cab17c, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 50257ca9c219eb240a2db71cab403770, type: 2}
+  m_sharedMaterial: {fileID: -5402035273864559146, guid: 50257ca9c219eb240a2db71cab403770, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

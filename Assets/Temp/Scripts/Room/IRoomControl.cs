@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// ルーム設定で変える部屋の状態と操作。プレイ形式（SinglePlay / マルチプレイ）ごとに受け持つ。
-/// 人数・待ち時間・CPU で埋めるはゲーム開始前だけ、キックはゲーム中も行える。
+/// 人数・待ち時間・VC の ON/OFF・CPU で埋めるはゲーム開始前だけ、キックはゲーム中も行える。
 /// </summary>
 public interface IRoomControl
 {
@@ -26,12 +26,20 @@ public interface IRoomControl
 
     bool CanFillWithCpu { get; }
 
+    /// <summary>部屋の VC が ON か（VC のないプレイ形式では常に false）</summary>
+    bool IsVoiceChatOn { get; }
+
+    bool CanChangeVoiceChat { get; }
+
     event Action Changed;
 
     /// <summary>今いる人数より少なくはできない</summary>
     bool SetCapacity(int capacity);
 
     void SetWaitSeconds(int seconds);
+
+    /// <summary>ゲーム開始前だけ変えられる</summary>
+    void SetVoiceChat(bool on);
 
     /// <summary>空き枠を 1 つ CPU で埋める</summary>
     bool FillWithCpu();

@@ -34,6 +34,12 @@ public class LocalHandPresenter : MonoBehaviour
             view.SetSpread(false);
     }
 
+    /// <summary>手札のカードを画面に映しているカードの画像（映していなければ false）</summary>
+    public bool TryGetImage(HandCard card, out Image image)
+    {
+        return shown.TryGetValue(card, out image);
+    }
+
     /// <summary>手札のカードを震わせる（使えないカードを押したときの合図）</summary>
     public void Shake(HandCard card)
     {

@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffa302fe71f764f4f8464c345ab9ca1c, type: 3}
+  m_Name: TutorialLanguageTable
+  m_EditorClassIdentifier: Assembly-CSharp::LanguageTable
+  entries:
+  - key: tutorial.intro.welcome
+    japanese: "CuratorJack\u3078\u3088\u3046\u3053\u305D\uFF01\n\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3092\u3084\u3063\u3066\u307F\u3088\u3046\uFF01"
+    english: 'Welcome to CuratorJack!
+
+      Let''s try the tutorial!'
+  - key: tutorial.click_hint
+    japanese: "\u30AF\u30EA\u30C3\u30AF\u3067\u6B21\u3078"
+    english: Click to continue
+  - key: tutorial.seller.open_hand
+    japanese: "\u307E\u305A\u306F\u51FA\u54C1\u8005\u30BF\u30FC\u30F3\uFF01\n\u307E\u305A\u306F\u81EA\u5206\u306E\u30AB\u30FC\u30C9\u3092\u898B\u3066\u307F\u3088\u3046\uFF01"
+    english: 'First up is the seller''s turn!
+
+      Let''s start by looking at your
+      cards!'
+  - key: tutorial.seller.look_goods
+    japanese: "\u51FA\u54C1\u30AB\u30FC\u30C9\u3092\u898B\u3066\u307F\u3088\u3046\uFF01"
+    english: Let's look at a listing card!
+  - key: tutorial.seller.card_detail
+    japanese: "\u3053\u306E\u3088\u3046\u306B\u30AB\u30FC\u30C9\u306E\u8A73\u7D30\u3092\n\u898B\u308B\u3053\u3068\u304C\u3067\u304D\u308B\u3088\uFF01"
+    english: 'This is how you can see
+
+      a card''s details!'
+  - key: tutorial.seller.select_goods
+    japanese: "\u30AB\u30FC\u30C9\u3092\u9078\u629E\u3057\u3066\u307F\u3088\u3046\uFF01"
+    english: Let's select the card!
+  - key: tutorial.seller.attach_buff
+    japanese: "\u6B21\u306F\u30A8\u30D5\u30A7\u30AF\u30C8\u30AB\u30FC\u30C9\u3092\u3064\u3051\u3066\u307F\u3088\u3046\uFF01"
+    english: Next, let's attach an effect card!
+  - key: tutorial.seller.raise
+    japanese: "\u30A8\u30D5\u30A7\u30AF\u30C8\u30AB\u30FC\u30C9\u304C\u3064\u3044\u3066\u3044\u308B\u51FA\u54C1\u306B\u306F\n\u4ED8\u52A0\u4FA1\u5024\u3092\u3064\u3051\u308B\u3053\u3068\u304C\u3067\u304D\u308B\u3088\uFF01"
+    english: 'Listings with effect cards
+
+      can be given added value!'
+  - key: tutorial.seller.attach_debuff
+    japanese: "\u30A8\u30D5\u30A7\u30AF\u30C8\u30AB\u30FC\u30C9\u306F\u51FA\u54C1\u30AB\u30FC\u30C9\u306B\n\u4F55\u679A\u3067\u3082\u3064\u3051\u308B\u3053\u3068\u304C\u3067\u304D\u308B\u3088\uFF01"
+    english: 'You can attach as many effect cards
+
+      as you like to a listing
+      card!'
+  - key: tutorial.seller.confirm
+    japanese: "\u78BA\u5B9A\u3092\u62BC\u3057\u3066\u51FA\u54C1\u3057\u3066\u307F\u3088\u3046\uFF01"
+    english: Press confirm to list it!
+  - key: tutorial.auction.intro
+    japanese: "\u30AA\u30FC\u30AF\u30B7\u30E7\u30F3\u958B\u59CB\uFF01\u51FA\u54C1\u8005\u4EE5\u5916\u306E\u30D7\u30EC\u30A4\u30E4\u30FC\u304C\n\u5165\u672D\u3059\u308B\u304B\u964D\u308A\u308B\u304B\u3092\u9078\u3076\u3088\uFF01"
+    english: 'The auction begins! Everyone except the seller
+
+      chooses to bid
+      or fold!'
+  - key: tutorial.auction.sold
+    japanese: "\u76F8\u624B\u304C\u843D\u672D\u3057\u305F\u306E\u3067\u3001\u4ED8\u3051\u305F\u30A8\u30D5\u30A7\u30AF\u30C8\u30AB\u30FC\u30C9\u306F\n\u843D\u672D\u3057\u305F\u30D7\u30EC\u30A4\u30E4\u30FC\u306B\u767A\u52D5\u3059\u308B\u3088\uFF01"
+    english: 'An opponent won the auction, so the attached
+
+      effect cards take
+      effect on the winner!'
+  - key: tutorial.auction.unsold
+    japanese: "\u3082\u3057\u8AB0\u3082\u843D\u672D\u3057\u306A\u304B\u3063\u305F\u3068\u304D\u306F\u3001\u30A8\u30D5\u30A7\u30AF\u30C8\u30AB\u30FC\u30C9\u306F\n\u51FA\u54C1\u8005\u306E\u81EA\u5206\u306B\u767A\u52D5\u3059\u308B\u3088\uFF01"
+    english: 'If nobody wins the auction, the effect cards
+
+      take effect on
+      you, the seller!'
+  - key: tutorial.auction.fold
+    japanese: "\u964D\u308A\u305F\u30D7\u30EC\u30A4\u30E4\u30FC\u306F\u898B\u9001\u308A\u6A29\u30921\u679A\u4F7F\u3046\u3088\uFF01\n\u898B\u9001\u308A\u6A29\u304C0\u679A\u306E\u3068\u304D\u306B\u964D\u308A\u308B\u3068\u8131\u843D\uFF01"
+    english: 'Players who fold use up one pass!
+
+      Folding with zero passes knocks
+      you out!'
+  - key: tutorial.info.open
+    japanese: "\u30A4\u30F3\u30D5\u30A9\u30E1\u30FC\u30B7\u30E7\u30F3\u30DE\u30FC\u30AF\u3092\u62BC\u3059\u3068\u3001\n\u30AB\u30FC\u30C9\u306E\u4E00\u89A7\u304C\u898B\u3089\u308C\u308B\u3088\uFF01\u62BC\u3057\u3066\u307F\u3088\u3046\uFF01"
+    english: 'Press the information mark
+
+      to see the list of cards! Give it
+      a try!'
+  - key: tutorial.info.catalog
+    japanese: "\u4E0A\u306E\u30BF\u30D6\u3067\u5546\u54C1\u30FB\u30A8\u30D5\u30A7\u30AF\u30C8\u30FB\u30B9\u30DA\u30B7\u30E3\u30EB\u3092\u5207\u308A\u66FF\u3048\u3089\u308C\u308B\u3088\uFF01\n\u30A6\u30A3\u30F3\u30C9\u30A6\u306E\u5916\u3092\u62BC\u3059\u3068\u9589\u3058\u308B\u3088\uFF01"
+    english: 'Use the tabs at the top to switch between goods, effects and specials!
+
+      Click
+      outside the window to close it!'
+  - key: tutorial.bid.intro
+    japanese: "\u4ECA\u5EA6\u306F\u5165\u672D\u3057\u3066\u307F\u3088\u3046\uFF01W/S
+      \u304B \u2191/\u2193 \u3067\u91D1\u984D\u3092\u6C7A\u3081\u3066\u3001\n\u5165\u672D\u30DC\u30BF\u30F3\u3092\u62BC\u305D\u3046\uFF01"
+    english: "Now let's try bidding! Set the amount with W/S or \u2191/\u2193,\nthen
+      press the bid button!"
+  - key: tutorial.special.open_hand
+    japanese: "1\u5468\u3057\u305F\u306E\u3067\u30C9\u30ED\u30FC\uFF01\u30EC\u30A2\u30EA\u30C6\u30A3\u300C\u9AD8\u300D\u306E\n\u30AB\u30FC\u30C9\u3092\u5F15\u3044\u305F\u3088\uFF01\u624B\u672D\u3092\u898B\u3066\u307F\u3088\u3046\uFF01"
+    english: 'A full round passed, so everyone drew!
+
+      You got a top-rarity
+      card! Let''s look at your hand!'
+  - key: tutorial.special.look
+    japanese: "\u30EC\u30A2\u30EA\u30C6\u30A3\u300C\u9AD8\u300D\u306E\u30AB\u30FC\u30C9\u306B\u306F\u3001\u30B9\u30DA\u30B7\u30E3\u30EB\u30AB\u30FC\u30C9\u304C\n\u4ED8\u3044\u3066\u3044\u308B\u3088\uFF01\u30AB\u30FC\u30BD\u30EB\u3092\u5408\u308F\u305B\u3066\u307F\u3088\u3046\uFF01"
+    english: 'Top-rarity cards come with a special card!
+
+      Hover over the card!'
+  - key: tutorial.special.hover
+    japanese: "\u4E0A\u306B\u51FA\u305F\u306E\u304C\u30B9\u30DA\u30B7\u30E3\u30EB\u30AB\u30FC\u30C9\uFF01\n\u30AB\u30FC\u30BD\u30EB\u3092\u5408\u308F\u305B\u308B\u3068\u52B9\u679C\u304C\u898B\u3089\u308C\u308B\u3088\uFF01"
+    english: 'The card shown above is the special card!
+
+      Hover over it to see
+      its effect!'
+  - key: tutorial.special.detail
+    japanese: "\u30B9\u30DA\u30B7\u30E3\u30EB\u30AB\u30FC\u30C9\u306E\u52B9\u679C\u3082\u3001\u843D\u672D\u3057\u305F\u4EBA\u306B\u767A\u52D5\u3059\u308B\u3088\uFF01\n\u8AB0\u3082\u843D\u672D\u3057\u306A\u3051\u308C\u3070\u51FA\u54C1\u8005\u306B\u767A\u52D5\u3059\u308B\u3088\uFF01"
+    english: 'Special cards also take effect on the winner!
+
+      If nobody wins,
+      they take effect on the seller!'
+  - key: tutorial.free
+    japanese: "\u3053\u3053\u304B\u3089\u306F\u81EA\u7531\u306B\u64CD\u4F5C\u3057\u3066\u307F\u3088\u3046\uFF01\n\u6700\u5F8C\u306E1\u4EBA\u307E\u3067\u6B8B\u308C\u3070\u52DD\u5229\u3060\u3088\uFF01"
+    english: 'From here on, play however you like!
+
+      Be the last one standing
+      to win!'
+  - key: tutorial.clear
+    japanese: "\u304A\u3081\u3067\u3068\u3046\uFF01\u6700\u5F8C\u306E1\u4EBA\u306B\u306A\u3063\u305F\u306E\u3067\u52DD\u5229\uFF01\n\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u30AF\u30EA\u30A2\uFF01"
+    english: 'Congratulations! You''re the last one standing!
+
+      Tutorial complete!'

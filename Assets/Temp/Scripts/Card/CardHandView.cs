@@ -84,6 +84,9 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
 
     public bool IsMoving => isMoving;
 
+    /// <summary>true の間は、カード以外の場所を押しても広げた手札を戻さない（チュートリアルの案内中など）</summary>
+    public bool KeepsSpread { get; set; }
+
     /// <summary>広げているときに、カードがクリックされた</summary>
     public event Action<Image> CardClicked;
 
@@ -389,7 +392,7 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
 
     void Update()
     {
-        if (IsSpread && IsPressedOutsideCards())
+        if (IsSpread && !KeepsSpread && IsPressedOutsideCards())
             SetSpread(false);
 
         UpdateHover();

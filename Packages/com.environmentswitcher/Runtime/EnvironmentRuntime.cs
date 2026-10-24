@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace EnvironmentSwitcher
 {
@@ -39,14 +39,14 @@ namespace EnvironmentSwitcher
             {
 #if ENV_RELEASE
                 return GameEnvironment.Release;
+#elif ENV_ONLINENET
+                return GameEnvironment.OnlineNet;
 #elif ENV_STG
                 return GameEnvironment.Staging;
 #elif ENV_LOCAL
                 return GameEnvironment.Local;
 #elif ENV_LOCALNET
                 return GameEnvironment.LocalNet;
-#elif ENV_ONLINENET
-                return GameEnvironment.OnlineNet;
 #elif ENV_DEV
                 return GameEnvironment.Development;
 #else
@@ -71,8 +71,11 @@ namespace EnvironmentSwitcher
 
         public static bool Is(GameEnvironment environment) => Current == environment;
 
-        /// <summary>Development とその追加版（Local / LocalNet / OnlineNet）か。</summary>
+        /// <summary>Development とその追加版（Local / LocalNet）か。</summary>
         public static bool IsDevelopmentFamily => Current.IsDevelopmentFamily();
+
+        /// <summary>Staging とその追加版（OnlineNet）か。</summary>
+        public static bool IsStagingFamily => Current.IsStagingFamily();
 
         /// <summary>現在環境のマルチプレイ通信方式。</summary>
         public static EnvironmentNetworkMode NetworkMode => Current.ToNetworkMode();
@@ -133,7 +136,7 @@ namespace EnvironmentSwitcher
         }
 
         /// <summary>
-        /// Dev: 全ログ / Stg: Warning 以上 / Release: Error のみ。
+        /// Dev 系: 全ログ / Stg 系: Warning 以上 / Release: Error のみ。
         /// いずれの環境でも Error / Exception は出力される。
         /// </summary>
         public static void ApplyLoggingPolicy()
@@ -144,7 +147,7 @@ namespace EnvironmentSwitcher
             {
                 Debug.unityLogger.filterLogType = LogType.Log;
             }
-            else if (Current == GameEnvironment.Staging)
+            else if (IsStagingFamily)
             {
                 Debug.unityLogger.filterLogType = LogType.Warning;
             }

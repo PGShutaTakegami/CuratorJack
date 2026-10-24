@@ -70,6 +70,7 @@ public class DrawPhaseController : MonoBehaviour
     [SerializeField] private float drawInterval = 0.15f;
 
     bool firstDrawStarted;
+    IScriptedDraw scriptedDraw;
 
     /// <summary>最初のドローを配り終えた（最後のカードのスライドが終わった時点）</summary>
     public event Action DrawFinished;
@@ -103,6 +104,12 @@ public class DrawPhaseController : MonoBehaviour
 
         yield return Deal(batches, goodsDeck.CreateFirstDrawRule);
         DrawFinished?.Invoke();
+    }
+
+    /// <summary>配るカードを決めておく仕組みを使う。決めていないカードは山札から引く（null で山札だけに戻す）。</summary>
+    public void UseScriptedDraw(IScriptedDraw script)
+    {
+        scriptedDraw = script;
     }
 
     /// <summary>山札の乱数をシードからやり直す（全員の画面で同じカードを配るため）。山札ごとに別の値を使う。</summary>
@@ -174,11 +181,14 @@ public class DrawPhaseController : MonoBehaviour
             return;
         }
 
-        game.AddToHand(player, CreateCard(kind, goodsRule, drawEffect));
+        game.AddToHand(player, CreateCard(player, kind, goodsRule, drawEffect));
     }
 
-    HandCard CreateCard(CardManager.CardKinds kind, GoodsDrawRule goodsRule, Func<CardData> drawEffect)
+    HandCard CreateCard(int player, CardManager.CardKinds kind, GoodsDrawRule goodsRule, Func<CardData> drawEffect)
     {
+        if (scriptedDraw != null && scriptedDraw.TryCreate(player, kind, out HandCard scripted))
+            return scripted;
+
         CardData data = kind switch
         {
             CardManager.CardKinds.GoodCard => goodsDeck.Draw(goodsRule),
