@@ -13971,7 +13971,7 @@ MonoBehaviour:
   gap: 16
   bounceHeight: 22
   bouncesPerSecond: 1.4
-  pointFromBelowAbove: 0.7
+  pointFromSideAbove: 0.7
   ignoreCoverage: 0.9
 --- !u!1 &689510947
 GameObject:

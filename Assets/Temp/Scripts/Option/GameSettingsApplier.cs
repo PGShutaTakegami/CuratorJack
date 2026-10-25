@@ -5,6 +5,7 @@ using UnityEngine;
 /// SE・BGM の音量、コントローラーの振動は、まだ機能がないため値を保存するだけ（使う側が GameSettingsStore から読む）。
 /// VC の音量・マイク・出力デバイスなど VC の設定は、VoiceChatSession が VC にだけ反映する（Unity の音声の出力デバイスは切り替えられない）。
 /// 起動時は解像度と表示方法以外を反映する。解像度と表示方法は Unity が前回の画面を覚えているため触らない（テスト用の追加ウィンドウの大きさ指定も上書きしない）。
+/// ただし前回のウィンドウがモニターに収まらない大きさなら、収まる大きさへ縮める。
 /// </summary>
 public static class GameSettingsApplier
 {
@@ -15,6 +16,8 @@ public static class GameSettingsApplier
         ApplyAudio(settings);
         ApplyGraphics(settings);
         ApplyLanguage(settings);
+        if (!Application.isEditor)
+            ScreenModeApplier.FitCurrentWindow();
     }
 
     public static void ApplyLanguage(GameSettings settings)
@@ -53,9 +56,6 @@ public static class GameSettingsApplier
         if (Application.isEditor)
             return;
 
-        Vector2Int size = settings.Resolution.Size();
-        FullScreenMode mode = settings.WindowMode == WindowMode.Windowed ? FullScreenMode.Windowed : FullScreenMode.FullScreenWindow;
-        Screen.SetResolution(size.x, size.y, mode);
-        Debug.Log($"[Option] 画面を {size.x}x{size.y}（{mode}）にしました");
+        ScreenModeApplier.Apply(settings);
     }
 }

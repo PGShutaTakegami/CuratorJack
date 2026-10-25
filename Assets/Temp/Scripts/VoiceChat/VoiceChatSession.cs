@@ -11,6 +11,7 @@ using UnityEngine.InputSystem;
 /// マイク・出力デバイス・ノイズ抑制・音量・話し方（プッシュトゥトーク / 常時 / OFF）はオプションの設定を使い、ゲーム中に変えてもすぐ反映する。
 /// プッシュトゥトークは操作の割り当てアセットの操作で読み（キーボードとコントローラー）、オプションで変えたキーボードのキーは上書きとして重ねる。
 /// ミュートは自分の画面だけで、選んだプレイヤーの声を聞こえなくする（相手やほかの人には影響しない）。
+/// 自分が声を送っているかは PlayerVoiceIdentity で全員へ知らせ、プレイヤーごとの「送っているか」「声が入っているか」を表示用に読める。
 /// </summary>
 public class VoiceChatSession : MonoBehaviour
 {
@@ -30,6 +31,7 @@ public class VoiceChatSession : MonoBehaviour
     readonly HashSet<int> mutedPlayers = new HashSet<int>();
     readonly List<VivoxParticipant> participants = new List<VivoxParticipant>();
     readonly Dictionary<VivoxParticipant, bool> appliedMutes = new Dictionary<VivoxParticipant, bool>();
+    VivoxParticipant selfParticipant;
     GameSettings settings;
     string joiningChannel;
     string joinedChannel;
@@ -74,7 +76,42 @@ public class VoiceChatSession : MonoBehaviour
             _ = ShutdownAsync(joinedChannel);
     }
 
+    /// <summary>部屋の VC に入っているか</summary>
+    public bool IsInVoiceChat => IsJoined;
+
     public bool IsMuted(int playerNumber) => mutedPlayers.Contains(playerNumber);
+
+    /// <summary>そのプレイヤーが VC に入っている人か（VC 上の ID がある）。CPU や VC に入っていない人は false</summary>
+    public bool HasVoice(int playerNumber)
+    {
+        PlayerVoiceIdentity identity = IdentityOf(playerNumber);
+        return identity != null && !string.IsNullOrEmpty(identity.VoiceId);
+    }
+
+    /// <summary>そのプレイヤーが今声を送っているか（プッシュトゥトークのキーを押している／常時）</summary>
+    public bool IsTransmitting(int playerNumber)
+    {
+        PlayerVoiceIdentity identity = IdentityOf(playerNumber);
+        return identity != null && identity.IsTransmitting;
+    }
+
+    /// <summary>そのプレイヤーの声が今入っているか</summary>
+    public bool IsSpeaking(int playerNumber)
+    {
+        if (playerNumber == registry.LocalPlayerNumber)
+            return selfParticipant != null && selfParticipant.SpeechDetected;
+
+        PlayerVoiceIdentity identity = IdentityOf(playerNumber);
+        if (identity == null || string.IsNullOrEmpty(identity.VoiceId))
+            return false;
+
+        foreach (VivoxParticipant participant in participants)
+        {
+            if (participant.PlayerId == identity.VoiceId)
+                return participant.SpeechDetected;
+        }
+        return false;
+    }
 
     /// <summary>自分の画面だけで、そのプレイヤーの声のミュートを切り替える。</summary>
     public void ToggleMute(int playerNumber)
@@ -102,7 +139,10 @@ public class VoiceChatSession : MonoBehaviour
         }
 
         if (!IsJoined)
+        {
+            LocalIdentity()?.SetTransmitting(false);
             return;
+        }
 
         ReportIdentity();
         ApplyTransmission();
@@ -122,11 +162,14 @@ public class VoiceChatSession : MonoBehaviour
         return room.VoiceChannel;
     }
 
-    PlayerVoiceIdentity LocalIdentity()
+    PlayerVoiceIdentity LocalIdentity() => IdentityOf(registry.LocalPlayerNumber);
+
+    PlayerVoiceIdentity IdentityOf(int playerNumber)
     {
-        int local = registry.LocalPlayerNumber;
-        return local != PlayerRegistry.NoPlayer && registry.TryGet(local, out Transform player)
-            ? player.GetComponent<PlayerVoiceIdentity>()
+        return playerNumber != PlayerRegistry.NoPlayer
+            && registry.TryGet(playerNumber, out Transform player)
+            && player.TryGetComponent(out PlayerVoiceIdentity identity)
+            ? identity
             : null;
     }
 
@@ -206,7 +249,16 @@ public class VoiceChatSession : MonoBehaviour
 
     void HandleParticipantAdded(VivoxParticipant participant)
     {
-        if (participant.IsSelf || participant.ChannelName != joiningChannel || participants.Contains(participant))
+        if (participant.ChannelName != joiningChannel)
+            return;
+
+        if (participant.IsSelf)
+        {
+            selfParticipant = participant;
+            return;
+        }
+
+        if (participants.Contains(participant))
             return;
 
         participants.Add(participant);
@@ -215,12 +267,15 @@ public class VoiceChatSession : MonoBehaviour
 
     void HandleParticipantRemoved(VivoxParticipant participant)
     {
+        if (participant == selfParticipant)
+            selfParticipant = null;
         participants.Remove(participant);
         appliedMutes.Remove(participant);
     }
 
     void ForgetParticipants()
     {
+        selfParticipant = null;
         participants.Clear();
         appliedMutes.Clear();
     }
@@ -315,6 +370,7 @@ public class VoiceChatSession : MonoBehaviour
     void ApplyTransmission()
     {
         bool transmit = ShouldTransmit();
+        LocalIdentity()?.SetTransmitting(transmit);
         if (isTransmitting == transmit)
             return;
 
@@ -358,9 +414,8 @@ public class VoiceChatSession : MonoBehaviour
     {
         foreach (int number in registry.PlayerNumbers)
         {
-            if (registry.TryGet(number, out Transform player)
-                && player.TryGetComponent(out PlayerVoiceIdentity identity)
-                && identity.VoiceId == voiceId)
+            PlayerVoiceIdentity identity = IdentityOf(number);
+            if (identity != null && identity.VoiceId == voiceId)
                 return number;
         }
 

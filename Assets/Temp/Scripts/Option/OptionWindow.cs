@@ -78,6 +78,7 @@ public class OptionWindow : MonoBehaviour
     IReadOnlyList<string> microphoneDevices = new string[0];
     int selectedRow;
     Vector2 previousStick;
+    bool isSaving;
 
     void Awake()
     {
@@ -118,6 +119,7 @@ public class OptionWindow : MonoBehaviour
         SetupTexts();
         ShowValues();
         GameLanguage.Changed += HandleLanguageChanged;
+        GameSettingsStore.Saved += HandleSettingsSaved;
         rowsScroll.verticalNormalizedPosition = 1f;
         Select(rows[0]);
     }
@@ -187,13 +189,29 @@ public class OptionWindow : MonoBehaviour
     void OnDisable()
     {
         GameLanguage.Changed -= HandleLanguageChanged;
+        GameSettingsStore.Saved -= HandleSettingsSaved;
         GameSettingsStore.Flush();
+    }
+
+    /// <summary>
+    /// 画面の外（Alt+Enter）で設定が変わったら、手元の値を取り直す（古い値のまま保存して元に戻さないように）。
+    /// 外から変わるのは表示方法だけのため、表示を直すのもその行だけにする（開いている一覧や待ち受けを閉じないように）。
+    /// </summary>
+    void HandleSettingsSaved(GameSettings saved)
+    {
+        if (isSaving)
+            return;
+
+        settings = saved;
+        windowMode.Show((int)settings.WindowMode);
     }
 
     void Change(System.Action<GameSettings> edit, System.Action<GameSettings> apply = null)
     {
         edit(settings);
+        isSaving = true;
         GameSettingsStore.Save(settings);
+        isSaving = false;
         apply?.Invoke(settings);
     }
 

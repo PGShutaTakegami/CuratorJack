@@ -2,14 +2,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// ビルドで Alt+Enter が押されたら、フルスクリーン（モニターの解像度）とウィンドウ（モニターの 3/4 の大きさの 16:9）を切り替える。
+/// ビルドで Alt+Enter が押されたら、フルスクリーンとウィンドウを切り替える。
+/// オプションの「表示方法」と食い違わないよう、設定を書き換えて保存し、大きさはオプションと同じ ScreenModeApplier で決める。
 /// Unity 標準の Alt+Enter の切り替え（Allow Fullscreen Switch）はウィンドウが画面と同じ大きさになるため使わない。
 /// どのシーンでも使えるよう、起動時に自動で作ってシーンをまたいで残す（エディターでは作らない）。
 /// </summary>
 public class DisplayModeToggle : MonoBehaviour
 {
-    const float WindowedScale = 0.75f;
-
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Create()
     {
@@ -31,19 +30,13 @@ public class DisplayModeToggle : MonoBehaviour
             Toggle();
     }
 
+    /// <summary>設定の値ではなく今の画面の状態から反対側を選ぶ（設定と画面がずれていても、押せば必ず切り替わるように）</summary>
     static void Toggle()
     {
-        Resolution display = Screen.currentResolution;
-        if (Screen.fullScreenMode == FullScreenMode.Windowed)
-        {
-            Screen.SetResolution(display.width, display.height, FullScreenMode.FullScreenWindow);
-            Debug.Log($"[Display] フルスクリーンに切り替えました（{display.width}x{display.height}）");
-            return;
-        }
-
-        int width = Mathf.RoundToInt(display.width * WindowedScale);
-        int height = Mathf.RoundToInt(width * 9f / 16f);
-        Screen.SetResolution(width, height, FullScreenMode.Windowed);
-        Debug.Log($"[Display] ウィンドウに切り替えました（{width}x{height}）");
+        GameSettings settings = GameSettingsStore.Current;
+        settings.WindowMode = Screen.fullScreenMode == FullScreenMode.Windowed ? WindowMode.FullScreen : WindowMode.Windowed;
+        GameSettingsStore.Save(settings);
+        GameSettingsStore.Flush();
+        ScreenModeApplier.Apply(settings);
     }
 }
