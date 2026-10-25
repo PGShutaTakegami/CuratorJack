@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 using UnityEngine.Splines;
 using Unity.Mathematics;
 
@@ -89,6 +92,7 @@ public class TitleSelectManager : MonoBehaviour
 
     const float StickThreshold = 0.5f;
     float previousStickX;
+    readonly List<RaycastResult> pointerHits = new List<RaycastResult>();
 
     MonitorScreenFader monitorFader;
 
@@ -271,12 +275,33 @@ public class TitleSelectManager : MonoBehaviour
         }
 
         var mouse = Mouse.current;
-        if (mouse != null && mouse.leftButton.wasPressedThisFrame)
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame && !IsPointerOverButton(mouse))
             return true;
 
         var gamepad = Gamepad.current;
         if (gamepad != null && gamepad.buttonSouth.wasPressedThisFrame)
             return true;
+
+        return false;
+    }
+
+    /// <summary>
+    /// タイトル画面のボタン（チュートリアルなど）を押したクリックは、ボタンの操作として扱い確定入力にしない
+    /// </summary>
+    bool IsPointerOverButton(Mouse mouse)
+    {
+        EventSystem eventSystem = EventSystem.current;
+        if (eventSystem == null)
+            return false;
+
+        var pointer = new PointerEventData(eventSystem) { position = mouse.position.ReadValue() };
+        pointerHits.Clear();
+        eventSystem.RaycastAll(pointer, pointerHits);
+        foreach (RaycastResult hit in pointerHits)
+        {
+            if (hit.gameObject.GetComponentInParent<Selectable>() != null)
+                return true;
+        }
 
         return false;
     }

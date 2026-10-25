@@ -55,3 +55,9 @@ MonoBehaviour:
   - key: title.players.with_cpu
     japanese: "\u81EA\u5206 + \u30B3\u30F3\u30D4\u30E5\u30FC\u30BF\u30FC {0}\u4EBA\u3067\u958B\u59CB\u3057\u307E\u3057\u305F"
     english: Started with you + {0} CPU player(s)
+  - key: title.menu.tutorial
+    japanese: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB"
+    english: Tutorial
+  - key: title.under_construction
+    japanese: "\u5236\u4F5C\u4E2D"
+    english: Under Construction

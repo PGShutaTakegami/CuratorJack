@@ -68,6 +68,11 @@ public class SinglePlaySessionBootstrap : MonoBehaviour, IMatchSession, IRoomCon
 
     public bool CanFillWithCpu => true;
 
+    /// <summary>シングルプレイは VC に対応しない</summary>
+    public bool IsVoiceChatOn => false;
+
+    public bool CanChangeVoiceChat => false;
+
     public event System.Action Changed;
 
     void Awake()
@@ -125,6 +130,10 @@ public class SinglePlaySessionBootstrap : MonoBehaviour, IMatchSession, IRoomCon
     }
 
     public void SetWaitSeconds(int seconds)
+    {
+    }
+
+    public void SetVoiceChat(bool on)
     {
     }
 

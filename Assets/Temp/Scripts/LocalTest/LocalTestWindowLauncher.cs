@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using EnvironmentSwitcher;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -10,10 +11,18 @@ using Debug = UnityEngine.Debug;
 /// <summary>
 /// エディター上での確認用。押したボタンの人数になるよう、テスト用ビルドを追加ウィンドウとして起動する
 /// （2 → 1 個、3 → 2 個、4 → 3 個）。追加ウィンドウは MultiPlay 画面から始まる。
-/// 起動したウィンドウは再生終了時にまとめて閉じる。ビルド上ではボタンを隠す。
+/// 起動したウィンドウは再生終了時にまとめて閉じる。
+/// ボタンはエディターで環境が Development / Local / LocalNet のときだけ出し、それ以外の環境とビルド上では隠す。
 /// </summary>
 public class LocalTestWindowLauncher : MonoBehaviour
 {
+    static readonly GameEnvironment[] LaunchableEnvironments =
+    {
+        GameEnvironment.Development,
+        GameEnvironment.Local,
+        GameEnvironment.LocalNet
+    };
+
     [Serializable]
     struct Option
     {
@@ -30,13 +39,16 @@ public class LocalTestWindowLauncher : MonoBehaviour
 
     UnityAction[] listeners;
 
+    static bool CanLaunch => Application.isEditor && Array.IndexOf(LaunchableEnvironments, EnvironmentRuntime.Current) >= 0;
+
     void Awake()
     {
-#if !UNITY_EDITOR
+        if (CanLaunch)
+            return;
+
         foreach (Option option in options)
             option.button.gameObject.SetActive(false);
         enabled = false;
-#endif
     }
 
     void OnEnable()

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// リタイアした後の選択（引き続き観戦 / 最初から / タイトルへ）。表示している間も試合の進行は止めない。
-/// 試合から抜けられないとき（マルチプレイ）は、最初から・タイトルへを灰色にして観戦だけを選ばせる。
+/// 選べないもの（マルチプレイの最初から、試合から抜けられないホストのタイトルへ）は灰色にする。
 /// 観戦を選んだら閉じるだけで、最初から・タイトルへのシーン移動は受け取った側が行う。
 /// </summary>
 public class RetireChoiceMenu : MonoBehaviour
@@ -29,11 +29,12 @@ public class RetireChoiceMenu : MonoBehaviour
         Hide();
     }
 
-    /// <param name="canLeave">最初から・タイトルへを選べるか</param>
-    public void Show(bool canLeave)
+    /// <param name="canRestart">最初からを選べるか</param>
+    /// <param name="canReturnToTitle">タイトルへを選べるか</param>
+    public void Show(bool canRestart, bool canReturnToTitle)
     {
-        restartButton.SetAvailable(canLeave);
-        titleButton.SetAvailable(canLeave);
+        restartButton.SetAvailable(canRestart);
+        titleButton.SetAvailable(canReturnToTitle);
         view.SetActive(true);
     }
 

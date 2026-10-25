@@ -5,9 +5,10 @@ using UnityEngine.SceneManagement;
 
 /// <summary>
 /// ポーズ画面のリタイア・Quit と、リタイア後の選択を受けて進める。
-/// リタイア：ポーズを閉じ、自分が生きていればリタイアを送って脱落し、観戦 / 最初から / タイトルへの選択を出す（試合から抜けられるのは SinglePlay だけ）。
+/// リタイア：ポーズを閉じ、自分が生きていればリタイアを送って脱落し、観戦 / 最初から / タイトルへの選択を出す
+/// （最初からは SinglePlay だけ、タイトルへは SinglePlay とマルチプレイのクライアント。MatchLeaveRule が決める）。
 /// 選択はポーズを開くと閉じる（脱落後にもう一度リタイアを押すと出し直す）。
-/// Quit（準備中のみ）：部屋にいれば部屋を抜け、いなければ接続方式の片付けをしてからタイトルへ戻る。
+/// Quit（準備中か脱落後）：部屋にいれば部屋を抜け、いなければ接続方式の片付けをしてからタイトルへ戻る。
 /// 最初から：SinglePlay を同じ人数でスタート前からやり直す。
 /// </summary>
 public class PauseNavigator : MonoBehaviour
@@ -22,7 +23,7 @@ public class PauseNavigator : MonoBehaviour
 
     [SerializeField] private PlayerRegistry registry;
 
-    [SerializeField] private SinglePlaySessionBootstrap singlePlay;
+    [SerializeField] private MatchLeaveRule leaveRule;
 
     [Tooltip("接続方式ごとの片付け役（IMatchSession / IRoomSession）。動いているものを選んで使う")]
     [SerializeField] private MonoBehaviour[] sessions;
@@ -55,7 +56,7 @@ public class PauseNavigator : MonoBehaviour
         int me = registry.LocalPlayerNumber;
         if (game.IsAlive(me))
             turnFlow.Commands.Retire(me);
-        retireChoice.Show(singlePlay.IsActive);
+        retireChoice.Show(leaveRule.CanRestart, leaveRule.CanLeaveAfterDropOut);
     }
 
     void HandleQuit()

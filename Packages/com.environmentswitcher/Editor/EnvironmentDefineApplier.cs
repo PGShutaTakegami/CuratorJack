@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -141,7 +141,7 @@ namespace EnvironmentSwitcher.Editor
                 }
 
                 // 追加版は元環境の Define も併せ持つため、追加版の一致を優先する
-                if (entry.environment.IsDevelopmentExtension())
+                if (entry.environment.GetBaseEnvironment().HasValue)
                 {
                     return entry.environment;
                 }

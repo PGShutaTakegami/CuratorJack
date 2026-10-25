@@ -6,7 +6,8 @@ using UnityEngine.UI;
 /// <summary>
 /// ルーム設定の画面。人数・待ち時間・VC と、プレイヤー枠（名前・ミュート・キック・CPU で埋める）を表示する。
 /// ゲーム開始前はすべて変えられ、ゲーム中はミュートとキックだけ変えられる。キックは部屋主にだけ表示し、自分の枠にはミュートもキックも出さない。
-/// 部屋の状態と操作は、今のプレイ形式の IRoomControl に任せる。VC とミュートは見た目の切り替えだけ。
+/// 部屋の状態と操作（VC の ON/OFF を含む）は、今のプレイ形式の IRoomControl に任せる。VC の ON/OFF を変えられるのはマルチプレイの部屋主だけ。
+/// ミュートは VoiceChatSession に任せ、自分の画面だけで相手の声を聞こえなくする。部屋の VC が ON のとき、CPU 以外のほかの人の枠にだけ出す。
 /// </summary>
 public class RoomSettingsPanel : MonoBehaviour
 {
@@ -34,10 +35,10 @@ public class RoomSettingsPanel : MonoBehaviour
 
     [SerializeField] private PlayerNameDirectory names;
 
-    readonly HashSet<int> mutedPlayers = new HashSet<int>();
+    [SerializeField] private VoiceChatSession voiceChat;
+
     readonly List<int> slotPlayers = new List<int>();
     IRoomControl room;
-    bool isVoiceChatOn = true;
 
     public bool IsOpen => view.activeSelf;
 
@@ -48,7 +49,7 @@ public class RoomSettingsPanel : MonoBehaviour
         closeButton.onClick.AddListener(Close);
         capacitySelector.Selected += value => room?.SetCapacity(value);
         waitTimeSelector.Selected += value => room?.SetWaitSeconds(value);
-        voiceChatSelector.Selected += HandleVoiceChatSelected;
+        voiceChatSelector.Selected += value => room?.SetVoiceChat(value != 0);
         for (int i = 0; i < slots.Length; i++)
         {
             int index = i;
@@ -60,6 +61,7 @@ public class RoomSettingsPanel : MonoBehaviour
 
         startGate.Changed += Refresh;
         game.PlayerDied += HandlePlayerDied;
+        voiceChat.Changed += Refresh;
         view.SetActive(false);
     }
 
@@ -67,6 +69,7 @@ public class RoomSettingsPanel : MonoBehaviour
     {
         startGate.Changed -= Refresh;
         game.PlayerDied -= HandlePlayerDied;
+        voiceChat.Changed -= Refresh;
         SetRoom(null);
     }
 
@@ -108,18 +111,9 @@ public class RoomSettingsPanel : MonoBehaviour
 
     void HandlePlayerDied(PlayerState player) => Refresh();
 
-    void HandleVoiceChatSelected(int value)
-    {
-        isVoiceChatOn = value != 0;
-        Refresh();
-    }
-
     void ToggleMute(int slotIndex)
     {
-        int player = slotPlayers[slotIndex];
-        if (!mutedPlayers.Remove(player))
-            mutedPlayers.Add(player);
-        Refresh();
+        voiceChat.ToggleMute(slotPlayers[slotIndex]);
     }
 
     void Kick(int slotIndex)
@@ -137,7 +131,7 @@ public class RoomSettingsPanel : MonoBehaviour
 
         capacitySelector.Show(room.Capacity, value => canEditRoom && value >= members.Count && value <= room.MaxCapacity);
         waitTimeSelector.Show(room.WaitSeconds, _ => canEditRoom && room.CanChangeWaitTime);
-        voiceChatSelector.Show(isVoiceChatOn ? 1 : 0, _ => canEditRoom);
+        voiceChatSelector.Show(room.IsVoiceChatOn ? 1 : 0, _ => canEditRoom && room.CanChangeVoiceChat);
 
         for (int i = 0; i < slots.Length; i++)
         {
@@ -155,8 +149,9 @@ public class RoomSettingsPanel : MonoBehaviour
         int player = member.PlayerNumber;
         slotPlayers[slotIndex] = player;
         bool isOthers = !member.IsLocal;
+        bool canMute = isOthers && !member.IsCpu && room.IsVoiceChatOn;
         bool canKick = !startGate.HasStarted || game.IsAlive(player);
-        slots[slotIndex].ShowMember(names.NameOf(player), isOthers, mutedPlayers.Contains(player), isOthers && roomOwner.IsOwner, canKick);
+        slots[slotIndex].ShowMember(names.NameOf(player), canMute, voiceChat.IsMuted(player), isOthers && roomOwner.IsOwner, canKick);
     }
 
     void ShowEmpty(int slotIndex, bool canFill)

@@ -51,6 +51,12 @@ public class NetworkSessionPlayer : NetworkBehaviour, IPlayerActionChannel
     /// <summary>このプレイヤーが切断し、ホストの CPU が代わりに操作し始めた（全員の画面で通知される）。プレイヤー番号を渡す</summary>
     public event Action<int> CpuTookOver;
 
+    /// <summary>サーバーのみ：このプレイヤーの画面で、待ち時間のステップの演出が終わった。プレイヤー番号とステップを渡す</summary>
+    public event Action<int, int> PhaseReadyReported;
+
+    /// <summary>ホストが待ち時間のステップの締め切り（ネットワークの時刻）を決めた（全員の画面で通知される）。ステップと締め切りを渡す</summary>
+    public event Action<int, double> PhaseCountdownAnnounced;
+
     public override void OnNetworkSpawn()
     {
         playerNumber.OnValueChanged += HandlePlayerNumberChanged;
@@ -172,6 +178,39 @@ public class NetworkSessionPlayer : NetworkBehaviour, IPlayerActionChannel
     void NotifyActionRpc(int phase, int kind, int value)
     {
         ActionReceived?.Invoke(new PlayerAction(phase, playerNumber.Value, (PlayerActionKind)kind, value));
+    }
+
+    /// <summary>自分のプレイヤーの画面で、待ち時間のステップの演出が終わったことをサーバーへ送る。</summary>
+    public void ReportPhaseReady(int step)
+    {
+        if (!IsSpawned || !IsOwner)
+            return;
+
+        ReportPhaseReadyRpc(step);
+    }
+
+    [Rpc(SendTo.Server)]
+    void ReportPhaseReadyRpc(int step, RpcParams rpcParams = default)
+    {
+        if (rpcParams.Receive.SenderClientId != OwnerClientId)
+            return;
+
+        PhaseReadyReported?.Invoke(playerNumber.Value, step);
+    }
+
+    /// <summary>サーバー（ホスト）から、待ち時間のステップの締め切りを全員へ通知する。</summary>
+    public void AnnouncePhaseCountdown(int step, double deadline)
+    {
+        if (!IsSpawned || !IsServer)
+            return;
+
+        NotifyPhaseCountdownRpc(step, deadline);
+    }
+
+    [Rpc(SendTo.ClientsAndHost)]
+    void NotifyPhaseCountdownRpc(int step, double deadline)
+    {
+        PhaseCountdownAnnounced?.Invoke(step, deadline);
     }
 
     /// <summary>サーバー（ホスト）から決まった出品者を全員へ通知する。</summary>

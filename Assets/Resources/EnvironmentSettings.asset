@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f0dd77b5f818cd48be22637bb08945d, type: 3}
   m_Name: EnvironmentSettings
   m_EditorClassIdentifier: EnvironmentSwitcher::EnvironmentSwitcher.EnvironmentSettings
-  activeEnvironment: 5
+  activeEnvironment: 3
   environments:
   - environment: 0
     displayName: Development
@@ -72,11 +72,11 @@ MonoBehaviour:
   - environment: 5
     displayName: OnlineNet
     defineSymbol: ENV_ONLINENET
-    apiBaseUrl: https://dev.example.local
+    apiBaseUrl: https://stg.example.local
     enableDebugLog: 1
-    enableCrashReporting: 0
+    enableCrashReporting: 1
     useAnalyticsSandbox: 1
-    analyticsAppId: analytics-dev
+    analyticsAppId: analytics-stg
     useIapSandbox: 1
     isolateSaveData: 1
     customValues: []

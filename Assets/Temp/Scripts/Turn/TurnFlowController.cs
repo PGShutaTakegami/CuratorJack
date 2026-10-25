@@ -13,6 +13,7 @@ using UnityEngine;
 /// （付いていた効果カード・スペシャルカード・ランダムで選ばれたスペシャルカードは、ディゾルブで公開してから発動する）。
 /// 出品には横やり（効果カードを付けられない）と投げ売り（最低出品額の値引き）をかけ、出品が確定したときに使う。
 /// ターン中に脱落した人がいれば、ターンの後に名前入りの DROP OUT を告知する（脱落で勝敗が決まったら、残りの精算や効果の公開は飛ばしてすぐに告知する）。
+/// 脱落で生き残りが 2 人（最後の 1v1）になったら、DROP OUT の後に FINAL BATTLE を 1 回だけ告知する（最初から 2 人のゲームでは出さない）。
 /// 出品者が出品を決める前にリタイアしたら、そのターンは打ち切る（脱落した出品者のターンは行わない）。
 /// 2度目を受けた人がいれば、そのターンの後に追加の出品ターンを行う（1 周の数には入れない。出品できるグッズがなければ飛ばす）。
 /// 生きている全員が 1 回ずつ出品者を終えたらドローし、今の向き（最初は時計回り、逆転で反対）で次の生きているプレイヤーへ。
@@ -54,6 +55,9 @@ public class TurnFlowController : MonoBehaviour
 
     [Tooltip("脱落したプレイヤーが出たら、そのターンの後に名前を入れて出す告知")]
     [SerializeField] private PlayerNameMessage dropOutMessage;
+
+    [Tooltip("脱落で最後の 1v1 になったら、DROP OUT の後に出す告知の文字")]
+    [SerializeField] private GameObject finalBattleMessage;
 
     [Tooltip("自分以外が脱落したら、告知の前にその人の正面へカメラを動かす")]
     [SerializeField] private PlayerFrontCamera frontCamera;
@@ -118,6 +122,7 @@ public class TurnFlowController : MonoBehaviour
     string turnHeader;
     readonly List<int> deathOrder = new List<int>();
     readonly Queue<int> pendingDropOuts = new Queue<int>();
+    bool hasAnnouncedFinalBattle;
     CardEffectResolver effectsInstance;
     PlayerActionDispatcher actionsInstance;
     TurnOrder order;
@@ -296,10 +301,12 @@ public class TurnFlowController : MonoBehaviour
 
     /// <summary>
     /// このターンに脱落したプレイヤーを、1 人ずつ名前を入れて告知する。
-    /// 自分以外はその人の正面へカメラを動かしてから告知し、全員の告知が終わったら元の視点へ戻す
+    /// 自分以外はその人の正面へカメラを動かしてから告知し、全員の告知が終わったら元の視点へ戻す。
+    /// この脱落で最後の 1v1 になったら、続けて FINAL BATTLE を告知する
     /// </summary>
     IEnumerator AnnounceDropOuts()
     {
+        bool hadDropOuts = pendingDropOuts.Count > 0;
         while (pendingDropOuts.Count > 0)
         {
             int player = pendingDropOuts.Dequeue();
@@ -308,6 +315,12 @@ public class TurnFlowController : MonoBehaviour
             yield return AnnounceWithName(dropOutMessage, player);
         }
         yield return frontCamera.Return();
+
+        if (hadDropOuts && game.IsFinalDuel && !hasAnnouncedFinalBattle)
+        {
+            hasAnnouncedFinalBattle = true;
+            yield return announcer.Show(finalBattleMessage);
+        }
     }
 
     /// <summary>

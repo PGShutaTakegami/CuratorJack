@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -8,7 +8,7 @@ namespace EnvironmentSwitcher
 {
     /// <summary>
     /// Dev/Stg 向けの枠なし HUD。
-    /// 左上: FPS/メモリ、右上: ログ、右下: Dev/Stg のみ。
+    /// Dev 系: 左上に FPS/メモリ・通信状態、右上にログ、右下に環境名。Stg 系: 右下に Stg と出すのみ。
     /// </summary>
     public sealed class EnvironmentStatusHud : MonoBehaviour
     {
@@ -68,12 +68,9 @@ namespace EnvironmentSwitcher
 
             _showNetworkHud = EnvironmentRuntime.IsDevelopmentFamily;
 
-            bool showLog = true;
-            if (EnvironmentRuntime.IsDevelopmentFamily
-                && EnvironmentRuntime.Settings != null)
-            {
-                showLog = EnvironmentRuntime.Settings.DevDebug.enableOnScreenLog;
-            }
+            bool showLog = EnvironmentRuntime.IsDevelopmentFamily
+                           && (EnvironmentRuntime.Settings == null
+                               || EnvironmentRuntime.Settings.DevDebug.enableOnScreenLog);
 
             BuildHud(showLog);
             if (showLog)
@@ -112,7 +109,7 @@ namespace EnvironmentSwitcher
             scaler.matchWidthOrHeight = 0.5f;
 
             Font font = ResolveUiFont();
-            Color envColor = EnvironmentRuntime.Current == GameEnvironment.Staging
+            Color envColor = EnvironmentRuntime.IsStagingFamily
                 ? new Color(1f, 0.75f, 0.25f, 1f)
                 : new Color(0.45f, 1f, 0.55f, 1f);
 
@@ -327,7 +324,7 @@ namespace EnvironmentSwitcher
         private static bool ShouldShow(GameEnvironment environment)
         {
             return environment.IsDevelopmentFamily()
-                   || environment == GameEnvironment.Staging;
+                   || environment.IsStagingFamily();
         }
 
         private static Font ResolveUiFont()

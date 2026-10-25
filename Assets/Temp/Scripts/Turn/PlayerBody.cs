@@ -24,6 +24,12 @@ public static class PlayerBody
         return bounds.center;
     }
 
+    /// <summary>頭のボーン。見つからなければ null（毎フレーム位置を追うときに、探し直さずに済むように使う）</summary>
+    public static Transform FindHead(Transform player, string headName = HeadBoneName)
+    {
+        return FindDescendant(player, headName);
+    }
+
     static Transform FindDescendant(Transform parent, string name)
     {
         foreach (Transform child in parent)

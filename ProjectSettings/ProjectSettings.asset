@@ -298,7 +298,14 @@ PlayerSettings:
   AndroidAppBundleSizeToValidate: 150
   AndroidReportGooglePlayAppDependencies: 1
   androidSymbolsSizeThreshold: 800
-  m_BuildTargetIcons: []
+  m_BuildTargetIcons:
+  - m_BuildTarget: 
+    m_Icons:
+    - serializedVersion: 2
+      m_Icon: {fileID: 2800000, guid: bfa85417d960b1f479e7412104e9ca57, type: 3}
+      m_Width: 128
+      m_Height: 128
+      m_Kind: 0
   m_BuildTargetPlatformIcons:
   - m_BuildTarget: iPhone
     m_Icons:
@@ -831,10 +838,10 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
-    Standalone: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
-    WebGL: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
-    iPhone: ENV_DEV;ENV_ONLINENET;ENV_NETWORK
+    Android: ENV_DEV;ENV_LOCAL;ENV_NETWORK
+    Standalone: ENV_DEV;ENV_LOCAL;ENV_NETWORK
+    WebGL: ENV_DEV;ENV_LOCAL;ENV_NETWORK
+    iPhone: ENV_DEV;ENV_LOCAL;ENV_NETWORK
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

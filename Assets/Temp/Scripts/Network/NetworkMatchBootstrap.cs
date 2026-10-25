@@ -6,7 +6,7 @@ using UnityEngine;
 /// ネットワークでゲームが開始されたら、全員の画面でターンの進行を始める。
 /// 自分は画面の操作役（LocalPlayerAgent）、他の人はネットワーク越しの操作役（RemotePlayerAgent）にし、
 /// 操作は自分のプレイヤーからサーバー経由で全員へ配り、全プレイヤーから配られた操作を進行へ渡す。
-/// 山札と効果の乱数は、ホストから届いたシードで全員そろえる。
+/// 山札と効果の乱数は、ホストから届いたシードで全員そろえる。出品・オークションの待ち時間は NetworkPhaseClock で全員そろえる。
 /// ゲーム中に誰かが切断したら、ホストでその人の操作役を CPU に代え、CPU の操作をその人の操作として全員へ配る。
 /// 部屋主がキックした人は、リタイアさせてから切断するため CPU に代えない。
 /// ルーム設定で空き枠を埋めた CPU は、最初からホストで CPU が操作する。
@@ -25,6 +25,9 @@ public class NetworkMatchBootstrap : MonoBehaviour, IPlayerActionChannel
     [SerializeField] private GameManager game;
 
     [SerializeField] private PlayerSessionService sessionService;
+
+    [Tooltip("出品・オークションの待ち時間を全員の画面でそろえる時計")]
+    [SerializeField] private NetworkPhaseClock phaseClock;
 
     readonly List<NetworkSessionPlayer> players = new List<NetworkSessionPlayer>();
     readonly Dictionary<ulong, NetworkSessionPlayer> playerByClient = new Dictionary<ulong, NetworkSessionPlayer>();
@@ -85,6 +88,7 @@ public class NetworkMatchBootstrap : MonoBehaviour, IPlayerActionChannel
         if (localPlayer != null && localPlayer.IsServer)
             BeginHosting(localPlayer.NetworkManager);
 
+        phaseClock.Connect(localPlayer, players, IsCpu);
         turnFlow.Activate(agents, this, seed);
         startGate.NotifyStarted();
         Debug.Log($"[Session] {agents.Count} 人でターンの進行を始めました（シード {seed}）");

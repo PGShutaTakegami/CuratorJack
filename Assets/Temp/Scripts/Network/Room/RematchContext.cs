@@ -1,26 +1,26 @@
 /// <summary>
-/// リザルトでリトライしたとき、直前に遊んだ部屋の ID を GameScene の読み直し後へ受け渡す。
-/// クライアントはこの ID を目印に、ホストが作り直した部屋を探して入る。
+/// リザルトでリトライしたとき、直前に遊んだ部屋の情報（RematchTicket）を GameScene の読み直し後へ受け渡す。
+/// 最初にリトライした人がこの部屋の ID を目印に部屋を作り直し、後から来た人はその部屋を探して入る。
 /// </summary>
 public static class RematchContext
 {
-    static string previousRoomId;
+    static RematchTicket ticket;
 
-    public static void Set(string roomId)
+    public static void Set(RematchTicket rematchTicket)
     {
-        previousRoomId = roomId;
+        ticket = rematchTicket;
     }
 
-    /// <summary>受け渡された ID を取り出す（取り出したら消える）。</summary>
-    public static bool TryTake(out string roomId)
+    /// <summary>受け渡された情報を取り出す（取り出したら消える）。</summary>
+    public static bool TryTake(out RematchTicket rematchTicket)
     {
-        roomId = previousRoomId;
-        previousRoomId = null;
-        return !string.IsNullOrEmpty(roomId);
+        rematchTicket = ticket;
+        ticket = null;
+        return rematchTicket != null && !string.IsNullOrEmpty(rematchTicket.PreviousRoomId);
     }
 
     public static void Clear()
     {
-        previousRoomId = null;
+        ticket = null;
     }
 }

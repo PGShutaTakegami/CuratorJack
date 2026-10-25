@@ -19,8 +19,19 @@ public static class LocalRoomFactory
             capacity = capacity,
             playerCount = 0,
             address = LoopbackAddress,
-            port = FindFreePort()
+            port = FindFreePort(),
+            createdUtcTicks = DateTime.UtcNow.Ticks
         };
+    }
+
+    /// <summary>リトライ用に、直前の部屋（previousRoomId）と同じ設定の部屋を新しいポートで作る。</summary>
+    public static RoomInfo CreateRematch(RoomInfo settings, string previousRoomId)
+    {
+        RoomInfo room = Create(settings.capacity, settings.roomName, settings.message);
+        room.waitSeconds = settings.waitSeconds;
+        room.voiceChatOff = settings.voiceChatOff;
+        room.rematchOf = previousRoomId;
+        return room;
     }
 
     static int FindFreePort()

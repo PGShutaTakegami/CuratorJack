@@ -1563,6 +1563,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5154608683011458969}
+    - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7373951597878243694}
   m_SourcePrefab: {fileID: 100100000, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
 --- !u!1 &7984306069283608379 stripped
 GameObject:
@@ -1699,6 +1702,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f16bd4e06c232b47a6567a4e0aeec9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerNameReporter
+--- !u!114 &7373951597878243694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7984306069283608379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88304ff9e0c97d74492f2b49ee651370, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerVoiceIdentity
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!4 &8927231750670987032 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5792768713495776756, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
