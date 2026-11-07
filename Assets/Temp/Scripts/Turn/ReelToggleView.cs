@@ -45,6 +45,9 @@ public class ReelToggleView : MonoBehaviour
             FinishRoll();
     }
 
+    /// <summary>コントローラーから押す（押せる状態で、上に何も重なっていないときだけ）</summary>
+    public bool TryPress() => UIButtonPresser.TryPress(button);
+
     /// <summary>値を反映する。animate なら変わったときだけ巻いて切り替える</summary>
     public void SetValue(bool on, bool animate)
     {
@@ -64,6 +67,7 @@ public class ReelToggleView : MonoBehaviour
             return;
         }
 
+        SoundEffectPlayer.Play(on ? SoundId.ReelUp : SoundId.ReelDown);
         next.text = Text(on);
         next.gameObject.SetActive(true);
         elapsed = 0f;

@@ -97,14 +97,8 @@ public class TurnFlowController : MonoBehaviour
     [Tooltip("落札した人の手元にカードを置き、所持コインのリールを巻く演出")]
     [SerializeField] private WinnerPresenter winnerPresenter;
 
-    [Tooltip("死亡したプレイヤーに × を表示する")]
-    [SerializeField] private PlayerLabelBoard deathBoard;
-
     [Tooltip("オークション中に手札を隠すフェード")]
     [SerializeField] private CanvasGroupFader handFader;
-
-    [Tooltip("頭のモニターに出す残りの見送り権の枚数。オークション中は隠す")]
-    [SerializeField] private MonitorPassRightBoard monitorPassRights;
 
     [SerializeField] private TurnUI ui;
 
@@ -233,8 +227,6 @@ public class TurnFlowController : MonoBehaviour
     {
         deathOrder.Add(player.PlayerNumber);
         pendingDropOuts.Enqueue(player.PlayerNumber);
-        if (player.PlayerNumber != registry.LocalPlayerNumber)
-            deathBoard.Pin(player.PlayerNumber, "×");
         SetInfo($"{NameOf(player.PlayerNumber)} が脱落しました");
     }
 
@@ -508,7 +500,6 @@ public class TurnFlowController : MonoBehaviour
         bool hidesHand = game.IsAlive(registry.LocalPlayerNumber);
         if (hidesHand)
             handFader.FadeOut(null);
-        monitorPassRights.SetVisible(false);
 
         int[] watchers = game.AlivePlayers.Select(player => player.PlayerNumber).ToArray();
         activeAuction = auction;
@@ -535,7 +526,6 @@ public class TurnFlowController : MonoBehaviour
 
         if (hidesHand)
             handFader.FadeIn(null);
-        monitorPassRights.SetVisible(true);
         onFinished(auction);
     }
 

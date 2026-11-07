@@ -6,6 +6,7 @@ using UnityEngine;
 /// サーバー側で接続承認・プレイヤー番号・席の割り当てを管理する。
 /// 部屋の人数はルーム設定であとから変えられ、部屋主はプレイヤーをキック（切断）したり、空き枠を CPU で埋めたりできる。
 /// CPU はプレイヤーと同じプレハブをサーバーが持つ形で生成し、番号と席を割り当てる。
+/// 接続するときは自分のゲームのバージョンを送り、サーバーはバージョンが違う接続を断る。
 /// </summary>
 public class PlayerSessionService : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerSessionService : MonoBehaviour
     public const string GameStartedReason = "GameStarted";
 
     public const string KickedReason = "Kicked";
+
+    public const string VersionMismatchReason = "VersionMismatch";
 
     [Tooltip("同時に接続できる人数（Local は 2 人）")]
     [SerializeField] private int maxPlayers = 2;
@@ -26,8 +29,29 @@ public class PlayerSessionService : MonoBehaviour
     readonly Dictionary<int, int> seatByPlayer = new Dictionary<int, int>();
 
     bool isEntryClosed;
+    IConnectionGuard guard;
 
     public int MaxPlayers => maxPlayers;
+
+    /// <summary>接続の許可に通信方式ごとの確認を足す（null なら足さない）</summary>
+    public void SetGuard(IConnectionGuard connectionGuard)
+    {
+        guard = connectionGuard;
+    }
+
+    /// <summary>接続するときにホストへ送るプレイヤー ID を決める（オンラインのみ。Bind のあとに呼ぶ）</summary>
+    public void SetLocalPlayerId(string playerId)
+    {
+        if (networkManager != null)
+            networkManager.NetworkConfig.ConnectionData = new ConnectionPayload(GameVersion.Current, playerId).ToBytes();
+    }
+
+    /// <summary>自分の接続が、ホストとゲームのバージョンが違うため断られたか</summary>
+    public static bool WasRejectedByVersion(NetworkManager manager)
+    {
+        string reason = manager.DisconnectReason;
+        return !string.IsNullOrEmpty(reason) && reason.Contains(VersionMismatchReason);
+    }
 
     public int SeatCount => seatRegistry.SeatCount;
 
@@ -59,6 +83,7 @@ public class PlayerSessionService : MonoBehaviour
             || !slotAllocator.TryGetClient(playerNumber, out ulong clientId) || clientId == NetworkManager.ServerClientId)
             return false;
 
+        guard?.HandleKicked(clientId);
         networkManager.DisconnectClient(clientId, KickedReason);
         return true;
     }
@@ -117,6 +142,7 @@ public class PlayerSessionService : MonoBehaviour
         seatPolicy = new SeatAssignmentPolicy(seatRegistry.SeatCount, seatRegistry.FirstSeat, new System.Random());
         seatByPlayer.Clear();
 
+        networkManager.NetworkConfig.ConnectionData = new ConnectionPayload(GameVersion.Current, string.Empty).ToBytes();
         networkManager.NetworkConfig.ConnectionApproval = true;
         networkManager.ConnectionApprovalCallback = ApproveConnection;
         networkManager.OnClientConnectedCallback += HandleClientConnected;
@@ -142,6 +168,24 @@ public class PlayerSessionService : MonoBehaviour
             return;
         }
 
+        if (request.ClientNetworkId != NetworkManager.ServerClientId)
+        {
+            ConnectionPayload payload = ConnectionPayload.Parse(request.Payload);
+            if (!GameVersion.IsCompatible(payload.Version))
+            {
+                response.Approved = false;
+                response.Reason = VersionMismatchReason;
+                return;
+            }
+
+            if (guard != null && !guard.Accepts(payload))
+            {
+                response.Approved = false;
+                response.Reason = KickedReason;
+                return;
+            }
+        }
+
         bool approved = slotAllocator.TryAssign(request.ClientNetworkId, out int playerNumber);
         response.Approved = approved;
         response.CreatePlayerObject = approved;
@@ -153,6 +197,9 @@ public class PlayerSessionService : MonoBehaviour
 
     void HandleClientConnected(ulong clientId)
     {
+        if (networkManager.IsServer)
+            guard?.HandleConnected(clientId);
+
         if (!networkManager.IsServer || !slotAllocator.TryGetNumber(clientId, out int playerNumber))
             return;
 
@@ -166,6 +213,9 @@ public class PlayerSessionService : MonoBehaviour
 
     void HandleClientDisconnected(ulong clientId)
     {
+        if (networkManager.IsServer)
+            guard?.HandleDisconnected(clientId);
+
         if (!networkManager.IsServer || !slotAllocator.TryRelease(clientId, out int playerNumber))
             return;
 

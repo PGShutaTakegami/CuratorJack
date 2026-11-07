@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EnvironmentSwitcher;
 using Unity.Netcode;
 using Unity.Netcode.Transports.UTP;
+using Unity.Services.Authentication;
 using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,6 +18,7 @@ using UnityEngine.SceneManagement;
 /// リトライでは、最初にリトライした人が同じ設定の部屋を作り直してホストになり、後から来た人はそこへ入る。
 /// 元の部屋主が戻るまでは作り直した人も部屋主にならず、元の部屋主が入ってきたらホストを渡す。リザルトから一定時間戻らなければ、作り直した人がそのまま部屋主になる。
 /// セッションの最大人数は作ったあと変えられないため席の数で作り、部屋の人数はプロパティとして公開する（ルーム設定で変えたら公開し直す）。
+/// ホストは、接続が部屋のメンバーのものかを確かめ、キックした人を部屋から外して入り直させない（OnlineMemberGuard / OnlineConnectionClaim）。
 /// </summary>
 public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
 {
@@ -57,6 +60,15 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     [Tooltip("ゲーム開始前にホストとの接続が切れたとき、ホストの引き継ぎで繋ぎ直されるのを待つ秒数")]
     [SerializeField] private float hostMigrationWaitSeconds = 30f;
 
+    [Tooltip("ホストが、部屋のメンバーと確認できない接続を切るまで待つ秒数")]
+    [SerializeField] private float memberVerifySeconds = 60f;
+
+    [Tooltip("自分の接続番号を部屋に登録できなかったとき、やり直すまでの秒数")]
+    [SerializeField] private float claimRetrySeconds = 3f;
+
+    readonly KickedPlayerList kickedPlayers = new KickedPlayerList();
+    OnlineMemberGuard memberGuard;
+    OnlineConnectionClaim connectionClaim;
     ISession session;
     bool isWatchingHost;
     bool isLeaving;
@@ -96,6 +108,9 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         bool isHost = RoomConnectionContext.CurrentRole == RoomConnectionContext.Role.Host;
         transport.DisconnectTimeoutMS = disconnectTimeoutMS;
         sessionService.Bind(networkManager, room.capacity);
+        memberGuard = new OnlineMemberGuard(networkManager, () => session, kickedPlayers, memberVerifySeconds);
+        connectionClaim = new OnlineConnectionClaim(networkManager, () => session, claimRetrySeconds);
+        sessionService.SetGuard(memberGuard);
         readyRoster.SetTotal(room.capacity);
         publishedCapacity = room.capacity;
         startGate.Started += LockSession;
@@ -106,6 +121,7 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         try
         {
             await OnlineServices.EnsureSignedInAsync();
+            sessionService.SetLocalPlayerId(AuthenticationService.Instance.PlayerId);
             if (isRematch)
                 await RematchAsync(room);
             else if (isHost)
@@ -141,12 +157,16 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             IsPrivate = false,
             SessionProperties = new Dictionary<string, SessionProperty>
             {
-                [OnlineRoomCatalog.CapacityKey] = new SessionProperty(room.capacity.ToString())
+                [OnlineRoomCatalog.CapacityKey] = new SessionProperty(room.capacity.ToString()),
+                [OnlineRoomCatalog.VersionKey] = new SessionProperty(GameVersion.Current)
             }
-        }.WithRelayNetwork().WithHostMigration(new RoomMigrationDataHandler());
+        }.WithRelayNetwork().WithHostMigration(new RoomMigrationDataHandler(kickedPlayers));
 
         if (!string.IsNullOrEmpty(room.message))
             options.SessionProperties[OnlineRoomCatalog.MessageKey] = new SessionProperty(room.message);
+
+        if (room.hasPassword)
+            options.Password = OnlineRoomPassword.ToSessionPassword(room.password);
 
         if (!string.IsNullOrEmpty(rematchOf))
             options.SessionProperties[OnlineRoomCatalog.RematchKey] = new SessionProperty(rematchOf);
@@ -168,7 +188,10 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     /// <summary>入れたあとシーンを離れていたら false。</summary>
     async Task<bool> JoinAsync(string roomId, RoomInfo room)
     {
-        session = await MultiplayerService.Instance.JoinSessionByIdAsync(roomId);
+        JoinSessionOptions joinOptions = room.hasPassword
+            ? new JoinSessionOptions { Password = OnlineRoomPassword.ToSessionPassword(room.password) }
+            : null;
+        session = await MultiplayerService.Instance.JoinSessionByIdAsync(roomId, joinOptions);
         if (await LeaveIfDestroyedAsync())
             return false;
 
@@ -194,7 +217,7 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         string previousRoomId = rematchTicket.PreviousRoomId;
         Debug.Log("[Session] リトライ後の部屋を探しています");
 
-        string roomId = await catalog.FindRematchRoomIdAsync(previousRoomId);
+        string roomId = await catalog.FindRematchRoomIdAsync(previousRoomId, rematchTicket.PreviousMemberIds);
         if (this == null)
             return;
 
@@ -212,7 +235,7 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         if (await LeaveIfDestroyedAsync())
             return;
 
-        string earliestId = await catalog.FindRematchRoomIdAsync(previousRoomId);
+        string earliestId = await catalog.FindRematchRoomIdAsync(previousRoomId, rematchTicket.PreviousMemberIds);
         if (await LeaveIfDestroyedAsync())
             return;
 
@@ -257,6 +280,12 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         if (!string.IsNullOrEmpty(reason) && reason.Contains(PlayerSessionService.GameStartedReason))
             return "ゲームが始まっています";
 
+        if (!string.IsNullOrEmpty(reason) && reason.Contains(PlayerSessionService.KickedReason))
+            return "キックされた部屋には入れません";
+
+        if (PlayerSessionService.WasRejectedByVersion(networkManager))
+            return GameVersion.MismatchMessage;
+
         return "ホストに接続できませんでした";
     }
 
@@ -287,6 +316,7 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         target.SessionMigrated += HandleSessionMigrated;
         target.Deleted += HandleSessionEnded;
         target.RemovedFromSession += HandleSessionEnded;
+        target.PlayerJoined += memberGuard.HandlePlayerJoined;
     }
 
     void UnsubscribeSession(ISession target)
@@ -294,6 +324,7 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         target.SessionMigrated -= HandleSessionMigrated;
         target.Deleted -= HandleSessionEnded;
         target.RemovedFromSession -= HandleSessionEnded;
+        target.PlayerJoined -= memberGuard.HandlePlayerJoined;
     }
 
     void HandleSessionEnded() => hasSessionEnded = true;
@@ -365,10 +396,15 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         }
     }
 
-    /// <summary>部屋主待ちの間に元の部屋主が入ってきたら、その画面へホストを渡す。</summary>
+    /// <summary>
+    /// 部屋主待ちの間に元の部屋主が入ってきたら、その画面へホストを渡す。
+    /// 名乗られたプレイヤー ID が、自分が控えた元の部屋主の ID で、今この部屋にいるときだけ渡す（なりすましても、ホストは本物の元の部屋主にしか渡らない）。
+    /// </summary>
     void HandleOwnershipRequested(ulong clientId, string previousRoomId, string playerId)
     {
         if (ownerTimer == null || session == null || !session.IsHost || string.IsNullOrEmpty(playerId) || previousRoomId != RematchOfSession())
+            return;
+        if (playerId != rematchTicket?.PreviousOwnerId || session.Players == null || session.Players.All(player => player.Id != playerId))
             return;
 
         ownerTimer = null;
@@ -384,6 +420,8 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
 
     void Update()
     {
+        memberGuard?.Tick();
+        connectionClaim?.Tick();
         UpdateAwaitingOwner();
 
         if (!isWatchingHost)
@@ -547,13 +585,14 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         matchFinishedAt = Time.realtimeSinceStartup;
     }
 
-    /// <summary>今の部屋の ID と、自分が部屋主だったかを目印として残す。ホストは部屋を削除し、クライアントは抜ける。</summary>
+    /// <summary>今の部屋の ID と、自分が部屋主だったか、部屋主とメンバーのプレイヤー ID を目印として残す。ホストは部屋を削除し、クライアントは抜ける。</summary>
     public async Task PrepareRetryAsync()
     {
         if (session != null)
         {
             float finishedAt = matchFinishedAt >= 0f ? matchFinishedAt : Time.realtimeSinceStartup;
-            RematchContext.Set(new RematchTicket(session.Id, roomState.IsLocalOwner, finishedAt + ownerWaitSeconds));
+            string[] memberIds = session.Players != null ? session.Players.Select(player => player.Id).ToArray() : Array.Empty<string>();
+            RematchContext.Set(new RematchTicket(session.Id, roomState.IsLocalOwner, finishedAt + ownerWaitSeconds, session.Host, memberIds));
         }
         StopWatching();
         isLeaving = true;

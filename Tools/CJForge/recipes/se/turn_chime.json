@@ -1,0 +1,12 @@
+{
+  "_comment": "YOUR TURN / FIRST TURN / NEXT TURN の告知（上品な2音のチャイム、5度上がる）",
+  "kind": "se",
+  "layers": [
+    { "osc": "sine", "freq": 784, "duration": 0.9, "fm": { "ratio": 3.5, "index": 1.0, "decay": 0.2 },
+      "env": { "a": 0.002, "d": 0.8, "s": 0, "r": 0.3 }, "gain_db": -4 },
+    { "osc": "sine", "start": 0.14, "freq": 1175, "duration": 0.9, "fm": { "ratio": 3.5, "index": 1.0, "decay": 0.2 },
+      "env": { "a": 0.002, "d": 0.8, "s": 0, "r": 0.3 }, "gain_db": -4 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.2, "decay": 1.2 }],
+  "master": { "peak_db": -3 }
+}

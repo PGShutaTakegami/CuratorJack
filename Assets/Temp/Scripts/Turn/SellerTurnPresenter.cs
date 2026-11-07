@@ -50,6 +50,7 @@ public class SellerTurnPresenter : MonoBehaviour
 
         bool isFaded = false;
         panel.FadeIn(() => isFaded = true);
+        SoundEffectPlayer.Play(SoundId.TurnChime);
         yield return new WaitUntil(() => isFaded);
 
         yield return new WaitForSeconds(displaySeconds);

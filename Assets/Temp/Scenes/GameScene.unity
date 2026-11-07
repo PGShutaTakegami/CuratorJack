@@ -1732,6 +1732,7 @@ MonoBehaviour:
   startGate: {fileID: 1871205615}
   game: {fileID: 1503668042}
   names: {fileID: 1503668048}
+  icons: {fileID: 1503668050}
   voiceChat: {fileID: 808310083}
 --- !u!114 &82492037
 MonoBehaviour:
@@ -3439,6 +3440,87 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &206865835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 206865836}
+  - component: {fileID: 206865838}
+  - component: {fileID: 206865837}
+  m_Layer: 0
+  m_Name: TableInspect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &206865836
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206865835}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1503668043}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &206865837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206865835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3319ab4195f9376489ff1837f3934012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TableInspectButtons
+  registry: {fileID: 1871205621}
+  turnFlow: {fileID: 1503668045}
+  inspectCamera: {fileID: 206865838}
+  piles: {fileID: 1430318996}
+  screen: {fileID: 606572329}
+  backgroundSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  iconSprite: {fileID: 21300000, guid: 4f467e51d155c3c4a8767df24e63e2c0, type: 3}
+  buttonSize: 64
+  iconRatio: 0.6
+  backgroundColor: {r: 0.12, g: 0.1, b: 0.08, a: 0.9}
+  outlineColor: {r: 0.85, g: 0.68, b: 0.35, a: 1}
+  iconColor: {r: 0.95, g: 0.82, b: 0.55, a: 1}
+  seatOffset: 0.3
+  sideOffset: 1
+  lift: 0.1
+  frontToleranceRatio: 0.02
+--- !u!114 &206865838
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206865835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9887bf07587220d4db9ea252534f873d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TableInspectCamera
+  registry: {fileID: 1871205621}
+  piles: {fileID: 1430318996}
+  sideOffset: 0.25
+  viewerOffset: 0.2
+  height: 1.5
+  backOffset: 0.25
+  moveSeconds: 0.6
+  holdSeconds: 2.5
 --- !u!1 &210378266
 GameObject:
   m_ObjectHideFlags: 0
@@ -5182,6 +5264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomSlotView
   memberRoot: {fileID: 1755854562}
   nameLabel: {fileID: 286534678}
+  icon: {fileID: 1358068603}
   muteButton: {fileID: 1727014779}
   muteLabel: {fileID: 896107931}
   kickButton: {fileID: 1488134811}
@@ -8205,6 +8288,7 @@ GameObject:
   - component: {fileID: 440961847}
   - component: {fileID: 440961846}
   - component: {fileID: 440961845}
+  - component: {fileID: 440961848}
   m_Layer: 5
   m_Name: BidButton
   m_TagString: Untagged
@@ -8314,6 +8398,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 440961843}
   m_CullTransparentMesh: 1
+--- !u!114 &440961848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 440961843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebcf57556ff262a458fc40eb86e57899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSound
+  sound: 1
 --- !u!1 &442719315
 GameObject:
   m_ObjectHideFlags: 0
@@ -14131,33 +14228,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 698239918}
-  - component: {fileID: 698239917}
+  - component: {fileID: 698239919}
+  - component: {fileID: 698239920}
   m_Layer: 0
-  m_Name: MonitorPassRights
+  m_Name: HeadMonitors
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &698239917
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 698239916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84afebbe984075e439ea503ab83cdd8a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonitorPassRightBoard
-  game: {fileID: 1503668042}
-  registry: {fileID: 1871205621}
-  screenName: Monitor_Screen
-  font: {fileID: 11400000, guid: a8c59cf6b6b40344c938927f7fe2879d, type: 2}
-  color: {r: 1, g: 0.85, b: 0.35, a: 1}
-  fillRatio: 0.8
-  surfaceOffset: 0.01
 --- !u!4 &698239918
 Transform:
   m_ObjectHideFlags: 0
@@ -14173,6 +14252,42 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1503668043}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &698239919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698239916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 524648d43d746e24d83fc3f764475ab3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonitorIconBoard
+  game: {fileID: 1503668042}
+  registry: {fileID: 1871205621}
+  icons: {fileID: 1503668050}
+  aliveMaterial: {fileID: 2100000, guid: eec4d44e2efece0418c142d8449b931c, type: 2}
+  droppedOutMaterial: {fileID: 2100000, guid: 5d99ef08dfb61734f8d3b1877bd6612a, type: 2}
+  screenName: Monitor_Screen
+  surfaceOffset: 0.01
+--- !u!114 &698239920
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 698239916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 271f69b59ee420b4d8bb6bf2bbe2cf88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DropOutHeadBow
+  game: {fileID: 1503668042}
+  registry: {fileID: 1871205621}
+  tableCenter: {fileID: 1277778663}
+  bowAngle: 20
+  bowSeconds: 0.6
 --- !u!1 &713102389
 GameObject:
   m_ObjectHideFlags: 0
@@ -14791,6 +14906,7 @@ GameObject:
   - component: {fileID: 767162127}
   - component: {fileID: 767162126}
   - component: {fileID: 767162129}
+  - component: {fileID: 767162130}
   m_Layer: 5
   m_Name: ConfirmButton
   m_TagString: Untagged
@@ -14912,6 +15028,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!114 &767162130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 767162124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ebcf57556ff262a458fc40eb86e57899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSound
+  sound: 1
 --- !u!1 &778752167
 GameObject:
   m_ObjectHideFlags: 0
@@ -19683,7 +19812,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.55, g: 0.55, b: 0.55, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -19692,7 +19821,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -25006,6 +25135,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomSlotView
   memberRoot: {fileID: 1542820311}
   nameLabel: {fileID: 873356506}
+  icon: {fileID: 1070932281}
   muteButton: {fileID: 916738482}
   muteLabel: {fileID: 497964883}
   kickButton: {fileID: 21054001}
@@ -25731,7 +25861,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.55, g: 0.55, b: 0.55, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -25740,7 +25870,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -28809,6 +28939,7 @@ GameObject:
   - component: {fileID: 1503668047}
   - component: {fileID: 1503668048}
   - component: {fileID: 1503668049}
+  - component: {fileID: 1503668050}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -28853,6 +28984,8 @@ Transform:
   - {fileID: 698239918}
   - {fileID: 1189171194}
   - {fileID: 1430318995}
+  - {fileID: 206865836}
+  - {fileID: 1905523614}
   - {fileID: 1967709175}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -28912,9 +29045,7 @@ MonoBehaviour:
   bidPaddles: {fileID: 1410798266}
   bidderShot: {fileID: 1030008048}
   winnerPresenter: {fileID: 1967709176}
-  deathBoard: {fileID: 2130418658}
   handFader: {fileID: 1921360743}
-  monitorPassRights: {fileID: 698239917}
   ui: {fileID: 479731435}
   resultSeconds: 2
   bidOverdraft: 10
@@ -28991,6 +29122,19 @@ MonoBehaviour:
   - {fileID: 1124753069}
   bidderShot: {fileID: 1030008048}
   networkClock: {fileID: 547329666}
+--- !u!114 &1503668050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503668041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c23836bbc7081a74588f540f93b7911c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerIconDirectory
+  registry: {fileID: 1871205621}
 --- !u!1 &1504495120
 GameObject:
   m_ObjectHideFlags: 0
@@ -34135,7 +34279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.55, g: 0.55, b: 0.55, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -34144,7 +34288,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -34988,6 +35132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomSlotView
   memberRoot: {fileID: 366781839}
   nameLabel: {fileID: 1084311182}
+  icon: {fileID: 1815858381}
   muteButton: {fileID: 317527915}
   muteLabel: {fileID: 1119019862}
   kickButton: {fileID: 1098754403}
@@ -35236,6 +35381,7 @@ GameObject:
   - component: {fileID: 1871205623}
   - component: {fileID: 1871205625}
   - component: {fileID: 1871205626}
+  - component: {fileID: 1871205627}
   m_Layer: 0
   m_Name: ReadyRoster
   m_TagString: Untagged
@@ -35503,6 +35649,32 @@ MonoBehaviour:
   - {fileID: 547329658}
   - {fileID: 547329665}
   lobbySceneName: HumanMonitorScene
+--- !u!114 &1871205627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871205612}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7555b1372c8661f44a198ecb74e840a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnnouncementSoundPresenter
+  announcer: {fileID: 1871205617}
+  cues:
+  - message: {fileID: 1274717170}
+    sound: 12
+  - message: {fileID: 813399994}
+    sound: 8
+  - message: {fileID: 1027919337}
+    sound: 8
+  - message: {fileID: 1371956279}
+    sound: 9
+  - message: {fileID: 210378266}
+    sound: 10
+  - message: {fileID: 14906383}
+    sound: 11
 --- !u!1 &1877203612
 GameObject:
   m_ObjectHideFlags: 0
@@ -35719,6 +35891,69 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1902949162}
   m_CullTransparentMesh: 1
+--- !u!1 &1905523613
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1905523614}
+  - component: {fileID: 1905523615}
+  m_Layer: 0
+  m_Name: PassTicketStubPiles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1905523614
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905523613}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1503668043}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1905523615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1905523613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b52a116c7e144c4ba883cceb9430e85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PassTicketStubPiles
+  game: {fileID: 1503668042}
+  registry: {fileID: 1871205621}
+  stubPrefab: {fileID: 7895293447193651042, guid: 58a853aea19547c4490f2037cd92b47f, type: 3}
+  tableCenter: {fileID: 1277778663}
+  table: {fileID: 1516036393}
+  surface: {fileID: 2032088767}
+  mat: {fileID: 1277778661}
+  edgeRatio: 0.5
+  sideOffset: 0.55
+  columnSpacing: 0.25
+  columnsPerRow: 5
+  rowSpacing: 0.4
+  slotJitter: 0.015
+  slotAngleJitter: 8
+  surfaceOffset: 0.002
+  dropHeight: 0.25
+  dropSeconds: 0.45
+  dropSpin: 120
+  dropTilt: 35
 --- !u!1 &1905793623
 GameObject:
   m_ObjectHideFlags: 0
@@ -35769,7 +36004,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.55, g: 0.55, b: 0.55, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -35778,7 +36013,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   m_Type: 1
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -38270,6 +38505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomSlotView
   memberRoot: {fileID: 1526026579}
   nameLabel: {fileID: 1358117828}
+  icon: {fileID: 1905793625}
   muteButton: {fileID: 1517192599}
   muteLabel: {fileID: 1966077029}
   kickButton: {fileID: 44334533}

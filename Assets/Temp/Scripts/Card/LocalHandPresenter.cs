@@ -68,6 +68,7 @@ public class LocalHandPresenter : MonoBehaviour
         if (!IsLocal(player))
             return;
 
+        SoundEffectPlayer.Play(SoundId.CardDraw);
         Image image = view.AddCard();
         if (image.TryGetComponent(out CardManager manager))
         {

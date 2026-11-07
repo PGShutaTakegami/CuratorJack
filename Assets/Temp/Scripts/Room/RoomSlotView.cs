@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// ルーム設定のプレイヤー枠 1 つ。
@@ -13,6 +14,9 @@ public class RoomSlotView : MonoBehaviour
     [SerializeField] private GameObject memberRoot;
 
     [SerializeField] private TMP_Text nameLabel;
+
+    [Tooltip("参加者のアイコン。アイコンのない人は空欄にする")]
+    [SerializeField] private Image icon;
 
     [SerializeField] private MenuButton muteButton;
 
@@ -41,10 +45,15 @@ public class RoomSlotView : MonoBehaviour
         fillButton.Button.onClick.AddListener(() => FillClicked?.Invoke());
     }
 
-    public void ShowMember(string playerName, bool showMute, bool isMuted, bool showKick, bool canKick)
+    public void ShowMember(string playerName, Sprite iconSprite, bool showMute, bool isMuted, bool showKick, bool canKick)
     {
         SetRoot(memberRoot);
         nameLabel.text = playerName;
+        if (icon != null)
+        {
+            icon.sprite = iconSprite;
+            icon.enabled = iconSprite != null;
+        }
         muteButton.gameObject.SetActive(showMute);
         muteLabel.text = isMuted ? "解除" : "ミュート";
         kickButton.gameObject.SetActive(showKick);

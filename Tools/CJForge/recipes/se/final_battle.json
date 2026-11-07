@@ -1,0 +1,19 @@
+{
+  "_comment": "FINAL BATTLE の告知（低い打撃＋緊張感のある短調の和音＋シンバル）",
+  "kind": "se",
+  "layers": [
+    { "drum": "tom", "tune": 0.5, "decay": 2.0, "gain_db": 0 },
+    { "drum": "kick", "tune": 0.8, "decay": 1.5, "gain_db": -2 },
+    { "drum": "crash", "decay": 1.2, "gain_db": -12 },
+    { "osc": "saw", "freq": 110, "duration": 1.2, "env": { "a": 0.005, "d": 1.0, "s": 0.3, "r": 0.4 },
+      "filter": { "type": "lowpass", "cutoff": [2200, 700] }, "gain_db": -8 },
+    { "osc": "saw", "freq": 130.8, "duration": 1.2, "env": { "a": 0.005, "d": 1.0, "s": 0.3, "r": 0.4 },
+      "filter": { "type": "lowpass", "cutoff": [2200, 700] }, "gain_db": -8 },
+    { "osc": "saw", "freq": 164.8, "duration": 1.2, "env": { "a": 0.005, "d": 1.0, "s": 0.3, "r": 0.4 },
+      "filter": { "type": "lowpass", "cutoff": [2200, 700] }, "gain_db": -8 },
+    { "osc": "saw", "freq": 220, "duration": 1.2, "env": { "a": 0.005, "d": 1.0, "s": 0.3, "r": 0.4 },
+      "filter": { "type": "lowpass", "cutoff": [2200, 700] }, "gain_db": -10 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.25, "decay": 1.8 }],
+  "master": { "peak_db": -2 }
+}

@@ -73,6 +73,7 @@ public class EffectCardReveal : MonoBehaviour
 
         yield return Tween(appearSeconds, t => group.alpha = t);
         yield return new WaitForSeconds(baseHoldSeconds);
+        SoundEffectPlayer.Play(SoundId.CardDissolve);
         yield return Tween(dissolveSeconds, t => material.SetFloat(ProgressId, t));
         yield return new WaitForSeconds(cardHoldSeconds);
         yield return Tween(fadeSeconds, t => group.alpha = 1f - t);

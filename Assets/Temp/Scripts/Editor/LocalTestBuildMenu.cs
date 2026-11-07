@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
@@ -26,7 +27,7 @@ public static class LocalTestBuildMenu
     {
         var options = new BuildPlayerOptions
         {
-            scenes = LocalTestBuildPaths.Scenes,
+            scenes = BuildScenes(),
             locationPathName = LocalTestBuildPaths.ExecutablePath,
             target = BuildTarget.StandaloneWindows64,
             options = BuildOptions.Development
@@ -43,5 +44,18 @@ public static class LocalTestBuildMenu
 
         Debug.LogError($"[LocalTest] テストビルドに失敗しました: {report.summary.result}（エラー {report.summary.totalErrors} 件）");
         return false;
+    }
+
+    /// <summary>起動シーンを先頭にし、ロード画面などほかのシーンはビルド設定の有効なシーンをすべて含める。</summary>
+    static string[] BuildScenes()
+    {
+        var scenes = new List<string> { LocalTestBuildPaths.StartScene };
+        foreach (EditorBuildSettingsScene scene in EditorBuildSettings.scenes)
+        {
+            if (scene.enabled && !scenes.Contains(scene.path))
+                scenes.Add(scene.path);
+        }
+
+        return scenes.ToArray();
     }
 }

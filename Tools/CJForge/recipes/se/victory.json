@@ -1,0 +1,23 @@
+{
+  "_comment": "勝利（WIN）の短いファンファーレ。和音の構成音を上がるだけの4音＋和音",
+  "kind": "se",
+  "layers": [
+    { "osc": "saw", "freq": 523.25, "duration": 0.14, "env": { "a": 0.01, "d": 0.1, "s": 0.7, "r": 0.08 },
+      "filter": { "type": "lowpass", "cutoff": 3000 }, "gain_db": -6 },
+    { "osc": "saw", "start": 0.15, "freq": 659.25, "duration": 0.14, "env": { "a": 0.01, "d": 0.1, "s": 0.7, "r": 0.08 },
+      "filter": { "type": "lowpass", "cutoff": 3000 }, "gain_db": -6 },
+    { "osc": "saw", "start": 0.3, "freq": 784, "duration": 0.14, "env": { "a": 0.01, "d": 0.1, "s": 0.7, "r": 0.08 },
+      "filter": { "type": "lowpass", "cutoff": 3000 }, "gain_db": -6 },
+    { "osc": "saw", "start": 0.45, "freq": 1046.5, "duration": 1.0, "env": { "a": 0.02, "d": 0.3, "s": 0.7, "r": 0.5 },
+      "filter": { "type": "lowpass", "cutoff": [1500, 4500] }, "vibrato": { "rate": 5.5, "depth": 18 }, "gain_db": -6 },
+    { "osc": "saw", "start": 0.45, "freq": 523.25, "duration": 1.0, "env": { "a": 0.03, "d": 0.3, "s": 0.6, "r": 0.5 },
+      "filter": { "type": "lowpass", "cutoff": 2000 }, "gain_db": -12 },
+    { "osc": "saw", "start": 0.45, "freq": 659.25, "duration": 1.0, "env": { "a": 0.03, "d": 0.3, "s": 0.6, "r": 0.5 },
+      "filter": { "type": "lowpass", "cutoff": 2000 }, "gain_db": -12 },
+    { "osc": "saw", "start": 0.45, "freq": 784, "duration": 1.0, "env": { "a": 0.03, "d": 0.3, "s": 0.6, "r": 0.5 },
+      "filter": { "type": "lowpass", "cutoff": 2000 }, "gain_db": -12 },
+    { "drum": "crash", "start": 0.45, "decay": 1.5, "gain_db": -12 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.25, "decay": 1.5 }],
+  "master": { "peak_db": -2 }
+}

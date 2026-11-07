@@ -16,7 +16,7 @@ public enum TutorialNavLayout
 /// チュートリアルの案内の画面。暗幕・キャラクター・ふきだしを出し、指定した UI だけを暗幕より手前に出す。
 /// 手前に出した UI のうち表示されている最初の 1 つを矢印で指す。描く順は 暗幕 → 手前に出した UI → 矢印 → キャラクターとふきだし。
 /// 暗幕は透明にしていても入力を止め、チュートリアル中は案内している UI 以外を押せないようにする（Release で外す）。
-/// ふきだしのクリックで進む案内では、ふきだしを押せるようにしてクリックの合図を出す。
+/// ふきだしのクリックで進む案内では、ふきだしを押せるようにしてクリックの合図を出す（コントローラーの A でも押せる）。
 /// ポーズ画面を開いている間は、案内も入力の制限も止める。
 /// </summary>
 public class TutorialNavigator : MonoBehaviour
@@ -93,6 +93,13 @@ public class TutorialNavigator : MonoBehaviour
     void OnDestroy()
     {
         spotlight.Clear();
+    }
+
+    /// <summary>ふきだしのクリックで進む案内は、コントローラーの A でも進める</summary>
+    void Update()
+    {
+        if (guide.gameObject.activeSelf && !suspended && ControllerInput.SubmitPressed)
+            UIButtonPresser.TryPress(bubbleButton);
     }
 
     /// <summary>案内を出す。dimmed なら highlights 以外を暗くし、waitsClick ならふきだしを押せるようにする</summary>

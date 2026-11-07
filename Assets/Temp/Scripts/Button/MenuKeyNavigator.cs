@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// 縦に並んだメニューのボタンを ↑↓（W/S）で選び、Enter / Space で決定する（Alt+Enter は画面の切り替えに使うため除く）。押せない・表示していないボタンは飛ばす。
+/// 縦に並んだメニューのボタンを ↑↓（W/S・十字キー上下）で選び、Enter / Space / コントローラーの A で決定する（Alt+Enter は画面の切り替えに使うため除く）。押せない・表示していないボタンは飛ばす。
 /// 選択の表示は ButtonSelectionGroup に任せる（マウスを乗せたボタンも選択される）。メニューを閉じたら選択を外す。
 /// </summary>
 public class MenuKeyNavigator : MonoBehaviour
@@ -21,15 +21,22 @@ public class MenuKeyNavigator : MonoBehaviour
     void Update()
     {
         Keyboard keyboard = Keyboard.current;
-        if (keyboard == null)
-            return;
+        bool up = ControllerInput.UpPressed;
+        bool down = ControllerInput.DownPressed;
+        bool submit = ControllerInput.SubmitPressed;
+        if (keyboard != null)
+        {
+            up |= keyboard.upArrowKey.wasPressedThisFrame || keyboard.wKey.wasPressedThisFrame;
+            down |= keyboard.downArrowKey.wasPressedThisFrame || keyboard.sKey.wasPressedThisFrame;
+            submit |= ((keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame) && !DisplayModeToggle.IsAltHeld(keyboard))
+                || keyboard.spaceKey.wasPressedThisFrame;
+        }
 
-        if (keyboard.upArrowKey.wasPressedThisFrame || keyboard.wKey.wasPressedThisFrame)
+        if (up)
             Move(-1);
-        else if (keyboard.downArrowKey.wasPressedThisFrame || keyboard.sKey.wasPressedThisFrame)
+        else if (down)
             Move(1);
-        else if (((keyboard.enterKey.wasPressedThisFrame || keyboard.numpadEnterKey.wasPressedThisFrame) && !DisplayModeToggle.IsAltHeld(keyboard))
-            || keyboard.spaceKey.wasPressedThisFrame)
+        else if (submit)
             selection.SubmitSelected();
     }
 

@@ -1,0 +1,11 @@
+{
+  "_comment": "UI ボタンのクリック（木を軽くたたくカチッ）",
+  "kind": "se",
+  "layers": [
+    { "osc": "sine", "freq": [2200, 900], "duration": 0.035, "env": { "a": 0.0005, "d": 0.03, "s": 0, "r": 0.01 } },
+    { "osc": "noise", "duration": 0.015, "env": { "a": 0.0002, "d": 0.012, "s": 0, "r": 0.005 },
+      "filter": { "type": "bandpass", "cutoff": 4000, "q": 1.5 }, "gain_db": -6 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.08, "decay": 0.25 }],
+  "master": { "peak_db": -3 }
+}

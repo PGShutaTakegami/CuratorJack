@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// インフォメーションマークを押すと、画面中央にカードの一覧を開く。ウィンドウの外を押すと閉じる。
 /// 上の切り替えで「商品」「エフェクト」「スペシャル」の一覧を選び、それぞれの山札に登録されたカードを横一列に並べる。
-/// 入りきらない分は、ウィンドウを押したまま左右に動かすか、左右の方向キーを押している間スライドして見る。
+/// 入りきらない分は、ウィンドウを押したまま左右に動かすか、左右の方向キー・十字キー左右を押している間スライドして見る。
 /// オークション中のスペシャルカードは外側を光らせ、開いたときは「スペシャル」にしてそのカードが見える位置までスライドする。
 /// </summary>
 public class SpecialCardCatalog : MonoBehaviour
@@ -141,10 +141,9 @@ public class SpecialCardCatalog : MonoBehaviour
             return;
 
         Keyboard keyboard = Keyboard.current;
-        if (keyboard == null)
-            return;
-
-        float direction = (keyboard.rightArrowKey.isPressed ? 1f : 0f) - (keyboard.leftArrowKey.isPressed ? 1f : 0f);
+        bool right = ControllerInput.RightHeld || (keyboard != null && keyboard.rightArrowKey.isPressed);
+        bool left = ControllerInput.LeftHeld || (keyboard != null && keyboard.leftArrowKey.isPressed);
+        float direction = (right ? 1f : 0f) - (left ? 1f : 0f);
         if (direction != 0f)
             ScrollBy(direction * keyScrollSpeed * Time.unscaledDeltaTime);
     }

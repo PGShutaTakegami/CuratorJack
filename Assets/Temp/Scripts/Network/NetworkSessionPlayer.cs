@@ -13,6 +13,12 @@ public class NetworkSessionPlayer : NetworkBehaviour, IPlayerActionChannel
 {
     public const int UnassignedNumber = 0;
 
+    /// <summary>ホストが 1 人から受け付ける操作の回数（まとめて ActionBurst 回、その後は毎秒 ActionsPerSecond 回）。普通に遊ぶ分には届かない</summary>
+    const float ActionBurst = 20f;
+    const float ActionsPerSecond = 10f;
+
+    readonly RpcRateLimiter actionLimiter = new RpcRateLimiter(ActionBurst, ActionsPerSecond);
+
     readonly NetworkVariable<int> playerNumber = new NetworkVariable<int>(UnassignedNumber);
     readonly NetworkVariable<int> seatIndex = new NetworkVariable<int>(SeatAssignmentPolicy.NoSeat);
     readonly NetworkVariable<bool> isReady = new NetworkVariable<bool>(false);
@@ -145,6 +151,8 @@ public class NetworkSessionPlayer : NetworkBehaviour, IPlayerActionChannel
         if (rpcParams.Receive.SenderClientId != OwnerClientId)
             return;
         if ((PlayerActionKind)kind == PlayerActionKind.Timeout && rpcParams.Receive.SenderClientId != NetworkManager.ServerClientId)
+            return;
+        if (!actionLimiter.TryConsume(Time.unscaledTime))
             return;
 
         NotifyActionRpc(phase, kind, value);

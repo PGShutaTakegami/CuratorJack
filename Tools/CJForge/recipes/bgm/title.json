@@ -1,0 +1,31 @@
+{
+  "_comment": "タイトル BGM。夜の美術館の静かで妖しい雰囲気（ニ短調、72BPM、8 小節ループ）",
+  "kind": "bgm",
+  "tempo": 72,
+  "bars": 8,
+  "loop": true,
+  "instruments": {
+    "pad": { "preset": "strings", "gain_db": -8 },
+    "piano": { "preset": "piano", "gain_db": -10 },
+    "celesta": { "preset": "music_box", "gain_db": -5 },
+    "bass": { "preset": "upright_bass", "gain_db": -2 }
+  },
+  "tracks": [
+    { "instrument": "pad", "step": "1/4", "center": "D4",
+      "chords": "Dm9 - - - | Bbmaj7 - - - | Gm9 - - - | A7b9 - - - | Dm9 - - - | Fmaj7 - - - | Em7b5 - - - | A7b9 - - -" },
+    { "instrument": "piano", "step": "1/4", "center": "D4", "style": "arp",
+      "arp": { "step": "1/8", "order": "updown", "octaves": 1 },
+      "chords": "Dm9 - - - | Bbmaj7 - - - | Gm9 - - - | A7b9 - - - | Dm9 - - - | Fmaj7 - - - | Em7b5 - - - | A7b9 - - -",
+      "humanize": { "time": 0.005, "velocity": 0.15 } },
+    { "instrument": "celesta", "step": "1/8", "pan": 0.2,
+      "notes": { "generate": { "key": "D", "scale": "harmonic_minor", "bars": 8, "low": "A4", "high": "D6",
+        "density": 0.35, "phrase_bars": 2, "seed": 2,
+        "chords": "Dm9 - - - | Bbmaj7 - - - | Gm9 - - - | A7b9 - - - | Dm9 - - - | Fmaj7 - - - | Em7b5 - - - | A7b9 - - -" } },
+      "effects": [{ "type": "delay", "time": 0.625, "feedback": 0.3, "mix": 0.2, "pingpong": true }] },
+    { "instrument": "bass", "step": "1/4",
+      "notes": "D2 - - - | Bb1 - - - | G1 - - - | A1 - - - | D2 - - - | F1 - - - | E1 - - - | A1 - - -" },
+    { "drum": "brush", "step": "1/8", "pattern": "..x...x.", "gain_db": -18, "pan": -0.2 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.3, "decay": 2.5 }],
+  "master": { "peak_db": -1 }
+}

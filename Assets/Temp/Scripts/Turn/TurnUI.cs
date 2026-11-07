@@ -170,6 +170,18 @@ public class TurnUI : MonoBehaviour
 
     public void SetBidInteractable(bool interactable) => SetButtonState(bidButton, interactable);
 
+    /// <summary>コントローラーから確定を押す。手札を広げて確定が表示され、押せるときだけ押す</summary>
+    public bool PressConfirm() => confirmRevealed && UIButtonPresser.TryPress(confirmButton);
+
+    /// <summary>コントローラーから入札を押す。入札 UI が出ていて押せるときだけ押す</summary>
+    public bool PressBid() => auctionPanel.activeSelf && !IsAuctionHidden && UIButtonPresser.TryPress(bidButton);
+
+    /// <summary>コントローラーから降りるを押す。入札 UI が出ていて押せるときだけ押す</summary>
+    public bool PressFold() => auctionPanel.activeSelf && !IsAuctionHidden && UIButtonPresser.TryPress(foldButton);
+
+    /// <summary>コントローラーから増額の切り替えを押す。増額の選択が出ているときだけ押す</summary>
+    public bool PressRaise() => raisePanel.activeSelf && raiseReel.TryPress();
+
     void SetButtonState(Button button, bool interactable)
     {
         button.interactable = interactable;
@@ -188,6 +200,7 @@ public class TurnUI : MonoBehaviour
     }
 
     bool amountShown;
+    int shownAmount;
 
     /// <summary>入札 UI を開く / 閉じる。演出で消している最中なら消えたまま開き、演出の後にフェードで出る</summary>
     public void ShowAuction(bool visible)
@@ -200,8 +213,11 @@ public class TurnUI : MonoBehaviour
     /// <summary>金額は、オークションを開いて最初の表示だけ巻かずに出し、その後は変わるたびに巻く</summary>
     public void SetAuction(int amount, string info)
     {
+        if (amountShown && amount != shownAmount)
+            SoundEffectPlayer.Play(amount > shownAmount ? SoundId.ReelUp : SoundId.ReelDown);
         amountReels.SetValue(amount, amountShown);
         amountShown = true;
+        shownAmount = amount;
         auctionInfoText.text = info;
     }
 

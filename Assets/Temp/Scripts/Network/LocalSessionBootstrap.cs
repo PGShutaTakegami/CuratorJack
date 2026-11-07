@@ -159,7 +159,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             yield break;
         }
 
-        EnvironmentNetwork.LogError($"部屋に入れませんでした: {(IsRejectedAsFull() ? "満員です" : "接続できませんでした")}");
+        EnvironmentNetwork.LogError($"部屋に入れませんでした: {RejectionMessage("接続できませんでした")}");
         ReturnToLobby();
     }
 
@@ -189,7 +189,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
                     yield break;
                 }
 
-                if (IsRejectedAsFull())
+                if (IsRejectedAsFull() || PlayerSessionService.WasRejectedByVersion(networkManager))
                     break;
             }
             else
@@ -210,7 +210,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             yield return new WaitForSecondsRealtime(hostRecoveryInterval);
         }
 
-        EnvironmentNetwork.LogError($"リトライ後の部屋に入れませんでした: {(IsRejectedAsFull() ? "満員です" : "部屋を用意できませんでした")}");
+        EnvironmentNetwork.LogError($"リトライ後の部屋に入れませんでした: {RejectionMessage("部屋を用意できませんでした")}");
         ReturnToLobby();
     }
 
@@ -239,6 +239,12 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
                 yield break;
             }
 
+            if (PlayerSessionService.WasRejectedByVersion(networkManager))
+            {
+                EnvironmentNetwork.LogError($"参加を拒否されました: {GameVersion.MismatchMessage}");
+                yield break;
+            }
+
             if (networkManager.StartHost())
             {
                 AllowHostStart();
@@ -258,6 +264,15 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     {
         string reason = networkManager.DisconnectReason;
         return !string.IsNullOrEmpty(reason) && reason.Contains(PlayerSessionService.SessionFullReason);
+    }
+
+    /// <summary>入れなかった理由。満員・バージョン違いでなければ fallback を返す</summary>
+    string RejectionMessage(string fallback)
+    {
+        if (IsRejectedAsFull())
+            return "満員です";
+
+        return PlayerSessionService.WasRejectedByVersion(networkManager) ? GameVersion.MismatchMessage : fallback;
     }
 
     void AllowHostStart()

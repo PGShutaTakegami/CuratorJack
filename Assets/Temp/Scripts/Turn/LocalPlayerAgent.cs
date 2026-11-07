@@ -6,8 +6,9 @@ using UnityEngine.InputSystem;
 /// 自分（この画面を操作している人）の操作役。画面の UI と手札のクリックを、進行中の手続きへつなぐ。
 /// 手札は出品者として出品する商品を決めているときだけ使える（それ以外は見る・広げるだけ）。
 /// 出品の確定ボタンは出品できる間、手札を広げているときだけ画面の右端に表示する。
-/// オークションでは金額を 0 から W/S か ↑/↓ で指定し（長押しで連続して変わる）、入札できる額のときだけ入札ボタンで入札する。
-/// ポーズ画面を開いている間は金額のキー操作を受け付けない（メニューの選択と重ならないように）。脱落した後は出品を受け持たない。
+/// オークションでは金額を 0 から W/S・↑/↓・十字キー上下で指定し（長押しで連続して変わる）、入札できる額のときだけ入札ボタンで入札する。
+/// コントローラーは A で確定・入札、B で降りる、Y で増額の切り替え（画面のボタンが押せるときだけ）。
+/// ポーズ画面を開いている間はキー・コントローラーの操作を受け付けない（メニューの選択と重ならないように）。脱落した後は出品を受け持たない。
 /// </summary>
 public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
 {
@@ -111,6 +112,8 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         {
             ui.PlaceConfirm(hand.SpreadTopRight);
             ui.RevealConfirm(hand.IsSpread);
+            if (!pause.BlocksGameInput)
+                HandleListingButtons();
         }
 
         if (auction == null)
@@ -125,30 +128,63 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
             return;
         }
 
-        Keyboard keyboard = Keyboard.current;
-        if (keyboard != null && !ui.IsAuctionHidden && !pause.IsOpen)
-        {
-            int ups = raiseKey.Tick(
-                keyboard.wKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame,
-                keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed,
-                Time.deltaTime);
-            int downs = lowerKey.Tick(
-                keyboard.sKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame,
-                keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed,
-                Time.deltaTime);
-            amount += (ups - downs) * auction.Listing.BidStep;
-        }
+        bool acceptsInput = !ui.IsAuctionHidden && !pause.BlocksGameInput;
+        if (acceptsInput)
+            amount += ReadAmountSteps() * auction.Listing.BidStep;
         RefreshAuction();
+        if (acceptsInput)
+            HandleAuctionButtons();
+    }
+
+    /// <summary>出品中のコントローラー操作。A で確定、Y で増額の切り替え</summary>
+    void HandleListingButtons()
+    {
+        if (ControllerInput.SubmitPressed)
+            ui.PressConfirm();
+        else if (ControllerInput.AltPressed)
+            ui.PressRaise();
+    }
+
+    /// <summary>オークション中のコントローラー操作。A で入札、B で降りる</summary>
+    void HandleAuctionButtons()
+    {
+        if (ControllerInput.SubmitPressed)
+            ui.PressBid();
+        else if (ControllerInput.BackPressed)
+            ui.PressFold();
+    }
+
+    /// <summary>W/S・↑/↓・十字キー上下で金額を何段変えるか（長押しで連続して変わる）</summary>
+    int ReadAmountSteps()
+    {
+        Keyboard keyboard = Keyboard.current;
+        bool upPressed = ControllerInput.UpPressed;
+        bool upHeld = ControllerInput.UpHeld;
+        bool downPressed = ControllerInput.DownPressed;
+        bool downHeld = ControllerInput.DownHeld;
+        if (keyboard != null)
+        {
+            upPressed |= keyboard.wKey.wasPressedThisFrame || keyboard.upArrowKey.wasPressedThisFrame;
+            upHeld |= keyboard.wKey.isPressed || keyboard.upArrowKey.isPressed;
+            downPressed |= keyboard.sKey.wasPressedThisFrame || keyboard.downArrowKey.wasPressedThisFrame;
+            downHeld |= keyboard.sKey.isPressed || keyboard.downArrowKey.isPressed;
+        }
+
+        int ups = raiseKey.Tick(upPressed, upHeld, Time.deltaTime);
+        int downs = lowerKey.Tick(downPressed, downHeld, Time.deltaTime);
+        return ups - downs;
     }
 
     void HandleCardClicked(HandCard card)
     {
+        bool denied = listing != null && listing.Goods != null && !listing.CanAttachBuffs && !card.IsGoods;
+        SoundEffectPlayer.Play(denied ? SoundId.Denied : SoundId.CardTap);
         if (listing == null)
             return;
 
         if (listing.Goods == null)
             commands.SelectGoods(PlayerNumber, card);
-        else if (!listing.CanAttachBuffs && !card.IsGoods)
+        else if (denied)
             hand.Shake(card);
         else
             commands.AttachBuff(PlayerNumber, card);
@@ -211,6 +247,6 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         else if (auction.IsLeading(PlayerNumber))
             ui.SetPrompt("最高額です。さらに金額を上げて入札することもできます");
         else
-            ui.SetPrompt("W/S か ↑/↓ で金額を指定して入札するか、降りるかを選んでください（降りると見送り権を使います）");
+            ui.SetPrompt("W/S か ↑/↓（コントローラーは十字キー）で金額を指定して入札するか、降りるかを選んでください（降りると見送り権を使います）");
     }
 }

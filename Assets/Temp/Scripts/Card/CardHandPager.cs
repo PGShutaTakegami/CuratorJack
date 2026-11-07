@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 広げた手札が複数ページになるときに、ページを切り替える操作と今のページを表示する。
-/// 左右のボタン・マウスホイール・←/→（A/D）キーでページを切り替える。最初・最後のページでは、その先へのボタンを隠す。
+/// 左右のボタン・マウスホイール・←/→（A/D）キー・十字キー左右でページを切り替える。最初・最後のページでは、その先へのボタンを隠す。
 /// ボタンを手札の子に置くと手札を閉じる操作になるため、手札の外に置く。
 /// </summary>
 public class CardHandPager : MonoBehaviour
@@ -68,6 +68,11 @@ public class CardHandPager : MonoBehaviour
             if (keyboard.rightArrowKey.wasPressedThisFrame || keyboard.dKey.wasPressedThisFrame)
                 return 1;
         }
+
+        if (ControllerInput.LeftPressed)
+            return -1;
+        if (ControllerInput.RightPressed)
+            return 1;
 
         Mouse mouse = Mouse.current;
         float wheel = mouse != null ? mouse.scroll.ReadValue().y : 0f;

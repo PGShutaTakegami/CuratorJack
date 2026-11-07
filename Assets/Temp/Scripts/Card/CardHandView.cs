@@ -132,6 +132,7 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
     {
         if (!IsSpread)
         {
+            SoundEffectPlayer.Play(SoundId.CardTap);
             SetSpread(true);
             return;
         }

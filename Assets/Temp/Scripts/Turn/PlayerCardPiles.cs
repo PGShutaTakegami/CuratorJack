@@ -33,23 +33,35 @@ public class PlayerCardPiles : MonoBehaviour
     /// <summary>そのプレイヤーの手元にカードを置き、置いたカードを返す（置けなければ null）</summary>
     public TableCard Place(int playerNumber, Sprite sprite)
     {
-        if (!registry.TryGet(playerNumber, out Transform player))
+        if (!TryGetSpot(playerNumber, out Pose spot))
             return null;
+
+        counts.TryGetValue(playerNumber, out int layer);
+
+        TableCard card = pile.PlaceAt(sprite, spot.position, surface.position.y, spot.rotation, layer);
+        if (card != null)
+            counts[playerNumber] = layer + 1;
+        return card;
+    }
+
+    /// <summary>そのプレイヤーの手元の山の中心（置く面の高さ）と、席から読める向き（forward がテーブル中央側）</summary>
+    public bool TryGetSpot(int playerNumber, out Pose spot)
+    {
+        spot = default;
+        if (!registry.TryGet(playerNumber, out Transform player))
+            return false;
 
         Vector3 center = tableCenter.position;
         Vector3 toPlayer = PlayerBody.HeadPosition(player) - center;
         toPlayer.y = 0f;
         if (toPlayer.sqrMagnitude < 1e-6f)
-            return null;
+            return false;
         toPlayer.Normalize();
 
         float distance = Mathf.Lerp(mat.bounds.extents.x, table.bounds.extents.x, edgeRatio);
-        Vector3 spot = center + toPlayer * distance;
-        counts.TryGetValue(playerNumber, out int layer);
-
-        TableCard card = pile.PlaceAt(sprite, spot, surface.position.y, Quaternion.LookRotation(-toPlayer, Vector3.up), layer);
-        if (card != null)
-            counts[playerNumber] = layer + 1;
-        return card;
+        Vector3 position = center + toPlayer * distance;
+        position.y = surface.position.y;
+        spot = new Pose(position, Quaternion.LookRotation(-toPlayer, Vector3.up));
+        return true;
     }
 }

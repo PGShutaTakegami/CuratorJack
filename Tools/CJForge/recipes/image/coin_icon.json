@@ -1,0 +1,17 @@
+{
+  "_comment": "金貨のアイコン（背景透過）。グラデーション・縁取り・影・繰り返し・文字・光彩の見本",
+  "kind": "image",
+  "size": [256, 256],
+  "background": "transparent",
+  "palette": { "gold": "#DEB86A", "gold_hi": "#F6DFA0", "gold_lo": "#9C7432", "dark": "#26180E" },
+  "layers": [
+    { "shape": "circle", "center": [128, 124], "radius": 104,
+      "fill": { "radial": { "center": [100, 92], "radius": 150 }, "stops": [[0, "$gold_hi"], [0.55, "$gold"], [1, "$gold_lo"]] },
+      "stroke": { "color": "$dark", "width": 6, "align": "inside" },
+      "shadow": { "color": "#00000090", "offset": [4, 6], "blur": 6 } },
+    { "shape": "ring", "center": [128, 124], "radius": 82, "width": 3, "fill": "$gold_lo" },
+    { "shape": "rect", "rect": [126, 28, 4, 12], "fill": "$gold_lo", "origin": [128, 124], "repeat": { "count": 36, "rotate": 10 } },
+    { "shape": "text", "text": "C", "font": "serif", "size": 112, "pos": [128, 126], "fill": "$gold_lo", "stroke": { "color": "$gold_hi", "width": 2 } },
+    { "shape": "star", "center": [80, 66], "points": 4, "outer": 14, "inner": 3, "fill": "#FFFFFFE0", "glow": { "color": "#FFFFFFA0", "blur": 4 } }
+  ]
+}

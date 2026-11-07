@@ -188,6 +188,7 @@ public class PassTicketTear : MonoBehaviour
         yield return new WaitForSeconds(holdSeconds);
         yield return Tween(tugSeconds, t => ForEachShown(ticket =>
             Pose(ticket.Stub, ticket.StubHome, Mathf.Sin(t * Mathf.PI * 4f) * tugAngle * (1f - t))));
+        SoundEffectPlayer.Play(SoundId.TicketTear);
         yield return Tween(tearSeconds, t => ForEachShown(ticket => Pose(ticket.Stub, ticket.StubHome, tearAngle * t)));
         yield return Tween(detachSeconds, t => ForEachShown(ticket =>
         {

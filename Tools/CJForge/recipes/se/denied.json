@@ -1,0 +1,11 @@
+{
+  "_comment": "使えない操作（ブブッ）",
+  "kind": "se",
+  "layers": [
+    { "osc": "square", "freq": 180, "duration": 0.09, "env": { "a": 0.002, "d": 0.02, "s": 0.7, "r": 0.02 },
+      "filter": { "type": "lowpass", "cutoff": 1800 }, "repeat": { "count": 2, "interval": 0.12 } },
+    { "osc": "square", "freq": 186, "duration": 0.09, "env": { "a": 0.002, "d": 0.02, "s": 0.7, "r": 0.02 },
+      "filter": { "type": "lowpass", "cutoff": 1800 }, "gain_db": -4, "repeat": { "count": 2, "interval": 0.12 } }
+  ],
+  "master": { "peak_db": -4, "loudness_db": -20 }
+}

@@ -1,0 +1,14 @@
+{
+  "_comment": "カードを引くときの紙がこすれる音（シュッ、最後に軽く置く音）",
+  "kind": "se",
+  "layers": [
+    { "osc": "pink", "duration": 0.2, "env": { "a": 0.04, "d": 0.16, "s": 0, "r": 0.03 },
+      "filter": { "type": "bandpass", "cutoff": { "points": [[0, 1500], [0.07, 5000], [0.2, 2200]] }, "q": 0.8 } },
+    { "osc": "noise", "start": 0.02, "duration": 0.12, "env": { "a": 0.01, "d": 0.11, "s": 0, "r": 0.02 },
+      "filter": { "type": "highpass", "cutoff": 7000 }, "gain_db": -12 },
+    { "osc": "noise", "start": 0.17, "duration": 0.02, "env": { "a": 0.0005, "d": 0.015, "s": 0, "r": 0.005 },
+      "filter": { "type": "bandpass", "cutoff": 1800, "q": 1.5 }, "gain_db": -8 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.05, "decay": 0.25 }],
+  "master": { "peak_db": -4 }
+}

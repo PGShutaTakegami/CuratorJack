@@ -1,0 +1,13 @@
+{
+  "_comment": "カードのディゾルブ（キラキラと溶けて消える、約0.8秒）",
+  "kind": "se",
+  "layers": [
+    { "osc": "pink", "duration": 0.8, "env": { "a": 0.15, "d": 0.65, "s": 0, "r": 0.15 },
+      "filter": { "type": "bandpass", "cutoff": [1500, 7000], "q": 0.9 }, "gain_db": -6 },
+    { "osc": "sine", "freq": 2400, "duration": 0.06, "env": { "a": 0.002, "d": 0.06, "s": 0, "r": 0.05 },
+      "fm": { "ratio": 2.7, "index": 1.5, "decay": 0.04 }, "gain_db": -14,
+      "repeat": { "count": 8, "interval": 0.09, "pitch_step": 2, "gain_step_db": -1 } }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.25, "decay": 1.0 }],
+  "master": { "peak_db": -4 }
+}

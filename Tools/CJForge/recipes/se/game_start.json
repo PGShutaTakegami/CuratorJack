@@ -1,0 +1,14 @@
+{
+  "_comment": "GAME START（洋館の玄関チャイム風の鐘、ピン・ポーンの2音）",
+  "kind": "se",
+  "layers": [
+    { "osc": "sine", "freq": 659.3, "duration": 1.6, "fm": { "ratio": 2.0, "index": 0.6, "decay": 0.4 },
+      "env": { "a": 0.002, "d": 1.6, "s": 0, "r": 0.5 }, "gain_db": -3 },
+    { "osc": "sine", "freq": 1819.7, "duration": 0.8, "env": { "a": 0.002, "d": 0.8, "s": 0, "r": 0.3 }, "gain_db": -16 },
+    { "osc": "sine", "start": 0.55, "freq": 523.25, "duration": 2.0, "fm": { "ratio": 2.0, "index": 0.6, "decay": 0.4 },
+      "env": { "a": 0.002, "d": 2.0, "s": 0, "r": 0.6 }, "gain_db": -3 },
+    { "osc": "sine", "start": 0.55, "freq": 1444.2, "duration": 1.0, "env": { "a": 0.002, "d": 1.0, "s": 0, "r": 0.3 }, "gain_db": -16 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.2, "decay": 1.5 }],
+  "master": { "peak_db": -2 }
+}
