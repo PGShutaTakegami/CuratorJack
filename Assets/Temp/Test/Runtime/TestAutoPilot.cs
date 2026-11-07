@@ -25,7 +25,7 @@ public static class TestAutoPilot
             return IsOn;
 
         pilot = body.gameObject.AddComponent<CpuPlayerAgent>();
-        pilot.Initialize(refs.LocalPlayer, refs.Game, refs.Flow.Commands);
+        pilot.Initialize(refs.LocalPlayer, refs.Game, refs.Flow.Commands, () => refs.Flow.IsPresentingBid);
         refs.Flow.ReplaceAgent(pilot);
         Debug.Log($"[Test] オートプレイ ON（Player{refs.LocalPlayer} を CPU が操作）");
         return true;

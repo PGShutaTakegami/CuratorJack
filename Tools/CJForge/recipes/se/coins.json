@@ -11,8 +11,8 @@
     { "osc": "noise", "duration": 0.01, "env": { "a": 0.0005, "d": 0.008, "s": 0, "r": 0.003 },
       "filter": { "type": "highpass", "cutoff": 6000 }, "gain_db": -12,
       "repeat": { "count": 8, "interval": 0.045 } },
-    { "osc": "sine", "start": 0.38, "freq": 3951, "duration": 0.6, "fm": { "ratio": 2.4, "index": 1.2, "decay": 0.2 },
-      "env": { "a": 0.001, "d": 0.6, "s": 0, "r": 0.3 }, "gain_db": -6 }
+    { "osc": "sine", "start": 0.38, "freq": 2093, "duration": 0.35, "fm": { "ratio": 2.4, "index": 0.5, "decay": 0.1 },
+      "env": { "a": 0.001, "d": 0.35, "s": 0, "r": 0.15 }, "gain_db": -14 }
   ],
   "effects": [{ "type": "reverb", "mix": 0.15, "decay": 0.5 }],
   "master": { "peak_db": -3 }

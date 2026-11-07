@@ -144,7 +144,7 @@ public sealed class CardEffectResolver
                 break;
             case CardEffect.Pressure:
                 game.AddStatus(recipient, PlayerStatus.Pressure, 1);
-                report.AddMessage($"{label}：{who} は出品カードのドローが 1 回できません");
+                report.AddMessage($"{label}：{who} は出品カードのドローが 1 回できません{RemainingText(recipient, PlayerStatus.Pressure)}");
                 break;
             case CardEffect.Markdown:
                 ApplyMarkdown(label, recipient, seller, report);
@@ -155,7 +155,7 @@ public sealed class CardEffectResolver
                 break;
             case CardEffect.Interference:
                 game.AddStatus(recipient, PlayerStatus.Interference, 1);
-                report.AddMessage($"{label}：{who} は次の出品で効果カードを付けられません");
+                report.AddMessage($"{label}：{who} は次の出品で効果カードを付けられません{RemainingText(recipient, PlayerStatus.Interference)}");
                 break;
             case CardEffect.Appraisal:
                 ApplyAppraisal(label, recipient, report);
@@ -245,11 +245,11 @@ public sealed class CardEffectResolver
                     break;
                 case CardEffect.InterferenceAll:
                     game.AddStatus(target, PlayerStatus.Interference, 1);
-                    affected.Add(nameOf(target));
+                    affected.Add(nameOf(target) + RemainingText(target, PlayerStatus.Interference));
                     break;
                 case CardEffect.PressureAll:
                     game.AddStatus(target, PlayerStatus.Pressure, 1);
-                    affected.Add(nameOf(target));
+                    affected.Add(nameOf(target) + RemainingText(target, PlayerStatus.Pressure));
                     break;
             }
         }
@@ -260,6 +260,13 @@ public sealed class CardEffectResolver
         report.AddMessage(effect == CardEffect.InterferenceAll
             ? $"{label}：{names} は次の出品で効果カードを付けられません"
             : $"{label}：{names} は出品カードのドローが 1 回できません");
+    }
+
+    /// <summary>横やり・圧力は受けた枚数だけ回数が重なる。2 回以上残っていれば、その回数を添える</summary>
+    string RemainingText(int player, PlayerStatus status)
+    {
+        int remaining = game.TryGet(player, out PlayerState state) ? state.StatusOf(status) : 0;
+        return remaining > 1 ? $"（残り {remaining} 回）" : string.Empty;
     }
 
     CardData[] EffectCardsInHand(int player)

@@ -1,14 +1,13 @@
 {
-  "_comment": "カードを引くときの紙がこすれる音（シュッ、最後に軽く置く音）",
+  "_comment": "カードを引くときのサッ（短く速い紙のこすれ。帯域を上から下へ流してスライド感を出し、ザラつきはごく薄く添える）",
   "kind": "se",
   "layers": [
-    { "osc": "pink", "duration": 0.2, "env": { "a": 0.04, "d": 0.16, "s": 0, "r": 0.03 },
-      "filter": { "type": "bandpass", "cutoff": { "points": [[0, 1500], [0.07, 5000], [0.2, 2200]] }, "q": 0.8 } },
-    { "osc": "noise", "start": 0.02, "duration": 0.12, "env": { "a": 0.01, "d": 0.11, "s": 0, "r": 0.02 },
-      "filter": { "type": "highpass", "cutoff": 7000 }, "gain_db": -12 },
-    { "osc": "noise", "start": 0.17, "duration": 0.02, "env": { "a": 0.0005, "d": 0.015, "s": 0, "r": 0.005 },
-      "filter": { "type": "bandpass", "cutoff": 1800, "q": 1.5 }, "gain_db": -8 }
+    { "osc": "pink", "duration": 0.15, "env": { "a": 0.012, "d": 0.13, "s": 0, "r": 0.02 },
+      "filter": { "type": "bandpass", "cutoff": { "points": [[0, 5500], [0.06, 4200], [0.15, 2400]] }, "q": 0.6 }, "gain_db": 0 },
+    { "osc": "noise", "start": 0.015, "duration": 0.005, "env": { "a": 0.0003, "d": 0.0045, "s": 0, "r": 0.001 },
+      "filter": { "type": "bandpass", "cutoff": 2500, "q": 1.2 }, "gain_db": -24,
+      "repeat": { "count": 6, "interval": 0.0191, "gain_step_db": -0.6 } }
   ],
-  "effects": [{ "type": "reverb", "mix": 0.05, "decay": 0.25 }],
-  "master": { "peak_db": -4 }
+  "effects": [{ "type": "reverb", "mix": 0.04, "decay": 0.2 }],
+  "master": { "peak_db": -6, "loudness_db": -30 }
 }

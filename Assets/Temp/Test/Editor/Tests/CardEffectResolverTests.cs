@@ -96,6 +96,23 @@ public class CardEffectResolverTests
     }
 
     [Test]
+    public void 最後の1v1で横やりと圧力を2枚ずつ受けると2回分ずつ残り1回ずつ使われる()
+    {
+        using var table = new VirtualGame(2);
+
+        EffectReport report = Receive(table, Buyer, CardEffect.Pressure, CardEffect.Pressure, CardEffect.Interference, CardEffect.Interference);
+
+        Assert.AreEqual(2, table.Player(Buyer).StatusOf(PlayerStatus.Pressure));
+        Assert.AreEqual(2, table.Player(Buyer).StatusOf(PlayerStatus.Interference));
+        Assert.That(report.Messages, Has.Some.Contains("残り 2 回"));
+
+        Assert.IsTrue(table.Game.TryUseStatus(Buyer, PlayerStatus.Pressure));
+        Assert.IsTrue(table.Game.TryUseStatus(Buyer, PlayerStatus.Interference));
+        Assert.AreEqual(1, table.Player(Buyer).StatusOf(PlayerStatus.Pressure));
+        Assert.AreEqual(1, table.Player(Buyer).StatusOf(PlayerStatus.Interference));
+    }
+
+    [Test]
     public void 逆転と2度目と投げ売りの結果()
     {
         using var table = new VirtualGame(3);

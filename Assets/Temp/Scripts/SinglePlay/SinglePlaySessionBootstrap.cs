@@ -243,7 +243,7 @@ public class SinglePlaySessionBootstrap : MonoBehaviour, IMatchSession, IRoomCon
                 var cpu = player.GetComponent<CpuPlayerAgent>();
                 if (cpu == null)
                     cpu = player.gameObject.AddComponent<CpuPlayerAgent>();
-                cpu.Initialize(player.PlayerNumber, game, turnFlow.Commands);
+                cpu.Initialize(player.PlayerNumber, game, turnFlow.Commands, () => turnFlow.IsPresentingBid);
                 agents.Add(cpu);
             }
             else

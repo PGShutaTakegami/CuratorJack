@@ -1,31 +1,69 @@
 {
-  "_comment": "タイトル BGM。夜の美術館の静かで妖しい雰囲気（ニ短調、72BPM、8 小節ループ）",
+  "_comment": "タイトル BGM。夜の美術館のジャズ（ニ短調、92BPM、スウィング、16 小節ループ）。ピアノとブラシ・ライドだけで、ベースとシンセ系の音色は使わない。低音はピアノの左手が担う",
+  "_piano": "ピアノは弦の倍音（高い倍音ほど少しずつ高めにずれる）を重ね、弦 2 本分の細かなずれでうなりを付ける。打鍵の瞬間だけ明るく、サステインなしで自然に減衰させる",
   "kind": "bgm",
-  "tempo": 72,
-  "bars": 8,
+  "tempo": 92,
+  "bars": 16,
   "loop": true,
+  "swing": 0.2,
   "instruments": {
-    "pad": { "preset": "strings", "gain_db": -8 },
-    "piano": { "preset": "piano", "gain_db": -10 },
-    "celesta": { "preset": "music_box", "gain_db": -5 },
-    "bass": { "preset": "upright_bass", "gain_db": -2 }
+    "comp": {
+      "osc": [
+        { "osc": "sine", "cents": -1.2 }, { "osc": "sine", "cents": 1.2, "gain_db": -1 },
+        { "osc": "sine", "semitones": 12, "cents": 2, "gain_db": -4 }, { "osc": "sine", "semitones": 19, "cents": 4, "gain_db": -9 },
+        { "osc": "sine", "semitones": 24, "cents": 7, "gain_db": -12 }, { "osc": "sine", "semitones": 28, "cents": -3, "gain_db": -15 },
+        { "osc": "sine", "semitones": 31, "cents": 17, "gain_db": -18 }, { "osc": "sine", "semitones": 34, "cents": -6, "gain_db": -22 },
+        { "osc": "sine", "semitones": 36, "cents": 28, "gain_db": -25 }
+      ],
+      "fm": { "ratio": 1, "index": 0.7, "decay": 0.03 },
+      "env": { "a": 0.002, "d": 1.8, "s": 0, "r": 0.35 },
+      "filter": { "type": "lowpass", "cutoff": 700, "env_amount": 3500, "key_track": 0.5 },
+      "noise": { "gain_db": -26, "decay": 0.01 },
+      "velocity_sens": 0.8, "gain_db": -9
+    },
+    "left": {
+      "osc": [
+        { "osc": "sine", "cents": -1.2 }, { "osc": "sine", "cents": 1.2, "gain_db": -1 },
+        { "osc": "sine", "semitones": 12, "cents": 2, "gain_db": -2 }, { "osc": "sine", "semitones": 19, "cents": 4, "gain_db": -6 },
+        { "osc": "sine", "semitones": 24, "cents": 7, "gain_db": -10 }, { "osc": "sine", "semitones": 28, "cents": -3, "gain_db": -14 },
+        { "osc": "sine", "semitones": 31, "cents": 17, "gain_db": -17 }
+      ],
+      "fm": { "ratio": 1, "index": 0.6, "decay": 0.03 },
+      "env": { "a": 0.002, "d": 1.4, "s": 0, "r": 0.3 },
+      "filter": { "type": "lowpass", "cutoff": 500, "env_amount": 2000, "key_track": 0.3 },
+      "noise": { "gain_db": -28, "decay": 0.01 },
+      "velocity_sens": 0.8, "gain_db": -8
+    },
+    "melody": {
+      "osc": [
+        { "osc": "sine", "cents": -1.2 }, { "osc": "sine", "cents": 1.2, "gain_db": -1 },
+        { "osc": "sine", "semitones": 12, "cents": 2, "gain_db": -4 }, { "osc": "sine", "semitones": 19, "cents": 4, "gain_db": -9 },
+        { "osc": "sine", "semitones": 24, "cents": 7, "gain_db": -12 }, { "osc": "sine", "semitones": 28, "cents": -3, "gain_db": -15 },
+        { "osc": "sine", "semitones": 31, "cents": 17, "gain_db": -18 }, { "osc": "sine", "semitones": 34, "cents": -6, "gain_db": -22 }
+      ],
+      "fm": { "ratio": 1, "index": 0.9, "decay": 0.025 },
+      "env": { "a": 0.002, "d": 1.5, "s": 0, "r": 0.3 },
+      "filter": { "type": "lowpass", "cutoff": 900, "env_amount": 4500, "key_track": 0.5 },
+      "noise": { "gain_db": -24, "decay": 0.01 },
+      "velocity_sens": 0.8, "gain_db": -9
+    }
   },
   "tracks": [
-    { "instrument": "pad", "step": "1/4", "center": "D4",
-      "chords": "Dm9 - - - | Bbmaj7 - - - | Gm9 - - - | A7b9 - - - | Dm9 - - - | Fmaj7 - - - | Em7b5 - - - | A7b9 - - -" },
-    { "instrument": "piano", "step": "1/4", "center": "D4", "style": "arp",
-      "arp": { "step": "1/8", "order": "updown", "octaves": 1 },
-      "chords": "Dm9 - - - | Bbmaj7 - - - | Gm9 - - - | A7b9 - - - | Dm9 - - - | Fmaj7 - - - | Em7b5 - - - | A7b9 - - -",
-      "humanize": { "time": 0.005, "velocity": 0.15 } },
-    { "instrument": "celesta", "step": "1/8", "pan": 0.2,
-      "notes": { "generate": { "key": "D", "scale": "harmonic_minor", "bars": 8, "low": "A4", "high": "D6",
-        "density": 0.35, "phrase_bars": 2, "seed": 2,
-        "chords": "Dm9 - - - | Bbmaj7 - - - | Gm9 - - - | A7b9 - - - | Dm9 - - - | Fmaj7 - - - | Em7b5 - - - | A7b9 - - -" } },
-      "effects": [{ "type": "delay", "time": 0.625, "feedback": 0.3, "mix": 0.2, "pingpong": true }] },
-    { "instrument": "bass", "step": "1/4",
-      "notes": "D2 - - - | Bb1 - - - | G1 - - - | A1 - - - | D2 - - - | F1 - - - | E1 - - - | A1 - - -" },
-    { "drum": "brush", "step": "1/8", "pattern": "..x...x.", "gain_db": -18, "pan": -0.2 }
+    { "instrument": "left", "step": "1/4",
+      "notes": "D2 - A2 - | G2 - D3 - | E2 - A2 - | D2 - A2 - | Bb2 - F2 - | G2 - C3 - | F2 - C3 - | E2 - A2 - | D2 - A2 - | C3 - G2 - | Bb2 - F2 - | A2 - E2 - | G2 - D3 - | C3 - G2 - | F2 - Bb2 - | E2 - A2 -",
+      "humanize": { "time": 0.008, "velocity": 0.12 } },
+    { "instrument": "comp", "step": "1/8", "center": "E4", "style": "block", "velocity": 0.6,
+      "chords": "Dm9 - - Dm9 - - - - | Gm9 - - Gm9 - - - - | Em7b5 - - - A7b9 - - - | Dm9 - - Dm9 - - - - | Bbmaj7 - - Bbmaj7 - - - - | Gm9 - - - C9 - - - | Fmaj7 - - Fmaj7 - - - - | Em7b5 - - - A7b9 - - - | Dm9 - - Dm9 - - - - | Dm7 - - Dm7 - - - - | Bbmaj7 - - Bbmaj7 - - - - | A7b9 - - A7b9 - - - - | Gm9 - - Gm9 - - - - | C9 - - C9 - - - - | Fmaj7 - - - Bbmaj7 - - - | Em7b5 - - - A7b9 - - -",
+      "humanize": { "time": 0.01, "velocity": 0.15 } },
+    { "instrument": "melody", "step": "1/8", "pan": 0.1, "velocity": 0.85,
+      "notes": { "generate": { "key": "D", "scale": "harmonic_minor", "bars": 16, "low": "F4", "high": "A5",
+        "density": 0.4, "phrase_bars": 2, "variation": 0.4, "max_leap": 5, "seed": 7,
+        "chords": "Dm9 - - - | Gm9 - - - | Em7b5 - A7b9 - | Dm9 - - - | Bbmaj7 - - - | Gm9 - C9 - | Fmaj7 - - - | Em7b5 - A7b9 - | Dm9 - - - | Dm7 - - - | Bbmaj7 - - - | A7b9 - - - | Gm9 - - - | C9 - - - | Fmaj7 - Bbmaj7 - | Em7b5 - A7b9 -" } },
+      "humanize": { "time": 0.012, "velocity": 0.2 } },
+    { "drum": "ride", "step": "1/8", "pattern": "x.xox.xo", "gain_db": -19, "pan": 0.3, "tune": 1.05 },
+    { "drum": "brush", "step": "1/8", "pattern": "..x...x.", "gain_db": -15, "pan": -0.2 },
+    { "drum": "hat", "step": "1/8", "pattern": "..o...o.", "gain_db": -26, "pan": -0.1, "tone": 0.3 }
   ],
-  "effects": [{ "type": "reverb", "mix": 0.3, "decay": 2.5 }],
+  "effects": [{ "type": "reverb", "mix": 0.18, "decay": 1.6, "damping": 5000 }],
   "master": { "peak_db": -1 }
 }

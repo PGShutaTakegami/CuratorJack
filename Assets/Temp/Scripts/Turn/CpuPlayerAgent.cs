@@ -8,6 +8,8 @@ using UnityEngine;
 /// オークション：払えるなら一定の確率で参加し、参加しないなら降りる。参加したら自分なりの上限額までは間をおいて入札し、
 /// 上回られて上限を超えるなら降りる（見送り権がなければ必ず参加し、所持コインまで入札する）。
 /// 入札額は自分と同じく、0 からレアリティの刻みで変えて選べる額（刻みの倍数）だけを使う。
+/// 入札は、入札を映す演出が終わってから考え始め、送る直前にも演出中でないことを確かめる（演出は最後の入札者しか映さないため、
+/// 演出中に入札が重なると間の人が飛ばされ、同じ人が続けて吊り上げたように見える）。
 /// 操作は窓口（IPlayerCommands）へ送る（ネットワークでは切断した人の代わりにホストで動き、操作は全員へ配られる）。
 /// </summary>
 public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
@@ -30,15 +32,18 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
 
     GameManager game;
     IPlayerCommands commands;
+    System.Func<bool> isPresentingBid;
     Coroutine running;
 
     public int PlayerNumber { get; private set; }
 
-    public void Initialize(int playerNumber, GameManager gameManager, IPlayerCommands playerCommands)
+    /// <param name="presentingBid">入札を映す演出の最中か（演出中は入札しない）</param>
+    public void Initialize(int playerNumber, GameManager gameManager, IPlayerCommands playerCommands, System.Func<bool> presentingBid)
     {
         PlayerNumber = playerNumber;
         game = gameManager;
         commands = playerCommands;
+        isPresentingBid = presentingBid ?? (() => false);
     }
 
     public void BeginListing(ListingSession session) => Run(Listing(session));
@@ -108,9 +113,12 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
 
         while (auction.IsActive(PlayerNumber))
         {
+            yield return new WaitWhile(isPresentingBid);
             yield return Think();
             if (!auction.IsActive(PlayerNumber))
                 yield break;
+            if (isPresentingBid())
+                continue;
 
             bool isLeading = auction.HighestBid > 0 && auction.BidOf(PlayerNumber) == auction.HighestBid;
             if (isLeading)

@@ -134,6 +134,9 @@ public class TurnFlowController : MonoBehaviour
     /// <summary>部屋主が今の手続きを待ち時間切れにする窓口</summary>
     public IPhaseTimeouts Timeouts => Actions;
 
+    /// <summary>他のプレイヤーの入札を映す演出の最中か</summary>
+    public bool IsPresentingBid => bidderShot != null && bidderShot.IsPlaying;
+
     /// <summary>出品者が出品する商品を選び始めた</summary>
     public event System.Action<ListingSession> ListingStarted;
 

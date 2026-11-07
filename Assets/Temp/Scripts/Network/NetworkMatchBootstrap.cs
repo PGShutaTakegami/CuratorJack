@@ -127,7 +127,7 @@ public class NetworkMatchBootstrap : MonoBehaviour, IPlayerActionChannel
     CpuPlayerAgent TakeOverByCpu(NetworkSessionPlayer player)
     {
         var cpu = player.gameObject.AddComponent<CpuPlayerAgent>();
-        cpu.Initialize(player.PlayerNumber, game, turnFlow.Commands);
+        cpu.Initialize(player.PlayerNumber, game, turnFlow.Commands, () => turnFlow.IsPresentingBid);
         cpuPlayers[player.PlayerNumber] = player;
         return cpu;
     }
