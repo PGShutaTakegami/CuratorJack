@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 778aa8b68950d7144b334ac9dc5264be, type: 3}
+  m_Name: AchievementCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::AchievementCatalog
+  achievements:
+  - id: tutorial_clear
+    hidden: 0
+    steamApiName: ACH_TUTORIAL_CLEAR
+  - id: first_purchase
+    hidden: 0
+    steamApiName: ACH_FIRST_PURCHASE
+  - id: first_sale
+    hidden: 0
+    steamApiName: ACH_FIRST_SALE
+  - id: final_battle
+    hidden: 0
+    steamApiName: ACH_FINAL_BATTLE
+  - id: first_win
+    hidden: 0
+    steamApiName: ACH_FIRST_WIN
+  - id: online_win
+    hidden: 0
+    steamApiName: ACH_ONLINE_WIN
+  - id: special_listing
+    hidden: 0
+    steamApiName: ACH_SPECIAL_LISTING
+  - id: collector
+    hidden: 0
+    steamApiName: ACH_COLLECTOR
+  - id: drain
+    hidden: 1
+    steamApiName: ACH_DRAIN
+  - id: last_stand
+    hidden: 1
+    steamApiName: ACH_LAST_STAND
+  - id: flawless
+    hidden: 1
+    steamApiName: ACH_FLAWLESS
+  - id: retire
+    hidden: 1
+    steamApiName: ACH_RETIRE
+  texts: {fileID: 11400000, guid: da0c92d3c881ec64faca0de405f1b671, type: 2}
+  unlockedIcon: {fileID: 21300000, guid: b67fda5aa58f05740986981986d50b90, type: 3}
+  lockedIcon: {fileID: 21300000, guid: 3eff89da2bbf92240aab268f913fbeca, type: 3}
+  secretIcon: {fileID: 21300000, guid: 18086332f688ef24788e022454e88d20, type: 3}

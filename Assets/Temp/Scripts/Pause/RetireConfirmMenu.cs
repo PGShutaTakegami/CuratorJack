@@ -14,6 +14,8 @@ public class RetireConfirmMenu : MonoBehaviour
 
     [SerializeField] private Button noButton;
 
+    readonly PressThrottle confirmThrottle = new PressThrottle();
+
     public bool IsOpen => view.activeSelf;
 
     public event Action Confirmed;
@@ -22,7 +24,11 @@ public class RetireConfirmMenu : MonoBehaviour
 
     void Awake()
     {
-        yesButton.onClick.AddListener(() => Confirmed?.Invoke());
+        yesButton.onClick.AddListener(() =>
+        {
+            if (confirmThrottle.TryAccept())
+                Confirmed?.Invoke();
+        });
         noButton.onClick.AddListener(Close);
         view.SetActive(false);
     }

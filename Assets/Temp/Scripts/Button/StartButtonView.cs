@@ -22,9 +22,11 @@ public class StartButtonView : MonoBehaviour
 
     [SerializeField] private ReadyRoster roster;
 
+    readonly PressThrottle startThrottle = new PressThrottle();
+
     void OnEnable()
     {
-        button.onClick.AddListener(startGate.RequestStart);
+        button.onClick.AddListener(RequestStart);
         startGate.Changed += Refresh;
         startGate.Started += HideButtons;
         roster.Changed += Refresh;
@@ -33,10 +35,16 @@ public class StartButtonView : MonoBehaviour
 
     void OnDisable()
     {
-        button.onClick.RemoveListener(startGate.RequestStart);
+        button.onClick.RemoveListener(RequestStart);
         startGate.Changed -= Refresh;
         startGate.Started -= HideButtons;
         roster.Changed -= Refresh;
+    }
+
+    void RequestStart()
+    {
+        if (startThrottle.TryAccept())
+            startGate.RequestStart();
     }
 
     void Refresh()

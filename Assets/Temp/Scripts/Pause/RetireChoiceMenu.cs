@@ -17,6 +17,8 @@ public class RetireChoiceMenu : MonoBehaviour
 
     [SerializeField] private MenuButton titleButton;
 
+    readonly PressThrottle choiceThrottle = new PressThrottle();
+
     public event Action RestartClicked;
 
     public event Action TitleClicked;
@@ -24,8 +26,16 @@ public class RetireChoiceMenu : MonoBehaviour
     void Awake()
     {
         spectateButton.onClick.AddListener(Hide);
-        restartButton.Button.onClick.AddListener(() => RestartClicked?.Invoke());
-        titleButton.Button.onClick.AddListener(() => TitleClicked?.Invoke());
+        restartButton.Button.onClick.AddListener(() =>
+        {
+            if (choiceThrottle.TryAccept())
+                RestartClicked?.Invoke();
+        });
+        titleButton.Button.onClick.AddListener(() =>
+        {
+            if (choiceThrottle.TryAccept())
+                TitleClicked?.Invoke();
+        });
         Hide();
     }
 

@@ -74,11 +74,13 @@ MonoBehaviour:
       take effect on
       you, the seller!'
   - key: tutorial.auction.fold
-    japanese: "\u964D\u308A\u305F\u30D7\u30EC\u30A4\u30E4\u30FC\u306F\u898B\u9001\u308A\u6A29\u30921\u679A\u4F7F\u3046\u3088\uFF01\n\u898B\u9001\u308A\u6A29\u304C0\u679A\u306E\u3068\u304D\u306B\u964D\u308A\u308B\u3068\u8131\u843D\uFF01"
+    japanese: "\u964D\u308A\u305F\u30D7\u30EC\u30A4\u30E4\u30FC\u306F\u898B\u9001\u308A\u6A29\u30921\u679A\u4F7F\u3046\u3088\uFF01\n\u673A\u306E\u4E0A\u306E\u30C1\u30B1\u30C3\u30C8\u306E\u679A\u6570\u304C\u4ECA\u306E\u898B\u9001\u308A\u6A29\uFF08HP\uFF09\uFF01\n\u898B\u9001\u308A\u6A29\u304C0\u679A\u306E\u3068\u304D\u306B\u964D\u308A\u308B\u3068\u8131\u843D\uFF01"
     english: 'Players who fold use up one pass!
 
-      Folding with zero passes knocks
-      you out!'
+      The tickets on the desk show
+      the passes (HP) left.
+
+      Folding with zero passes knocks you out!'
   - key: tutorial.info.open
     japanese: "\u30A4\u30F3\u30D5\u30A9\u30E1\u30FC\u30B7\u30E7\u30F3\u30DE\u30FC\u30AF\u3092\u62BC\u3059\u3068\u3001\n\u30AB\u30FC\u30C9\u306E\u4E00\u89A7\u304C\u898B\u3089\u308C\u308B\u3088\uFF01\u62BC\u3057\u3066\u307F\u3088\u3046\uFF01"
     english: 'Press the information mark
@@ -91,11 +93,72 @@ MonoBehaviour:
 
       Click
       outside the window to close it!'
+  - key: tutorial.inspect.open
+    japanese: "\u866B\u773C\u93E1\u30DE\u30FC\u30AF\u3092\u62BC\u3059\u3068\u3001\u305D\u306E\u30D7\u30EC\u30A4\u30E4\u30FC\u306E\n\u624B\u5143\u3092\u8FD1\u304F\u3067\u898B\u3089\u308C\u308B\u3088\uFF01\u62BC\u3057\u3066\u307F\u3088\u3046\uFF01"
+    english: 'Press a magnifier mark to take a closer look
+
+      at that player''s
+      spot!'
+  - key: tutorial.inspect.view
+    japanese: "\u30C1\u30B1\u30C3\u30C8\u306E\u679A\u6570\u304C\u305D\u306E\u30D7\u30EC\u30A4\u30E4\u30FC\u306E\u898B\u9001\u308A\u6A29\uFF08HP\uFF09\u3001\n\u7A4D\u307E\u308C\u3066\u3044\u308B\u30AB\u30FC\u30C9\u304C\u843D\u672D\u3057\u305F\u30AB\u30FC\u30C9\u3060\u3088\uFF01"
+    english: 'The tickets are that player''s passes (HP),
+
+      and the stacked
+      cards are the cards they won!'
   - key: tutorial.bid.intro
     japanese: "\u4ECA\u5EA6\u306F\u5165\u672D\u3057\u3066\u307F\u3088\u3046\uFF01W/S
       \u304B \u2191/\u2193 \u3067\u91D1\u984D\u3092\u6C7A\u3081\u3066\u3001\n\u5165\u672D\u30DC\u30BF\u30F3\u3092\u62BC\u305D\u3046\uFF01"
     english: "Now let's try bidding! Set the amount with W/S or \u2191/\u2193,\nthen
       press the bid button!"
+  - key: tutorial.fold.leader
+    japanese: "\u4ECA\u306F\u81EA\u5206\u304C\u6700\u9AD8\u984D\uFF01\n\u6700\u9AD8\u984D\u306E\u3042\u3044\u3060\u306F\u964D\u308A\u3089\u308C\u306A\u3044\u3088\uFF01"
+    english: 'You''re the highest bidder now!
+
+      You can''t fold while you hold
+      the highest bid!'
+  - key: tutorial.bid.raise
+    japanese: "\u4E0A\u56DE\u3089\u308C\u305F\uFF01\n\u91D1\u984D\u3092\u4E0A\u3052\u3066\u5165\u672D\u3057\u8FD4\u305D\u3046\uFF01"
+    english: 'You''ve been outbid!
+
+      Raise the amount and bid back!'
+  - key: tutorial.fold.outbid
+    japanese: "\u5024\u6BB5\u304C\u3069\u3093\u3069\u3093\u4E0A\u304C\u3063\u3066\u304D\u305F\uFF01\n\u3053\u308C\u4EE5\u4E0A\u306F\u9AD8\u3059\u304E\u308B\u306E\u3067\u964D\u308A\u3088\u3046\u3002\u964D\u308A\u308B\u30DC\u30BF\u30F3\u3092\u62BC\u305D\u3046\uFF01\n\uFF08\u898B\u9001\u308A\u6A29\u30921\u679A\u4F7F\u3046\u3088\uFF09"
+    english: 'The price keeps climbing!
+
+      It''s getting too expensive, so let''s
+      fold. Press the fold button!
+
+      (It uses one pass.)'
+  - key: tutorial.bid.win
+    japanese: "\u4ECA\u5EA6\u306F\u5165\u672D\u3057\u3066\u843D\u672D\u3057\u3066\u307F\u3088\u3046\uFF01\n\u91D1\u984D\u3092\u6C7A\u3081\u3066\u3001\u5165\u672D\u30DC\u30BF\u30F3\u3092\u62BC\u305D\u3046\uFF01"
+    english: 'This time, bid and win the auction!
+
+      Set the amount and press
+      the bid button!'
+  - key: tutorial.final.intro
+    japanese: "\u6B8B\u308A\u304C2\u4EBA\u306B\u306A\u3063\u305F\u306E\u3067 FINAL
+      BATTLE\uFF01\n\u3053\u3053\u304B\u3089\u306F\u30EB\u30FC\u30EB\u304C\u5C11\u3057\u5909\u308F\u308B\u3088\uFF01"
+    english: 'Only two players remain: FINAL BATTLE!
+
+      Some rules change from
+      here!'
+  - key: tutorial.final.proceeds
+    japanese: "\u843D\u672D\u3055\u308C\u3066\u3082\u4EE3\u91D1\u306F\u51FA\u54C1\u8005\u306B\u5165\u3089\u305A\u6D88\u3048\u308B\u3088\uFF01\n\u30C9\u30ED\u30FC\u306E\u30D0\u30D5\u30C7\u30D0\u30D5\u30AB\u30FC\u30C9\u306F\n\u30C7\u30D0\u30D5\u30AB\u30FC\u30C9\u3060\u3051\u306B\u306A\u308A\u3001\u679A\u6570\u3082\u5897\u3048\u308B\u3088\uFF01"
+    english: 'Winning bids no longer pay the seller; the coins vanish!
+
+      Drawn
+      effect cards are debuffs only,
+
+      and you get more of them!'
+  - key: tutorial.final.drain
+    japanese: "2\u4EBA\u3068\u3082\u898B\u9001\u308A\u6A29\u304C0\u679A\u306B\u306A\u308B\u3068\u3001\u6700\u4F4E\u984D\u3088\u308A\u591A\u304F\u5165\u672D\u3057\u3066\n\u843D\u672D\u3057\u305F\u5206\u3060\u3051\u3001\u51FA\u54C1\u8005\u306E\u30B3\u30A4\u30F3\u3092\u524A\u308C\u308B\u3088\uFF01\n\uFF08\u3069\u3061\u3089\u304B\u304C\u898B\u9001\u308A\u6A29\u3092\u6301\u3063\u3066\u3044\u308B\u9593\u306F\u524A\u308C\u306A\u3044\uFF09"
+    english: 'Once both players have zero passes, bidding above the minimum
+
+      drains
+      the seller''s coins by the difference!
+
+      (No draining while either player
+      still has a pass.)'
   - key: tutorial.special.open_hand
     japanese: "1\u5468\u3057\u305F\u306E\u3067\u30C9\u30ED\u30FC\uFF01\u30EC\u30A2\u30EA\u30C6\u30A3\u300C\u9AD8\u300D\u306E\n\u30AB\u30FC\u30C9\u3092\u5F15\u3044\u305F\u3088\uFF01\u624B\u672D\u3092\u898B\u3066\u307F\u3088\u3046\uFF01"
     english: 'A full round passed, so everyone drew!

@@ -98,7 +98,7 @@ public class OptionWindow : MonoBehaviour
         graphicsQuality.Changed += index => Change(s => s.GraphicsQuality = (GraphicsQuality)index, GameSettingsApplier.ApplyGraphics);
         windowMode.Changed += index => Change(s => s.WindowMode = (WindowMode)index, GameSettingsApplier.ApplyDisplay);
         vibration.Changed += index => Change(s => s.Vibration = index == 0);
-        outputDevice.Changed += index => Change(s => s.OutputDevice = DeviceAt(outputDevices, index));
+        outputDevice.Changed += index => Change(s => s.OutputDevice = DeviceAt(outputDevices, index), GameSettingsApplier.ApplyOutputDevice);
         microphoneDevice.Changed += index => Change(s => s.MicrophoneDevice = DeviceAt(microphoneDevices, index));
         noiseSuppression.Changed += index => Change(s => s.NoiseSuppression = index == 0);
         talkMode.Changed += index => Change(s => s.TalkMode = (VoiceTalkMode)index);

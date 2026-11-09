@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 /// <summary>
 /// BGM を鳴らす。アクティブなシーンが変わったら、そのシーンに割り当てた曲へフェードで切り替える（同じ曲なら止めずに流し続ける）。
 /// 割り当てのないシーンでは止める。音量はオプションの BGM 音量（マスター音量は AudioListener 側で掛かる）。
+/// 出力デバイスが変わって Unity の音声出力が開き直されると曲が止まるため、止まった位置から流し直す。
 /// 起動時に Resources から生成してシーンをまたいで常駐させる。
 /// </summary>
 [RequireComponent(typeof(AudioSource))]
@@ -32,6 +33,7 @@ public class BgmPlayer : MonoBehaviour
     float bgmVolume;
     float trackVolume;
     float fade;
+    float playbackTime;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics()
@@ -67,6 +69,7 @@ public class BgmPlayer : MonoBehaviour
         ApplyVolume();
         GameSettingsStore.Saved += OnSettingsSaved;
         SceneManager.activeSceneChanged += OnActiveSceneChanged;
+        AudioSettings.OnAudioConfigurationChanged += OnAudioConfigurationChanged;
     }
 
     void Start()
@@ -74,10 +77,26 @@ public class BgmPlayer : MonoBehaviour
         ChangeTo(SceneManager.GetActiveScene());
     }
 
+    void Update()
+    {
+        if (source.isPlaying)
+            playbackTime = source.time;
+    }
+
     void OnDestroy()
     {
         GameSettingsStore.Saved -= OnSettingsSaved;
         SceneManager.activeSceneChanged -= OnActiveSceneChanged;
+        AudioSettings.OnAudioConfigurationChanged -= OnAudioConfigurationChanged;
+    }
+
+    void OnAudioConfigurationChanged(bool deviceWasChanged)
+    {
+        if (source.clip == null || source.clip != requestedClip || source.isPlaying)
+            return;
+
+        source.Play();
+        source.time = Mathf.Clamp(playbackTime, 0f, source.clip.length - 0.01f);
     }
 
     void OnSettingsSaved(GameSettings settings)
@@ -128,6 +147,7 @@ public class BgmPlayer : MonoBehaviour
         }
 
         source.clip = clip;
+        playbackTime = 0f;
         trackVolume = volume;
         if (clip != null)
         {

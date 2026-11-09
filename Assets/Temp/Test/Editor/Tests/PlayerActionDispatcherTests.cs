@@ -48,7 +48,7 @@ public class PlayerActionDispatcherTests
         using var table = new VirtualGame(4);
         var dispatcher = new PlayerActionDispatcher(table.Game);
         var listing = new Listing(Seller, TestCards.BlankGoods(), new HandCard[0], false);
-        var auction = new AuctionModel(listing, new[] { 2, 3, 4 }, player => table.Player(player).Coins, 10, 2);
+        var auction = new AuctionModel(listing, new[] { 2, 3, 4 }, player => table.Player(player).Coins, 2);
         dispatcher.BeginAuction(auction);
         dispatcher.Bid(2, 5);
         dispatcher.Bid(3, 8);
@@ -66,7 +66,7 @@ public class PlayerActionDispatcherTests
         using var table = new VirtualGame(3);
         var dispatcher = new PlayerActionDispatcher(table.Game);
         var listing = new Listing(Seller, TestCards.BlankGoods(), new HandCard[0], false);
-        var auction = new AuctionModel(listing, new[] { 2, 3 }, player => table.Player(player).Coins, 10, 2);
+        var auction = new AuctionModel(listing, new[] { 2, 3 }, player => table.Player(player).Coins, 2);
         dispatcher.BeginAuction(auction);
 
         dispatcher.TimeOut(Seller);

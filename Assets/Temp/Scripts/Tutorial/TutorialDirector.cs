@@ -8,12 +8,15 @@ using UnityEngine.UI;
 
 /// <summary>
 /// チュートリアルの進行。SinglePlay の試合を、決めたカード・決めた動きの CPU で進め、場面ごとに案内を出す。
+/// 席はランダムなので、CPU の役は自分から時計回りの順（A → B → C。ターン 2〜4 の出品者）で決める。B をライバルにする。
 /// ・最初の出品者は自分。CPU は見送り権 cpuPassRights 枚で始め、オークションでは案内を読み終えてから降りる。
 /// ・ターン 1：出品の操作（手札を開く → カードの詳細 → 選ぶ → バフ → 付加価値 → デバフ → 確定）を 1 つずつ案内する。
-///   オークションは CPU の 1 人（ライバル）が落札し、残りの CPU は降りて脱落する。
+///   オークションはライバルが落札し、残りの CPU は降りて見送り権を使う。
 ///   落札者・落札者なしのときのエフェクトカードの発動先、見送り権、インフォメーションを案内する。
-/// ・ターン 2：ライバルの出品に自分が入札して落札する。
-/// ・ターン 3：1 周後のドローで引いた最高レアリティのカードで、スペシャルカードを案内する。
+/// ・ターン 2（A の出品）：虫眼鏡で手元（見送り権のチケット・落札したカード）を見る → 自分が入札する → 最高額の間は降りられない
+///   → ライバルと raiseRounds 回競り合って値段を上げる → ライバルが上回ったら降りる、を案内する。C は降りて脱落し、ライバルが落札する。
+/// ・ターン 3（ライバルの出品）：自分が入札して落札する。A は降りて脱落し、FINAL BATTLE になる。
+/// ・ターン 4：1 周後のドローの後、FINAL BATTLE で変わるルールを案内してから、引いた最高レアリティのカードでスペシャルカードを案内する。
 ///   そこからは制限を外して自由に操作させ、ライバルが降りて自分が勝ったらクリアを出す。
 /// 案内中は、案内している操作だけを進行へ送る（TutorialCommandGate）。自分が脱落したらチュートリアルをやめる。
 /// </summary>
@@ -45,8 +48,12 @@ public class TutorialDirector : MonoBehaviour
 
     [SerializeField] private PauseMenu pause;
 
+    [SerializeField] private TableInspectButtons inspectButtons;
+
+    [SerializeField] private TableInspectCamera inspectCamera;
+
     [Tooltip("CPU が最初に持っている見送り権")]
-    [SerializeField] private int cpuPassRights = 0;
+    [SerializeField] private int cpuPassRights = 1;
 
     [Header("案内で明るくする UI")]
     [SerializeField] private RectTransform startButton;
@@ -60,6 +67,8 @@ public class TutorialDirector : MonoBehaviour
     [SerializeField] private RectTransform amountReels;
 
     [SerializeField] private RectTransform bidButton;
+
+    [SerializeField] private RectTransform foldButton;
 
     [Tooltip("カードの一覧を開くインフォメーションマーク")]
     [SerializeField] private RectTransform infoButton;
@@ -78,8 +87,12 @@ public class TutorialDirector : MonoBehaviour
     [Tooltip("ターン 3 で出品する、スペシャルカード付きの出品カード")]
     [SerializeField] private CardData specialGoods;
 
+    [Tooltip("ターン 2 で降りる前に、ライバルと競り合って入札し返す回数")]
+    [SerializeField, Min(0)] private int raiseRounds = 2;
+
     readonly Dictionary<int, TutorialCpuAgent> cpus = new Dictionary<int, TutorialCpuAgent>();
     TutorialCommandGate gate;
+    TutorialCpuAgent rival;
     ListingSession listing;
     AuctionModel auction;
     int finishedAuctions;
@@ -88,7 +101,12 @@ public class TutorialDirector : MonoBehaviour
     bool cpusMayList;
     bool cpusMayAct;
     bool isReleased;
+    bool isExplaining;
+    bool hasExplainedFinalBattle;
     bool isFinished;
+
+    /// <summary>自分が最後の 1 人になってチュートリアルをクリアした（クリアの案内を出す直前）</summary>
+    public event Action Cleared;
 
     int Local => registry.LocalPlayerNumber;
 
@@ -142,7 +160,7 @@ public class TutorialDirector : MonoBehaviour
         foreach (SinglePlayPlayer player in singlePlay.Players.Where(player => player.IsCpu))
         {
             var agent = player.gameObject.AddComponent<TutorialCpuAgent>();
-            agent.Initialize(player.PlayerNumber, game, turnFlow.Commands, () => cpusMayList || isReleased, () => cpusMayAct || isReleased);
+            agent.Initialize(player.PlayerNumber, game, turnFlow.Commands, () => (cpusMayList || isReleased) && !isExplaining, () => (cpusMayAct || isReleased) && !isExplaining);
             turnFlow.ReplaceAgent(agent);
             cpus[player.PlayerNumber] = agent;
         }
@@ -193,10 +211,19 @@ public class TutorialDirector : MonoBehaviour
         yield return RunFirstAuction();
         yield return RunInformation();
         cpusMayList = true;
+        yield return RunFolding();
         yield return RunBidding();
         yield return RunSpecialListing();
 
+        yield return new WaitUntil(() => hasExplainedFinalBattle || game.IsFinalDuel || gameFinished);
+        if (!hasExplainedFinalBattle && !gameFinished)
+        {
+            yield return RunFinalBattleRules();
+            navigator.Release();
+        }
+
         yield return new WaitUntil(() => gameFinished);
+        Cleared?.Invoke();
         yield return ShowAndWaitClick("tutorial.clear", TutorialNavLayout.Top, false);
         Finish();
     }
@@ -215,7 +242,7 @@ public class TutorialDirector : MonoBehaviour
             yield break;
         }
 
-        TutorialCpuAgent rival = cpus.OrderBy(entry => entry.Key).Select(entry => entry.Value).FirstOrDefault();
+        rival = CpuClockwiseFromLocal(2);
         if (rival != null)
             rival.BidInNextAuction();
 
@@ -237,7 +264,7 @@ public class TutorialDirector : MonoBehaviour
         EndGuidedListing();
     }
 
-    /// <summary>ターン 1 のオークション：ライバルが落札し、付けたエフェクトカードが落札者に発動する。残りの CPU は降りて脱落する</summary>
+    /// <summary>ターン 1 のオークション：ライバルが落札し、付けたエフェクトカードが落札者に発動する。残りの CPU は降りて見送り権を使う</summary>
     IEnumerator RunFirstAuction()
     {
         yield return new WaitUntil(() => auction != null);
@@ -247,6 +274,8 @@ public class TutorialDirector : MonoBehaviour
         yield return ShowAndWaitClick("tutorial.auction.sold", TutorialNavLayout.Top, false);
         yield return ShowAndWaitClick("tutorial.auction.unsold", TutorialNavLayout.Top, false);
         yield return ShowAndWaitClick("tutorial.auction.fold", TutorialNavLayout.Top, false);
+        if (rival != null)
+            rival.BidInNextAuction(raiseRounds + 1);
     }
 
     /// <summary>インフォメーションマークでカードの一覧を開き、閉じるまでを案内する</summary>
@@ -257,22 +286,89 @@ public class TutorialDirector : MonoBehaviour
         navigator.Hide();
     }
 
-    /// <summary>ターン 2：ライバルの出品に入札して落札する</summary>
+    /// <summary>
+    /// ターン 2：虫眼鏡で手元を見せてから入札させ、最高額の間は降りられないことを案内する。
+    /// ライバルと raiseRounds 回競り合って値段を上げてから、上回られたところで降りさせる
+    /// </summary>
+    IEnumerator RunFolding()
+    {
+        yield return new WaitUntil(() => auction != null && auction.Participants.Contains(Local));
+        AuctionModel model = auction;
+        int finished = finishedAuctions;
+        yield return RunInspect();
+
+        gate.AllowBid();
+        yield return Show("tutorial.bid.intro", TutorialNavLayout.Top, true, () => model.BidOf(Local) > 0, TutorialPointerSide.Left, bidButton, amountReels);
+        gate.Lock();
+        yield return ShowAndWaitClick("tutorial.fold.leader", TutorialNavLayout.Top, true, foldButton);
+
+        for (int round = 0; round < raiseRounds; round++)
+        {
+            yield return WaitUntilOutbid(model);
+            if (!model.IsActive(Local))
+                break;
+
+            gate.AllowBid();
+            yield return Show("tutorial.bid.raise", TutorialNavLayout.Top, true, () => !model.IsActive(Local) || model.IsLeading(Local), TutorialPointerSide.Left, bidButton, amountReels);
+            gate.Lock();
+        }
+
+        yield return WaitUntilOutbid(model);
+        if (model.IsActive(Local))
+        {
+            gate.AllowFold();
+            yield return Show("tutorial.fold.outbid", TutorialNavLayout.Top, true, () => !model.IsActive(Local), foldButton);
+            gate.Lock();
+        }
+        yield return LetCpusAct(finished);
+    }
+
+    /// <summary>CPU を動かし、自分が最高額でなくなる（またはオークションから外れる）まで待つ</summary>
+    IEnumerator WaitUntilOutbid(AuctionModel model)
+    {
+        navigator.Hide();
+        cpusMayAct = true;
+        yield return new WaitUntil(() => !model.IsActive(Local) || !model.IsLeading(Local));
+        cpusMayAct = false;
+    }
+
+    /// <summary>虫眼鏡でほかのプレイヤーの手元を見せ、見送り権のチケットと落札したカードを案内する</summary>
+    IEnumerator RunInspect()
+    {
+        yield return Show("tutorial.inspect.open", TutorialNavLayout.Top, true, () => inspectCamera.IsInspecting, inspectButtons.Markers.ToArray());
+        yield return ShowAndWaitClick("tutorial.inspect.view", TutorialNavLayout.Top, false);
+    }
+
+    /// <summary>ターン 3：ライバルの出品に入札して落札する</summary>
     IEnumerator RunBidding()
     {
         yield return new WaitUntil(() => auction != null && auction.Participants.Contains(Local));
         AuctionModel model = auction;
         int finished = finishedAuctions;
         gate.AllowBid();
-        yield return Show("tutorial.bid.intro", TutorialNavLayout.Top, true, () => model.BidOf(Local) > 0, TutorialPointerSide.Left, bidButton, amountReels);
+        yield return Show("tutorial.bid.win", TutorialNavLayout.Top, true, () => model.BidOf(Local) > 0, TutorialPointerSide.Left, bidButton, amountReels);
         gate.Lock();
         yield return LetCpusAct(finished);
     }
 
-    /// <summary>ターン 3：スペシャルカード付きのカードを案内し、そこからは自由に操作させる</summary>
+    /// <summary>FINAL BATTLE で変わるルールを案内する。読んでいる間は CPU を止める</summary>
+    IEnumerator RunFinalBattleRules()
+    {
+        hasExplainedFinalBattle = true;
+        isExplaining = true;
+        yield return ShowAndWaitClick("tutorial.final.intro", TutorialNavLayout.Top, true);
+        yield return ShowAndWaitClick("tutorial.final.proceeds", TutorialNavLayout.Top, true);
+        yield return ShowAndWaitClick("tutorial.final.drain", TutorialNavLayout.Top, true);
+        isExplaining = false;
+    }
+
+    /// <summary>ターン 4：FINAL BATTLE のルールとスペシャルカード付きのカードを案内し、そこからは自由に操作させる</summary>
     IEnumerator RunSpecialListing()
     {
         yield return new WaitUntil(() => IsLocalListing);
+        if (game.IsFinalDuel)
+            yield return RunFinalBattleRules();
+
         HandCard goods = FindInHand(specialGoods);
         if (goods == null)
         {
@@ -349,6 +445,16 @@ public class TutorialDirector : MonoBehaviour
         StopAllCoroutines();
         ReleaseControl();
         navigator.Finish();
+    }
+
+    /// <summary>自分から時計回りに steps 人目の CPU。並びが分からないときは番号がいちばん小さい CPU</summary>
+    TutorialCpuAgent CpuClockwiseFromLocal(int steps)
+    {
+        IReadOnlyList<int> clockwise = turnFlow.ClockwiseSellers;
+        int localIndex = clockwise.ToList().IndexOf(Local);
+        if (localIndex >= 0 && cpus.TryGetValue(clockwise[(localIndex + steps) % clockwise.Count], out TutorialCpuAgent cpu))
+            return cpu;
+        return cpus.OrderBy(entry => entry.Key).Select(entry => entry.Value).FirstOrDefault();
     }
 
     HandCard FindInHand(CardData data)

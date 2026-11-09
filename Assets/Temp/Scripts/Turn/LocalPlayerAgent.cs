@@ -8,6 +8,7 @@ using UnityEngine.InputSystem;
 /// 出品の確定ボタンは出品できる間、手札を広げているときだけ画面の右端に表示する。
 /// オークションでは金額を 0 から W/S・↑/↓・十字キー上下で指定し（長押しで連続して変わる）、入札できる額のときだけ入札ボタンで入札する。
 /// コントローラーは A で確定・入札、B で降りる、Y で増額の切り替え（画面のボタンが押せるときだけ）。
+/// 確定・入札・降りるは、連打しても PressThrottle の間隔より短い間隔では送らない。
 /// ポーズ画面を開いている間はキー・コントローラーの操作を受け付けない（メニューの選択と重ならないように）。脱落した後は出品を受け持たない。
 /// </summary>
 public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
@@ -30,6 +31,9 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
     int amount;
     readonly KeyRepeat raiseKey = new KeyRepeat();
     readonly KeyRepeat lowerKey = new KeyRepeat();
+    readonly PressThrottle confirmThrottle = new PressThrottle();
+    readonly PressThrottle bidThrottle = new PressThrottle();
+    readonly PressThrottle foldThrottle = new PressThrottle();
 
     public int PlayerNumber { get; private set; } = PlayerRegistry.NoPlayer;
 
@@ -192,7 +196,7 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
 
     void HandleConfirm()
     {
-        if (listing != null)
+        if (listing != null && confirmThrottle.TryAccept())
             commands.Confirm(PlayerNumber);
     }
 
@@ -204,13 +208,13 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
 
     void HandleBid()
     {
-        if (auction != null)
+        if (auction != null && bidThrottle.TryAccept())
             commands.Bid(PlayerNumber, amount);
     }
 
     void HandleFold()
     {
-        if (auction != null)
+        if (auction != null && foldThrottle.TryAccept())
             commands.Fold(PlayerNumber);
     }
 
@@ -233,19 +237,21 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
             ui.SetPrompt($"{listing.Goods.DisplayName}（最低 {listing.MinPrice}）を出品します。増額するか選んで確定");
     }
 
-    /// <summary>金額は 0〜（所持コイン + 前借りできる額）の範囲で自由に指定させ、入札できる額かどうかはボタンの可否で示す</summary>
+    /// <summary>金額は 0〜所持コインの範囲で自由に指定させ、入札できる額かどうかはボタンの可否で示す。最高額の間は降りるを押せない</summary>
     void RefreshAuction()
     {
         int highest = auction.HighestSelectable(PlayerNumber);
         amount = Mathf.Clamp(amount, 0, highest);
         ui.SetBidInteractable(auction.CanBid(PlayerNumber, amount));
-        ui.SetAuction(amount, $"最低 {auction.Listing.MinPrice} / 最高額 {auction.HighestBid} / 自分 {auction.BidOf(PlayerNumber)} / 所持 {auction.CoinsOf(PlayerNumber)}（{highest} まで入札可）");
+        ui.SetFoldInteractable(auction.CanFold(PlayerNumber));
+        string drain = auction.DrainsSeller ? $" / 相手から削る {auction.DrainOf(amount)}" : string.Empty;
+        ui.SetAuction(amount, $"最低 {auction.Listing.MinPrice} / 最高額 {auction.HighestBid} / 自分 {auction.BidOf(PlayerNumber)} / 所持 {auction.CoinsOf(PlayerNumber)}{drain}");
         if (highest < auction.Listing.MinPrice)
             ui.SetPrompt("コインが足りないため降りるしかありません（見送り権を使います）");
-        else if (!auction.CanAfford(PlayerNumber, amount))
-            ui.SetPrompt($"所持コインを超えています。この額で落札して払えないと、見送り権を {auction.ShortfallPenalty} 枚失います");
         else if (auction.IsLeading(PlayerNumber))
-            ui.SetPrompt("最高額です。さらに金額を上げて入札することもできます");
+            ui.SetPrompt("最高額です。さらに金額を上げて入札することもできます（最高額のあいだは降りられません）");
+        else if (auction.DrainsSeller)
+            ui.SetPrompt("FINAL BATTLE：最低額より多く入札して落札した分だけ、相手のコインを削れます。金額を指定して入札するか、降りるかを選んでください");
         else
             ui.SetPrompt("W/S か ↑/↓（コントローラーは十字キー）で金額を指定して入札するか、降りるかを選んでください（降りると見送り権を使います）");
     }

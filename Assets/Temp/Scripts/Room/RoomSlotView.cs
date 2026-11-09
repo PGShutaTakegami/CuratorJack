@@ -38,11 +38,27 @@ public class RoomSlotView : MonoBehaviour
 
     public event Action FillClicked;
 
+    readonly PressThrottle muteThrottle = new PressThrottle();
+    readonly PressThrottle kickThrottle = new PressThrottle();
+    readonly PressThrottle fillThrottle = new PressThrottle();
+
     void Awake()
     {
-        muteButton.Button.onClick.AddListener(() => MuteClicked?.Invoke());
-        kickButton.Button.onClick.AddListener(() => KickClicked?.Invoke());
-        fillButton.Button.onClick.AddListener(() => FillClicked?.Invoke());
+        muteButton.Button.onClick.AddListener(() =>
+        {
+            if (muteThrottle.TryAccept())
+                MuteClicked?.Invoke();
+        });
+        kickButton.Button.onClick.AddListener(() =>
+        {
+            if (kickThrottle.TryAccept())
+                KickClicked?.Invoke();
+        });
+        fillButton.Button.onClick.AddListener(() =>
+        {
+            if (fillThrottle.TryAccept())
+                FillClicked?.Invoke();
+        });
     }
 
     public void ShowMember(string playerName, Sprite iconSprite, bool showMute, bool isMuted, bool showKick, bool canKick)

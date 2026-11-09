@@ -1653,7 +1653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerNumberLabel
   headAnchor: {fileID: 8927231750670987032}
-  offset: {x: 0, y: 0.9, z: 0}
+  offset: {x: 0, y: 0.45, z: 0}
   fontSize: 6
   color: {r: 1, g: 0.85, b: 0.35, a: 1}
   font: {fileID: 11400000, guid: a8c59cf6b6b40344c938927f7fe2879d, type: 2}

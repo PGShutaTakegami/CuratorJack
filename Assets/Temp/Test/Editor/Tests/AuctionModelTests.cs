@@ -1,16 +1,40 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 
-/// <summary>オークションのルール（入札できる額・落札者・前借り）を、仮想の入札で確かめる</summary>
+/// <summary>オークションのルール（入札できる額・落札者・降りられる条件）を、仮想の入札で確かめる</summary>
 public class AuctionModelTests
 {
-    const int Overdraft = 10;
     const int Penalty = 2;
 
-    static AuctionModel Create(Dictionary<int, int> coins, HandCard goods = null)
+    static AuctionModel Create(Dictionary<int, int> coins, HandCard goods = null, bool drainsSeller = false)
     {
         var listing = new Listing(1, goods ?? TestCards.BlankGoods(), new HandCard[0], false);
-        return new AuctionModel(listing, coins.Keys, player => coins[player], Overdraft, Penalty);
+        return new AuctionModel(listing, coins.Keys, player => coins[player], Penalty, drainsSeller);
+    }
+
+    [Test]
+    public void 削れるオークションでは落札額のうち最低出品額を超えた分を削る()
+    {
+        AuctionModel auction = Create(new Dictionary<int, int> { [2] = 100 }, drainsSeller: true);
+        int min = auction.Listing.MinPrice;
+
+        Assert.AreEqual(0, auction.DrainAmount);
+        Assert.IsTrue(auction.TryBid(2, min + 10));
+
+        Assert.AreEqual(2, auction.Winner);
+        Assert.AreEqual(10, auction.DrainAmount);
+    }
+
+    [Test]
+    public void 削れないオークションでは多く入札しても削らない()
+    {
+        AuctionModel auction = Create(new Dictionary<int, int> { [2] = 100 });
+
+        auction.TryBid(2, auction.Listing.MinPrice + 10);
+
+        Assert.AreEqual(2, auction.Winner);
+        Assert.AreEqual(0, auction.DrainAmount);
+        Assert.AreEqual(0, auction.DrainOf(auction.Listing.MinPrice + 10));
     }
 
     [Test]
@@ -65,16 +89,42 @@ public class AuctionModelTests
     }
 
     [Test]
-    public void 所持コインより前借りの分まで多く入札できるが払えない()
+    public void 所持コインを超えては入札できない()
     {
         AuctionModel auction = Create(new Dictionary<int, int> { [2] = 20, [3] = 100 });
 
-        Assert.IsFalse(auction.CanBid(2, 20 + Overdraft + 1));
-        Assert.IsTrue(auction.TryBid(2, 20 + Overdraft));
+        Assert.AreEqual(20, auction.HighestSelectable(2));
+        Assert.IsFalse(auction.CanBid(2, 21));
+        Assert.IsTrue(auction.TryBid(2, 20));
         auction.TryFold(3);
 
         Assert.AreEqual(2, auction.Winner);
-        Assert.IsFalse(auction.CanAfford(2, auction.Price));
+        Assert.IsTrue(auction.CanAfford(2, auction.Price));
+    }
+
+    [Test]
+    public void 最高額を付けている間は降りられず上回られたら降りられる()
+    {
+        AuctionModel auction = Create(new Dictionary<int, int> { [2] = 100, [3] = 100, [4] = 100 });
+
+        auction.TryBid(2, 10);
+        Assert.IsFalse(auction.CanFold(2));
+        Assert.IsFalse(auction.TryFold(2));
+        Assert.IsTrue(auction.IsActive(2));
+
+        auction.TryBid(3, 12);
+        Assert.IsTrue(auction.TryFold(2));
+        Assert.IsFalse(auction.IsActive(2));
+    }
+
+    [Test]
+    public void 脱落した人は最高額でも抜けられる()
+    {
+        AuctionModel auction = Create(new Dictionary<int, int> { [2] = 100, [3] = 100, [4] = 100 });
+
+        auction.TryBid(2, 10);
+        Assert.IsTrue(auction.Withdraw(2));
+        Assert.IsFalse(auction.IsActive(2));
     }
 
     [Test]

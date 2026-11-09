@@ -26,6 +26,8 @@ public class ReadyToggleButton : MonoBehaviour
     [Tooltip("{0} = 準備完了の人数, {1} = 全体の人数")]
     [SerializeField] private string readyFormat = "準備完了{0}/{1}";
 
+    readonly PressThrottle toggleThrottle = new PressThrottle();
+
     public bool IsReady { get; private set; }
 
     public event Action<bool> ReadyChanged;
@@ -60,7 +62,8 @@ public class ReadyToggleButton : MonoBehaviour
 
     void Toggle()
     {
-        SetReady(!IsReady);
+        if (toggleThrottle.TryAccept())
+            SetReady(!IsReady);
     }
 
     void Refresh()

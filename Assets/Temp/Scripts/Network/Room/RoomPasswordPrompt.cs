@@ -24,6 +24,7 @@ public class RoomPasswordPrompt : MonoBehaviour, IBackInputHandler
 
     [SerializeField] private string wrongPasswordMessage = "パスワードが違います";
 
+    readonly PressThrottle submitThrottle = new PressThrottle();
     Func<string, bool> tryEnter;
 
     public bool IsOpen => view.activeSelf;
@@ -82,7 +83,7 @@ public class RoomPasswordPrompt : MonoBehaviour, IBackInputHandler
 
     void Submit(string password)
     {
-        if (!IsOpen || !RoomPasswordRule.IsValid(password))
+        if (!IsOpen || !RoomPasswordRule.IsValid(password) || !submitThrottle.TryAccept())
             return;
 
         if (tryEnter != null && tryEnter(password))

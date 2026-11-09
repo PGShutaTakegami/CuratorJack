@@ -69,12 +69,18 @@ public class PauseMenu : MonoBehaviour
 
     public event Action QuitClicked;
 
+    readonly PressThrottle quitThrottle = new PressThrottle();
+
     void Awake()
     {
         openButton.onClick.AddListener(Toggle);
         resumeButton.onClick.AddListener(Close);
         retireButton.Button.onClick.AddListener(OpenRetireConfirm);
-        quitButton.Button.onClick.AddListener(() => QuitClicked?.Invoke());
+        quitButton.Button.onClick.AddListener(() =>
+        {
+            if (quitThrottle.TryAccept())
+                QuitClicked?.Invoke();
+        });
         settingsButton.onClick.AddListener(OpenSettings);
         settings.BackRequested += CloseSettings;
         settings.gameObject.SetActive(false);

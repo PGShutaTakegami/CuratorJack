@@ -11,7 +11,8 @@ public sealed class TutorialCommandGate : IPlayerCommands
         AttachBuff,
         Raise,
         Confirm,
-        Bid
+        Bid,
+        Fold
     }
 
     readonly IPlayerCommands inner;
@@ -35,6 +36,8 @@ public sealed class TutorialCommandGate : IPlayerCommands
     public void AllowConfirm() => Allow(Allowed.Confirm, null);
 
     public void AllowBid() => Allow(Allowed.Bid, null);
+
+    public void AllowFold() => Allow(Allowed.Fold, null);
 
     void Allow(Allowed action, HandCard card)
     {
@@ -74,6 +77,8 @@ public sealed class TutorialCommandGate : IPlayerCommands
 
     public void Fold(int player)
     {
+        if (allowed == Allowed.Fold)
+            inner.Fold(player);
     }
 
     public void Retire(int player) => inner.Retire(player);

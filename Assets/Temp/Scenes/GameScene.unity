@@ -11154,6 +11154,8 @@ MonoBehaviour:
   rematchPollMilliseconds: 2000
   ownerWaitSeconds: 30
   hostMigrationWaitSeconds: 30
+  memberVerifySeconds: 60
+  claimRetrySeconds: 3
 --- !u!114 &547329666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28940,6 +28942,8 @@ GameObject:
   - component: {fileID: 1503668048}
   - component: {fileID: 1503668049}
   - component: {fileID: 1503668050}
+  - component: {fileID: 1503668051}
+  - component: {fileID: 1503668052}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -28986,6 +28990,7 @@ Transform:
   - {fileID: 1430318995}
   - {fileID: 206865836}
   - {fileID: 1905523614}
+  - {fileID: 1601427111}
   - {fileID: 1967709175}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29048,7 +29053,6 @@ MonoBehaviour:
   handFader: {fileID: 1921360743}
   ui: {fileID: 479731435}
   resultSeconds: 2
-  bidOverdraft: 10
   shortfallPenalty: 2
 --- !u!114 &1503668046
 MonoBehaviour:
@@ -29135,6 +29139,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerIconDirectory
   registry: {fileID: 1871205621}
+--- !u!114 &1503668051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503668041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca9b1b459fde333498e901cf1cdc10d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FoldedHighlighter
+  registry: {fileID: 1871205621}
+  turnFlow: {fileID: 1503668045}
+  outlineMaterial: {fileID: 2100000, guid: e6b4ab677e6b12c4b96464364c2eae26, type: 2}
+  glowColor: {r: 1, g: 0.15, b: 0.1, a: 1}
+  intensityRange: {x: 0.9, y: 1.6}
+  pulseSeconds: 1.6
+  boxyRendererNames:
+  - Monitor_Case
+  - Monitor_Screen
+--- !u!114 &1503668052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503668041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 171dda18e7b054147b8dfa87c8825433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AchievementTracker
+  game: {fileID: 1503668042}
+  turnFlow: {fileID: 1503668045}
+  registry: {fileID: 1871205621}
+  singlePlay: {fileID: 1459003510}
+  pauseMenu: {fileID: 82492034}
+  tutorial: {fileID: 0}
+  collectorCount: 5
 --- !u!1 &1504495120
 GameObject:
   m_ObjectHideFlags: 0
@@ -31300,6 +31344,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1601427110
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1601427111}
+  - component: {fileID: 1601427112}
+  m_Layer: 0
+  m_Name: PassTicketTableStack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1601427111
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601427110}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1503668043}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1601427112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601427110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe0b5843b07bc2145b2dfb877c8f7500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PassTicketTableStack
+  game: {fileID: 1503668042}
+  registry: {fileID: 1871205621}
+  piles: {fileID: 1430318996}
+  ticketPrefab: {fileID: 3887430927117752904, guid: ed77b2dc012bcdb4c8964b61cc44e289, type: 3}
+  sideOffset: 0.6
+  spacing: 0.2
+  layerHeight: 0.002
+  angleJitter: 6
+  surfaceOffset: 0.002
+  dropHeight: 0.25
+  dropSeconds: 0.4
+  liftHeight: 0.15
+  vanishSeconds: 0.4
 --- !u!1 &1604629782
 GameObject:
   m_ObjectHideFlags: 0

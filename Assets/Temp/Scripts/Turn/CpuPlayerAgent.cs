@@ -7,6 +7,7 @@ using UnityEngine;
 /// 出品：ランダムなグッズを選び、ときどきバフデバフを付ける（付けたら一定の確率で増額する）。
 /// オークション：払えるなら一定の確率で参加し、参加しないなら降りる。参加したら自分なりの上限額までは間をおいて入札し、
 /// 上回られて上限を超えるなら降りる（見送り権がなければ必ず参加し、所持コインまで入札する）。
+/// 出品者のコインを削れるオークション（最後の 1v1 で 2 人とも見送り権がない）では、自分のほうがコインに余裕があれば、出品者のコインを削り切れる額まで入札する。
 /// 入札額は自分と同じく、0 からレアリティの刻みで変えて選べる額（刻みの倍数）だけを使う。
 /// 入札は、入札を映す演出が終わってから考え始め、送る直前にも演出中でないことを確かめる（演出は最後の入札者しか映さないため、
 /// 演出中に入札が重なると間の人が飛ばされ、同じ人が続けて吊り上げたように見える）。
@@ -124,11 +125,26 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
             if (isLeading)
                 continue;
 
-            int next = auction.Listing.RoundUpToStep(Mathf.Max(auction.LowestSelectable(PlayerNumber), auction.HighestBid + 1));
+            int next = DrainBid(auction, auction.Listing.RoundUpToStep(Mathf.Max(auction.LowestSelectable(PlayerNumber), auction.HighestBid + 1)), coins);
             if (next <= valuation && auction.CanBid(PlayerNumber, next))
                 commands.Bid(PlayerNumber, next);
             else
                 commands.Fold(PlayerNumber);
         }
+    }
+
+    /// <summary>
+    /// 出品者のコインを削れるオークションでは、払った後も出品者より多くコインが残るとき、出品者のコインを削り切れる額まで（払える範囲で）上げる。
+    /// 削った分と多く払った分は同じ額なので、残りのコインの差は変わらず、先に尽きるのは出品者になる。
+    /// </summary>
+    int DrainBid(AuctionModel auction, int next, int coins)
+    {
+        int sellerCoins = auction.CoinsOf(auction.Listing.Seller);
+        if (!auction.DrainsSeller || coins - auction.Listing.MinPrice <= sellerCoins)
+            return next;
+
+        int drainAll = auction.Listing.RoundUpToStep(auction.Listing.MinPrice + sellerCoins);
+        int affordable = coins / auction.Listing.BidStep * auction.Listing.BidStep;
+        return Mathf.Max(next, Mathf.Min(drainAll, affordable));
     }
 }

@@ -60,6 +60,9 @@ public class TableInspectButtons : MonoBehaviour
     bool isListing;
     bool isAuction;
 
+    /// <summary>ほかのプレイヤーごとの虫眼鏡のボタン（隠れているものも含む）</summary>
+    public IEnumerable<RectTransform> Markers => markers.Values;
+
     void OnEnable()
     {
         turnFlow.ListingStarted += HandleListingStarted;

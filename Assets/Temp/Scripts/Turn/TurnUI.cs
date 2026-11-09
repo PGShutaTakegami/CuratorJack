@@ -170,6 +170,8 @@ public class TurnUI : MonoBehaviour
 
     public void SetBidInteractable(bool interactable) => SetButtonState(bidButton, interactable);
 
+    public void SetFoldInteractable(bool interactable) => SetButtonState(foldButton, interactable);
+
     /// <summary>コントローラーから確定を押す。手札を広げて確定が表示され、押せるときだけ押す</summary>
     public bool PressConfirm() => confirmRevealed && UIButtonPresser.TryPress(confirmButton);
 

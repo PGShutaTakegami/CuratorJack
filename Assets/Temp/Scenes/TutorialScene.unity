@@ -1132,6 +1132,87 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 44334531}
   m_CullTransparentMesh: 1
+--- !u!1 &50402770
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 50402771}
+  - component: {fileID: 50402772}
+  - component: {fileID: 50402773}
+  m_Layer: 0
+  m_Name: TableInspect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &50402771
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50402770}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1503668043}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &50402772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50402770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9887bf07587220d4db9ea252534f873d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TableInspectCamera
+  registry: {fileID: 1871205621}
+  piles: {fileID: 1430318996}
+  sideOffset: 0.25
+  viewerOffset: 0.2
+  height: 1.5
+  backOffset: 0.25
+  moveSeconds: 0.6
+  holdSeconds: 2.5
+--- !u!114 &50402773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 50402770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3319ab4195f9376489ff1837f3934012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TableInspectButtons
+  registry: {fileID: 1871205621}
+  turnFlow: {fileID: 1503668045}
+  inspectCamera: {fileID: 50402772}
+  piles: {fileID: 1430318996}
+  screen: {fileID: 606572329}
+  backgroundSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  iconSprite: {fileID: 21300000, guid: 4f467e51d155c3c4a8767df24e63e2c0, type: 3}
+  buttonSize: 64
+  iconRatio: 0.6
+  backgroundColor: {r: 0.12, g: 0.1, b: 0.08, a: 0.9}
+  outlineColor: {r: 0.85, g: 0.68, b: 0.35, a: 1}
+  iconColor: {r: 0.95, g: 0.82, b: 0.55, a: 1}
+  seatOffset: 0.3
+  sideOffset: 1
+  lift: 0.1
+  frontToleranceRatio: 0.02
 --- !u!1 &58740370
 GameObject:
   m_ObjectHideFlags: 0
@@ -11120,6 +11201,8 @@ MonoBehaviour:
   rematchPollMilliseconds: 2000
   ownerWaitSeconds: 30
   hostMigrationWaitSeconds: 30
+  memberVerifySeconds: 60
+  claimRetrySeconds: 3
 --- !u!114 &547329666
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14332,6 +14415,63 @@ MonoBehaviour:
   droppedOutMaterial: {fileID: 2100000, guid: 5d99ef08dfb61734f8d3b1877bd6612a, type: 2}
   screenName: Monitor_Screen
   surfaceOffset: 0.01
+--- !u!1 &707192294
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 707192295}
+  - component: {fileID: 707192296}
+  m_Layer: 0
+  m_Name: PassTicketTableStack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &707192295
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707192294}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1503668043}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &707192296
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707192294}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe0b5843b07bc2145b2dfb877c8f7500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PassTicketTableStack
+  game: {fileID: 1503668042}
+  registry: {fileID: 1871205621}
+  piles: {fileID: 1430318996}
+  ticketPrefab: {fileID: 3887430927117752904, guid: ed77b2dc012bcdb4c8964b61cc44e289, type: 3}
+  sideOffset: 0.6
+  spacing: 0.2
+  layerHeight: 0.002
+  angleJitter: 6
+  surfaceOffset: 0.002
+  dropHeight: 0.25
+  dropSeconds: 0.4
+  liftHeight: 0.15
+  vanishSeconds: 0.4
 --- !u!1 &713102389
 GameObject:
   m_ObjectHideFlags: 0
@@ -23544,19 +23684,23 @@ MonoBehaviour:
   hand: {fileID: 1871205623}
   handView: {fileID: 1921360742}
   pause: {fileID: 82492034}
-  cpuPassRights: 0
+  inspectButtons: {fileID: 50402773}
+  inspectCamera: {fileID: 50402772}
+  cpuPassRights: 1
   startButton: {fileID: 210722456}
   handArea: {fileID: 1921360741}
   raisePanel: {fileID: 1836371694}
   confirmButton: {fileID: 767162125}
   amountReels: {fileID: 1752506390}
   bidButton: {fileID: 440961844}
+  foldButton: {fileID: 1189178403}
   infoButton: {fileID: 2122573238}
   catalogWindow: {fileID: 1022097373}
   firstGoods: {fileID: 11400000, guid: 350c33571fc2e2245a2bb7e5754cc639, type: 2}
   buffCard: {fileID: 11400000, guid: 85e30f07dbadf2a418b04d7b84c01ac2, type: 2}
   debuffCard: {fileID: 11400000, guid: 245bf1d0786c55c43b0a8b030e96977b, type: 2}
   specialGoods: {fileID: 11400000, guid: 392ee247ba2fbd34080d0cf5d694ccb6, type: 2}
+  raiseRounds: 2
 --- !u!114 &1233963870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29682,6 +29826,8 @@ GameObject:
   - component: {fileID: 1503668048}
   - component: {fileID: 1503668049}
   - component: {fileID: 1503668050}
+  - component: {fileID: 1503668051}
+  - component: {fileID: 1503668052}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -29727,7 +29873,9 @@ Transform:
   - {fileID: 1189171194}
   - {fileID: 1430318995}
   - {fileID: 1905523614}
+  - {fileID: 707192295}
   - {fileID: 1967709175}
+  - {fileID: 50402771}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1503668044
@@ -29789,7 +29937,6 @@ MonoBehaviour:
   handFader: {fileID: 1921360743}
   ui: {fileID: 479731435}
   resultSeconds: 2
-  bidOverdraft: 10
   shortfallPenalty: 2
 --- !u!114 &1503668046
 MonoBehaviour:
@@ -29876,6 +30023,46 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerIconDirectory
   registry: {fileID: 1871205621}
+--- !u!114 &1503668051
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503668041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca9b1b459fde333498e901cf1cdc10d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FoldedHighlighter
+  registry: {fileID: 1871205621}
+  turnFlow: {fileID: 1503668045}
+  outlineMaterial: {fileID: 2100000, guid: e6b4ab677e6b12c4b96464364c2eae26, type: 2}
+  glowColor: {r: 1, g: 0.15, b: 0.1, a: 1}
+  intensityRange: {x: 0.9, y: 1.6}
+  pulseSeconds: 1.6
+  boxyRendererNames:
+  - Monitor_Case
+  - Monitor_Screen
+--- !u!114 &1503668052
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1503668041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 171dda18e7b054147b8dfa87c8825433, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AchievementTracker
+  game: {fileID: 1503668042}
+  turnFlow: {fileID: 1503668045}
+  registry: {fileID: 1871205621}
+  singlePlay: {fileID: 1459003510}
+  pauseMenu: {fileID: 82492034}
+  tutorial: {fileID: 1233963869}
+  collectorCount: 5
 --- !u!1 &1504495120
 GameObject:
   m_ObjectHideFlags: 0

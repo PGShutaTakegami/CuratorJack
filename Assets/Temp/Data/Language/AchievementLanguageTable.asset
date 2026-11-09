@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffa302fe71f764f4f8464c345ab9ca1c, type: 3}
+  m_Name: AchievementLanguageTable
+  m_EditorClassIdentifier: Assembly-CSharp::LanguageTable
+  entries:
+  - key: achievement.toast.header
+    japanese: "\u5B9F\u7E3E\u89E3\u9664"
+    english: Achievement Unlocked
+  - key: trophy.title
+    japanese: "\u30C8\u30ED\u30D5\u30A3\u30FC"
+    english: Trophies
+  - key: trophy.progress
+    japanese: "{0} / {1} \u89E3\u9664\uFF08{2}%\uFF09"
+    english: '{0} / {1} unlocked ({2}%)'
+  - key: trophy.hidden_name
+    japanese: "\uFF1F\uFF1F\uFF1F"
+    english: ???
+  - key: trophy.hidden_description
+    japanese: "\u96A0\u3057\u5B9F\u7E3E"
+    english: Hidden achievement
+  - key: trophy.unlocked_at
+    japanese: "{0:yyyy/MM/dd} \u89E3\u9664"
+    english: Unlocked {0:yyyy/MM/dd}
+  - key: trophy.locked
+    japanese: "\u672A\u89E3\u9664"
+    english: Locked
+  - key: trophy.back
+    japanese: "\u623B\u308B"
+    english: Back
+  - key: achievement.tutorial_clear.name
+    japanese: "\u898B\u7FD2\u3044\u30AD\u30E5\u30EC\u30FC\u30BF\u30FC"
+    english: Apprentice Curator
+  - key: achievement.tutorial_clear.description
+    japanese: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3092\u30AF\u30EA\u30A2\u3059\u308B"
+    english: Clear the tutorial.
+  - key: achievement.first_purchase.name
+    japanese: "\u306F\u3058\u3081\u3066\u306E\u843D\u672D"
+    english: First Acquisition
+  - key: achievement.first_purchase.description
+    japanese: "\u30AA\u30FC\u30AF\u30B7\u30E7\u30F3\u3067\u521D\u3081\u3066\u843D\u672D\u3059\u308B"
+    english: Win an auction for the first time.
+  - key: achievement.first_sale.name
+    japanese: "\u5546\u8AC7\u6210\u7ACB"
+    english: Deal Closed
+  - key: achievement.first_sale.description
+    japanese: "\u81EA\u5206\u306E\u51FA\u54C1\u304C\u521D\u3081\u3066\u843D\u672D\u3055\u308C\u308B"
+    english: Have one of your listings sold.
+  - key: achievement.final_battle.name
+    japanese: "\u6700\u5F8C\u306E\u4E8C\u4EBA"
+    english: The Final Two
+  - key: achievement.final_battle.description
+    japanese: "FINAL BATTLE \u306B\u9032\u3080"
+    english: Reach the FINAL BATTLE.
+  - key: achievement.first_win.name
+    japanese: "\u540D\u30AD\u30E5\u30EC\u30FC\u30BF\u30FC"
+    english: Master Curator
+  - key: achievement.first_win.description
+    japanese: "\u30B2\u30FC\u30E0\u306B\u52DD\u3064"
+    english: Win a game.
+  - key: achievement.online_win.name
+    japanese: "\u9802\u70B9\u306E\u9451\u5B9A\u58EB"
+    english: Peerless Appraiser
+  - key: achievement.online_win.description
+    japanese: "\u30DE\u30EB\u30C1\u30D7\u30EC\u30A4\u3067\u52DD\u3064"
+    english: Win a multiplayer game.
+  - key: achievement.special_listing.name
+    japanese: "\u76EE\u7389\u5546\u54C1"
+    english: Star Attraction
+  - key: achievement.special_listing.description
+    japanese: "\u30B9\u30DA\u30B7\u30E3\u30EB\u30AB\u30FC\u30C9\u4ED8\u304D\u306E\u30AB\u30FC\u30C9\u3092\u51FA\u54C1\u3059\u308B"
+    english: List a card that has a special card.
+  - key: achievement.collector.name
+    japanese: "\u30B3\u30EC\u30AF\u30BF\u30FC"
+    english: Collector
+  - key: achievement.collector.description
+    japanese: "1\u56DE\u306E\u30B2\u30FC\u30E0\u30675\u679A\u843D\u672D\u3059\u308B"
+    english: Win 5 auctions in a single game.
+  - key: achievement.drain.name
+    japanese: "\u524A\u308A\u53D6\u308A"
+    english: Bleed Them Dry
+  - key: achievement.drain.description
+    japanese: "FINAL BATTLE \u3067\u76F8\u624B\u306E\u30B3\u30A4\u30F3\u3092\u524A\u308B"
+    english: Drain your opponent's coins in the FINAL BATTLE.
+  - key: achievement.last_stand.name
+    japanese: "\u80CC\u6C34\u306E\u9663"
+    english: Last Stand
+  - key: achievement.last_stand.description
+    japanese: "\u898B\u9001\u308A\u6A290\u679A\u306E\u72B6\u614B\u3067\u52DD\u3064"
+    english: Win with zero passes left.
+  - key: achievement.flawless.name
+    japanese: "\u7121\u50B7\u306E\u52DD\u5229"
+    english: Flawless Victory
+  - key: achievement.flawless.description
+    japanese: "\u898B\u9001\u308A\u6A29\u3092\u4E00\u5EA6\u3082\u4F7F\u308F\u305A\u306B\u52DD\u3064"
+    english: Win without using a single pass.
+  - key: achievement.retire.name
+    japanese: "\u6226\u7565\u7684\u64A4\u9000"
+    english: Strategic Retreat
+  - key: achievement.retire.description
+    japanese: "\u30B2\u30FC\u30E0\u3092\u30EA\u30BF\u30A4\u30A2\u3059\u308B"
+    english: Retire from a game.

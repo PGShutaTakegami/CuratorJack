@@ -57,6 +57,39 @@ public class GameManagerTests
     }
 
     [Test]
+    public void 最後の1v1で2人とも見送り権がなければコインを削れる()
+    {
+        using var table = new VirtualGame(3, passRights: 0);
+        Assert.IsFalse(table.Game.CanDrainInFinalDuel);
+
+        table.Game.Retire(3);
+
+        Assert.IsTrue(table.Game.CanDrainInFinalDuel);
+    }
+
+    [Test]
+    public void 最後の1v1でもどちらかが見送り権を持っていればコインを削れない()
+    {
+        using var table = new VirtualGame(3, passRights: 0);
+        table.Game.Retire(3);
+
+        table.Game.AddPassRights(2, 1);
+
+        Assert.IsFalse(table.Game.CanDrainInFinalDuel);
+    }
+
+    [Test]
+    public void コインは持っている分までしか削らない()
+    {
+        using var table = new VirtualGame(2, coins: 10);
+
+        int drained = table.Game.DrainCoins(1, 15);
+
+        Assert.AreEqual(10, drained);
+        Assert.AreEqual(0, table.Player(1).Coins);
+    }
+
+    [Test]
     public void リタイアすると見送り権を手放して脱落する()
     {
         using var table = new VirtualGame(2);

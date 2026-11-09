@@ -9,7 +9,8 @@ using UnityEngine;
 /// →（スペシャルカード付きならスペシャルカードを明かす）→（真贋証明が付いていれば付いている効果カードを公開）
 /// → 出品者以外の全員でオークション（入札か降りるか）
 /// → 落札者がいれば入札額で購入し（最後の 1v1 では代金は出品者に入らない）、効果カードとスペシャルカードは落札者に、全員が降りたら出品者に発動する
-/// （所持コインより多く入札できるが、落札額を払えなければ購入は成立せず見送り権を失い（足りなければ脱落）、全員が降りたときと同じく出品者に発動する）
+/// （最後の 1v1 で 2 人とも見送り権がなければ、落札額のうち最低出品額を超えた分だけ出品者のコインを削る）
+/// （落札額を払えなければ購入は成立せず見送り権を失い（足りなければ脱落）、全員が降りたときと同じく出品者に発動する）
 /// （付いていた効果カード・スペシャルカード・ランダムで選ばれたスペシャルカードは、ディゾルブで公開してから発動する）。
 /// 出品には横やり（効果カードを付けられない）と投げ売り（最低出品額の値引き）をかけ、出品が確定したときに使う。
 /// ターン中に脱落した人がいれば、ターンの後に名前入りの DROP OUT を告知する（脱落で勝敗が決まったら、残りの精算や効果の公開は飛ばしてすぐに告知する）。
@@ -105,9 +106,6 @@ public class TurnFlowController : MonoBehaviour
     [Tooltip("ターンの結果を表示しておく秒数")]
     [SerializeField] private float resultSeconds = 2f;
 
-    [Tooltip("オークションで所持コインより多く入札できる額")]
-    [SerializeField] private int bidOverdraft = 10;
-
     [Tooltip("落札額を払えなかったときに失う見送り権の枚数（足りなければ脱落）")]
     [SerializeField] private int shortfallPenalty = 2;
 
@@ -130,6 +128,9 @@ public class TurnFlowController : MonoBehaviour
 
     /// <summary>操作役が今の手続きへ操作を送る窓口</summary>
     public IPlayerCommands Commands => Actions;
+
+    /// <summary>出品者の順番に使う、時計回りに並べたプレイヤー番号（ゲームが始まるまでは空）</summary>
+    public IReadOnlyList<int> ClockwiseSellers => order != null ? order.Clockwise : (IReadOnlyList<int>)System.Array.Empty<int>();
 
     /// <summary>部屋主が今の手続きを待ち時間切れにする窓口</summary>
     public IPhaseTimeouts Timeouts => Actions;
@@ -419,6 +420,7 @@ public class TurnFlowController : MonoBehaviour
         else
         {
             yield return Settle(listing, winner, auction.Price);
+            yield return DrainSeller(listing.Seller, auction.DrainAmount);
         }
         if (!IsDecided)
             yield return PresentEffects(Effects.ResolveReceived(recipient, seller, listing.Buffs, listing.Goods.Special));
@@ -470,7 +472,7 @@ public class TurnFlowController : MonoBehaviour
 
     IEnumerator RunAuction(Listing listing, List<int> bidders, System.Action<AuctionModel> onFinished)
     {
-        var auction = new AuctionModel(listing, bidders, CoinsOf, bidOverdraft, shortfallPenalty);
+        var auction = new AuctionModel(listing, bidders, CoinsOf, shortfallPenalty, game.CanDrainInFinalDuel);
         int leader = PlayerRegistry.NoPlayer;
         void ShowAuction()
         {
@@ -513,7 +515,7 @@ public class TurnFlowController : MonoBehaviour
         yield return new WaitUntil(() =>
         {
             foreach (int player in auction.ActivePlayers.Where(player => !game.IsAlive(player)).ToArray())
-                auction.TryFold(player);
+                auction.Withdraw(player);
             return auction.IsFinished;
         });
         foreach (int player in watchers)
@@ -544,6 +546,22 @@ public class TurnFlowController : MonoBehaviour
         SetInfo($"{NameOf(buyer)} が {listing.Goods.DisplayName} を {price} コインで購入しました{proceeds}");
         Sprite sprite = listing.Goods.Data != null ? listing.Goods.Data.Parameter.CardSprite : null;
         yield return winnerPresenter.Present(buyer, sprite, coinsBefore, coinsAfter);
+    }
+
+    /// <summary>最後の 1v1 で 2 人とも見送り権がないとき：落札額のうち最低出品額を超えた分だけ、出品者のコインを削る（持っている分まで。削った分は消える）</summary>
+    IEnumerator DrainSeller(int seller, int amount)
+    {
+        if (amount <= 0)
+            yield break;
+
+        int coinsBefore = CoinsOf(seller);
+        int drained = game.DrainCoins(seller, amount);
+        if (drained == 0)
+            yield break;
+
+        SetInfo($"最低出品額より {amount} 多く落札したため、{NameOf(seller)} のコインを {drained} 削りました");
+        yield return winnerPresenter.PresentCoins(seller, coinsBefore, CoinsOf(seller));
+        yield return new WaitForSeconds(resultSeconds);
     }
 
     /// <summary>落札額を払えなかった：購入は成立せず（商品は消費し、効果は出品者へ）、落札者は見送り権を失う（足りなければ脱落）</summary>

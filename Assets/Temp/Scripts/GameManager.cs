@@ -125,6 +125,25 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public bool SellerEarnsProceeds => AlivePlayers.Count() > 2;
 
+    /// <summary>最後の 1v1 で、2 人とも見送り権を持っていないか（このとき、最低出品額より多く入札して落札した分だけ出品者のコインを削れる）</summary>
+    public bool CanDrainInFinalDuel => IsFinalDuel && AlivePlayers.All(player => player.PassRights == 0);
+
+    /// <summary>コインを amount だけ削る（持っている分まで。削った分はどこにも入らない）。削った額を返す</summary>
+    public int DrainCoins(int playerNumber, int amount)
+    {
+        if (!players.TryGetValue(playerNumber, out PlayerState player))
+            return 0;
+
+        int drained = Mathf.Clamp(amount, 0, Mathf.Max(0, player.Coins));
+        if (drained == 0)
+            return 0;
+
+        player.AddCoins(-drained);
+        StatusChanged?.Invoke(player);
+        Debug.Log($"[Game] Player{playerNumber} のコインを {drained} 削りました");
+        return drained;
+    }
+
     /// <summary>購入者から代金を払い、商品を購入者へ渡す。代金は SellerEarnsProceeds のときだけ出品者に入る。</summary>
     public void SettlePurchase(int buyerNumber, int sellerNumber, HandCard goods, int price)
     {
