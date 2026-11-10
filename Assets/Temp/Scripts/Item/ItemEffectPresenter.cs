@@ -3,9 +3,9 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// 自分がアイテムを使ったときの見せ方。
-/// ・虫眼鏡：今の出品に付いている効果カードを、自分の画面だけに公開する（付いていなければその旨を出す）。
-/// ・電気プラグ：自分の画面全体を一瞬緑に光らせる。
+/// アイテムが使われたときの、自分の画面での見せ方。
+/// ・虫眼鏡：自分が使ったら、今の出品に付いている効果カードを自分の画面だけに公開する（付いていなければその旨を出す）。
+/// ・電気プラグ：自分にシールドが貼られたら、自分の画面全体を一瞬緑に光らせる。
 /// 続いて残る効果（シールドの緑・マヒの電気）は StatusAuraPresenter が見せる。
 /// </summary>
 public class ItemEffectPresenter : MonoBehaviour
@@ -18,6 +18,9 @@ public class ItemEffectPresenter : MonoBehaviour
 
     [Tooltip("虫眼鏡で効果カードを見せる演出")]
     [SerializeField] private EffectCardReveal reveal;
+
+    [Tooltip("使ったアイテムへカメラを向ける演出。虫眼鏡の効果カードはこれが終わってから見せる")]
+    [SerializeField] private BidderCloseUpShot closeUp;
 
     [Tooltip("電気プラグで画面を光らせる")]
     [SerializeField] private ScreenFlash flash;
@@ -36,15 +39,13 @@ public class ItemEffectPresenter : MonoBehaviour
 
     void HandleUsed(ItemUse use)
     {
-        if (use.Player != registry.LocalPlayerNumber)
-            return;
-
+        int local = registry.LocalPlayerNumber;
         switch (use.Item.Kind)
         {
-            case ItemKind.Magnifier:
+            case ItemKind.Magnifier when use.Player == local:
                 StartCoroutine(ShowAttached(use.Listing));
                 break;
-            case ItemKind.PowerPlug:
+            case ItemKind.PowerPlug when use.Target == local:
                 flash.Flash(plugFlashColor);
                 break;
         }
@@ -52,7 +53,8 @@ public class ItemEffectPresenter : MonoBehaviour
 
     IEnumerator ShowAttached(Listing listing)
     {
-        yield return new WaitWhile(() => reveal.IsPlaying);
+        yield return null;
+        yield return new WaitWhile(() => (closeUp != null && closeUp.IsPlaying) || reveal.IsPlaying);
 
         CardData[] attached = listing.Buffs.Where(buff => buff.Data != null).Select(buff => buff.Data).ToArray();
         string seller = names.NameOf(listing.Seller);

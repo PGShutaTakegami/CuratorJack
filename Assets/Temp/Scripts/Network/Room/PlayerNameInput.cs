@@ -22,19 +22,27 @@ public class PlayerNameInput : MonoBehaviour
         string saved = PlayerNameContext.Current;
         string allowed = new string(saved.Where(character => IsAllowed(character) && !RichTextGuard.IsTagCharacter(character)).ToArray());
         if (allowed != saved)
+        {
             PlayerNameContext.Set(allowed);
+            PlayerNameContext.Flush();
+        }
         inputField.text = PlayerNameContext.Current;
     }
 
     void OnEnable()
     {
         inputField.onValueChanged.AddListener(PlayerNameContext.Set);
+        inputField.onEndEdit.AddListener(FlushName);
     }
 
     void OnDisable()
     {
         inputField.onValueChanged.RemoveListener(PlayerNameContext.Set);
+        inputField.onEndEdit.RemoveListener(FlushName);
+        PlayerNameContext.Flush();
     }
+
+    void FlushName(string _) => PlayerNameContext.Flush();
 
     char ValidateCharacter(string text, int index, char addedChar) => IsAllowed(addedChar) && !RichTextGuard.IsTagCharacter(addedChar) ? addedChar : '\0';
 

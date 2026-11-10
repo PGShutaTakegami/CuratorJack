@@ -71,6 +71,11 @@ public sealed class TutorialCommandGate : IPlayerCommands
             inner.SetRaise(player, true);
     }
 
+    /// <summary>案内の手順が崩れるため、チュートリアルではやり直させない</summary>
+    public void ResetListing(int player)
+    {
+    }
+
     public void Confirm(int player)
     {
         if (allowed == Allowed.Confirm)

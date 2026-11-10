@@ -54,6 +54,16 @@ public static class PlayerIconStore
         Changed?.Invoke();
     }
 
+    /// <summary>保存したアイコンを消す（アイコンなしに戻す）</summary>
+    public static void Clear()
+    {
+        if (File.Exists(FilePath))
+            File.Delete(FilePath);
+        current = null;
+        isLoaded = true;
+        Changed?.Invoke();
+    }
+
     /// <summary>PNG からテクスチャを作る。読めない・大きすぎるときは null</summary>
     public static Texture2D CreateTexture(byte[] png, FilterMode filterMode = FilterMode.Bilinear)
     {

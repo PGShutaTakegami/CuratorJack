@@ -20,14 +20,14 @@ public class TableInspectCamera : MonoBehaviour
     [Tooltip("山の中心から、その人の席から見て右へずらして映す距離（右に置く半券も映す）")]
     [SerializeField] private float sideOffset = 0.25f;
 
-    [Tooltip("映す中心を、山から自分の側へずらす距離（山を画面の上寄りに映し、下の入札の UI と重ねない）")]
+    [Tooltip("映す中心を、山からテーブル中央の側へずらす距離（山を画面の上寄りに映し、下の入札の UI と重ねない）")]
     [FormerlySerializedAs("seatOffset")]
     [SerializeField] private float viewerOffset = 0.2f;
 
     [Tooltip("映す中心からの高さ")]
     [SerializeField] private float height = 1.5f;
 
-    [Tooltip("映す中心から、自分の側へ引く距離（0 で真上から）")]
+    [Tooltip("映す中心から、テーブル中央の側へ引く距離（0 で真上から）")]
     [SerializeField] private float backOffset = 0.25f;
 
     [Tooltip("置き場へ移動する / 元の視点へ戻るのにかける秒数")]
@@ -57,7 +57,7 @@ public class TableInspectCamera : MonoBehaviour
         if (!CanInspect || !piles.TryGetSpot(playerNumber, out Pose spot))
             return;
 
-        running = StartCoroutine(Run(LookPose(spot, localCamera.transform.position)));
+        running = StartCoroutine(Run(LookPose(spot)));
     }
 
     void OnDisable()
@@ -91,14 +91,12 @@ public class TableInspectCamera : MonoBehaviour
     }
 
     /// <summary>
-    /// 自分のカメラから山へ向かう水平の向きを画面の上にして見下ろす（その人は画面の上側に映り、今の向きからの回転が最小限になる）
+    /// テーブル中央からその人へ向かう水平の向きを画面の上にして見下ろす（左右の人も正面の人と同じく、画面の上側にまっすぐ映る）
     /// </summary>
-    Pose LookPose(Pose spot, Vector3 viewer)
+    Pose LookPose(Pose spot)
     {
         Vector3 pile = spot.position + spot.rotation * Vector3.right * sideOffset;
-        Vector3 away = pile - viewer;
-        away.y = 0f;
-        away = away.sqrMagnitude > 1e-6f ? away.normalized : -(spot.rotation * Vector3.forward);
+        Vector3 away = -(spot.rotation * Vector3.forward);
 
         Vector3 target = pile - away * viewerOffset;
         Vector3 position = target - away * backOffset + Vector3.up * height;

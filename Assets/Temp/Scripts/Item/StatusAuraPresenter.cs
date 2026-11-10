@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 /// <summary>
 /// 持続効果（シールド・マヒなど）が残っている生きている人を光らせ、効果が無くなったら消す。
 /// ほかの人はモデルの縁を光らせ（稲妻があれば上半身を囲む円に沿っても走らせる）、
 /// 自分はカメラが頭の中にあり体が見えないため、効果を受けた瞬間だけ画面の端を一瞬光らせる（稲妻があれば画面の端にも走らせる）。
-/// flashOnDecrease のときは、効果が減った瞬間（シールドがダメージを肩代わりしたときなど）にも一瞬光らせる。
+/// flashOnShieldConsumed のときは、シールドが見送り権の代わりに削られた瞬間にも一瞬光らせる（時間切れで消えたときは光らせない）。
 /// 同じ人に降りたときの赤い縁が付いても、互いの縁は消し合わない（OutlineGlow）。
 /// </summary>
 public class StatusAuraPresenter : MonoBehaviour
@@ -47,8 +48,9 @@ public class StatusAuraPresenter : MonoBehaviour
     [Tooltip("自分が効果を受けたときに画面の端を光らせておく秒数")]
     [SerializeField] private float localFlashSeconds = 0.8f;
 
-    [Tooltip("自分の効果が減った瞬間（シールドがダメージを肩代わりしたときなど）にも光らせる")]
-    [SerializeField] private bool flashOnDecrease;
+    [Tooltip("自分のシールドが見送り権の代わりに削られた瞬間にも光らせる")]
+    [FormerlySerializedAs("flashOnDecrease")]
+    [SerializeField] private bool flashOnShieldConsumed;
 
     [Tooltip("ほかの人の体の周りに走らせる稲妻（無ければ走らせない）")]
     [SerializeField] private ElectricBolts bodyBolts;
@@ -74,8 +76,20 @@ public class StatusAuraPresenter : MonoBehaviour
     int lastLocalValue;
     float localFlashTimer;
 
+    void OnEnable()
+    {
+        game.ShieldConsumed += HandleShieldConsumed;
+    }
+
+    void HandleShieldConsumed(PlayerState player, int count)
+    {
+        if (flashOnShieldConsumed && player.PlayerNumber == registry.LocalPlayerNumber)
+            localFlashTimer = localFlashSeconds;
+    }
+
     void OnDisable()
     {
+        game.ShieldConsumed -= HandleShieldConsumed;
         foreach (OutlineGlow glow in glows.Values)
             glow.Detach();
         glows.Clear();
@@ -118,7 +132,7 @@ public class StatusAuraPresenter : MonoBehaviour
             bodyBolts.SetAreas(BodyAreas());
     }
 
-    /// <summary>自分の効果の残りが増えた（減ったときも光らせるなら減った）瞬間から localFlashSeconds の間だけ true。見始めた時点で残っている分では光らせない</summary>
+    /// <summary>自分の効果の残りが増えた（またはシールドが削られた）瞬間から localFlashSeconds の間だけ true。見始めた時点で残っている分では光らせない</summary>
     bool UpdateLocalFlash(int local)
     {
         bool alive = game.TryGet(local, out PlayerState me) && me.IsAlive;
@@ -130,7 +144,7 @@ public class StatusAuraPresenter : MonoBehaviour
             localFlashTimer = 0f;
         }
 
-        if (value > lastLocalValue || (flashOnDecrease && value < lastLocalValue))
+        if (value > lastLocalValue)
             localFlashTimer = localFlashSeconds;
         lastLocalValue = value;
 

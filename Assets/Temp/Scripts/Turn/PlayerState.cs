@@ -38,7 +38,21 @@ public sealed class PlayerState
 
     public bool HasGoods => hand.Exists(card => card.IsGoods);
 
-    internal void AddToHand(HandCard card) => hand.Add(card);
+    /// <summary>グッズはグッズの右端（エフェクトカードより左）に、エフェクトカードは手札の右端に加える</summary>
+    internal void AddToHand(HandCard card)
+    {
+        if (!card.IsGoods)
+        {
+            hand.Add(card);
+            return;
+        }
+
+        int firstEffect = hand.FindIndex(held => !held.IsGoods);
+        hand.Insert(firstEffect < 0 ? hand.Count : firstEffect, card);
+    }
+
+    /// <summary>手札の index の位置にカードを戻す（範囲外なら端に収める）</summary>
+    internal void InsertToHand(HandCard card, int index) => hand.Insert(System.Math.Clamp(index, 0, hand.Count), card);
 
     internal bool RemoveFromHand(HandCard card) => hand.Remove(card);
 

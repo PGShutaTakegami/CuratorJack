@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 /// <summary>
 /// アイテムの相手を選ぶ画面。選べる人の頭の上に名前入りのボタンを出し、押されたら Picked で知らせる。
+/// 自分の頭は自分のカメラに映らないため、自分を選べるときは「自分」のボタンを画面の決まった位置に出す。
 /// 表示とクリックの通知だけを受け持ち、いつ選び始める・やめるかは操作役（LocalPlayerAgent）が決める。
 /// </summary>
 public class ItemTargetPicker : MonoBehaviour
@@ -31,6 +32,9 @@ public class ItemTargetPicker : MonoBehaviour
 
     [Tooltip("頭からボタンを上げる高さ")]
     [SerializeField] private float headLift = 0.45f;
+
+    [Tooltip("自分のボタンを出す位置（画面の左下 0・右上 1 の割合）")]
+    [SerializeField] private Vector2 selfButtonViewport = new Vector2(0.5f, 0.3f);
 
     [SerializeField] private Color backgroundColor = new Color(0.05f, 0.08f, 0.14f, 0.92f);
 
@@ -91,7 +95,13 @@ public class ItemTargetPicker : MonoBehaviour
     {
         Vector3 point = Vector3.zero;
         bool visible = false;
-        if (camera != null && registry.TryGet(player, out Transform body))
+        if (camera != null && player == registry.LocalPlayerNumber)
+        {
+            Rect screen = camera.pixelRect;
+            point = new Vector3(screen.x + screen.width * selfButtonViewport.x, screen.y + screen.height * selfButtonViewport.y, 0f);
+            visible = true;
+        }
+        else if (camera != null && registry.TryGet(player, out Transform body))
         {
             point = camera.WorldToScreenPoint(PlayerBody.HeadPosition(body) + Vector3.up * headLift);
             visible = point.z > 0f && camera.pixelRect.Contains(point);
@@ -133,7 +143,7 @@ public class ItemTargetPicker : MonoBehaviour
         text.alignment = TextAlignmentOptions.Center;
         text.textWrappingMode = TextWrappingModes.NoWrap;
         text.raycastTarget = false;
-        text.text = names.NameOf(player);
+        text.text = player == registry.LocalPlayerNumber ? "自分" : names.NameOf(player);
 
         var button = go.GetComponent<Button>();
         button.targetGraphic = background;

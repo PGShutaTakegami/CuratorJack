@@ -8,8 +8,8 @@ using UnityEngine.UI;
 
 /// <summary>
 /// 開かれている手札を表示する。シーンに置いたカードを初期の手札とし、足りない分はプレハブを複製する。
-/// 新しいカードほど右・手前に置き、普段は重ねて左へ並べる。カードを引くと画面の右外から右端へスライドし、
-/// 既存の手札は左へずれる。カードをクリックすると画面下部の中央に広げ、カード以外の場所を押すと戻す。
+/// 並びの後ろのカードほど右・手前に置き、普段は重ねて左へ並べる。カードを引くと画面の右外から入る位置へスライドし、
+/// 既存の手札はずれる。カードをクリックすると画面下部の中央に広げ、カード以外の場所を押すと戻す。
 /// 広げたときは 1 列に spreadColumns 枚まで、spreadRows 列までを 1 ページとして並べ、それより多ければページを切り替えて見せる。
 /// 広げているときは、カーソルの下のカードに情報（CardInfoOverlay）を重ねる。
 /// </summary>
@@ -107,11 +107,16 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    /// <summary>カードを 1 枚引く。画面の右外から右端へスライドさせ、既存の手札は左へずらす。</summary>
-    public Image AddCard()
+    /// <summary>カードを手札の index 番目（左から）に入れる。画面の右外からその位置へスライドさせ、既存の手札はずらす。</summary>
+    public Image InsertCard(int index)
     {
         Image card = CreateCard();
-        Vector2 target = TargetPosition(cards.Count - 1, CreateSpreadLayout());
+        cards.Remove(card);
+        index = Mathf.Clamp(index, 0, cards.Count);
+        cards.Insert(index, card);
+        RestoreDrawOrder();
+
+        Vector2 target = TargetPosition(index, CreateSpreadLayout());
         card.rectTransform.anchoredPosition = new Vector2(OffscreenRightX(), target.y);
         MoveToCurrentLayout(drawDuration);
         return card;
@@ -232,13 +237,6 @@ public class CardHandView : MonoBehaviour, IPointerClickHandler
 
         moveElapsed = 0f;
         isMoving = true;
-    }
-
-    /// <summary>広げたときの表示中のページの一番上の列の右上（ワールド座標）。広げていなくても、広げたときの位置を返す。</summary>
-    public Vector3 SpreadTopRight()
-    {
-        var self = (RectTransform)transform;
-        return self.TransformPoint(self.rect.center + CreateSpreadLayout().TopRight());
     }
 
     float TargetScale() => IsSpread ? SpreadScale() : 1f;

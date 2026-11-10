@@ -4,8 +4,8 @@ using UnityEngine;
 /// <summary>
 /// 出品・オークションの待ち時間を計り、時間切れになったら今の手続きを時間切れにする。
 /// 待ち時間は今のプレイ形式のルーム設定から読み、無制限なら計らない。
-/// 出品の始まり・オークションの始まり・入札・降りるごとにステップの番号を振り（全員の画面で同じ番号になる）、ステップごとに計り直す。
-/// 数え始めるのはこの画面の演出（オークションでは他の人の入札のアップ）が終わってから。マルチプレイでは対象者全員の画面の演出が終わってから
+/// 出品の始まり・オークションの始まり・入札・降りる・アイテムを使うごとにステップの番号を振り（全員の画面で同じ番号になる）、ステップごとに計り直す。
+/// 数え始めるのはこの画面の演出（オークションでは入札のアップや使ったアイテムへカメラを向ける演出）が終わってから。マルチプレイでは対象者全員の画面の演出が終わってから
 /// ホストが決めた締め切りで数え、全員の画面で残り秒数をそろえる（NetworkPhaseClock）。SinglePlay は自分の画面だけで数え、ポーズ中は止まる。
 /// 対象者は、出品では出品者、オークションでは降りていない参加者。
 /// 時間切れを送るのは部屋主（SinglePlay は自分、マルチプレイはホスト）だけで、反映は全員の画面で同じ時点になる。
@@ -21,7 +21,7 @@ public class PhaseTimer : MonoBehaviour
     [Tooltip("IRoomControl を持つコンポーネント（SinglePlay / マルチプレイ）")]
     [SerializeField] private MonoBehaviour[] rooms;
 
-    [Tooltip("入札した人をアップで映す演出。演出中は数え始めない")]
+    [Tooltip("入札した人をアップで映す演出（使ったアイテムを映す演出も含む）。演出中は数え始めない")]
     [SerializeField] private BidderCloseUpShot bidderShot;
 
     [Tooltip("マルチプレイで全員の残り秒数をそろえる時計（マルチプレイのゲーム中でなければ SinglePlay の時計を使う）")]
@@ -56,6 +56,7 @@ public class PhaseTimer : MonoBehaviour
         turnFlow.ListingFinished += HandleListingFinished;
         turnFlow.AuctionStarted += HandleAuctionStarted;
         turnFlow.AuctionFinished += HandleAuctionFinished;
+        turnFlow.ItemEffects.Used += HandleItemUsed;
     }
 
     void OnDisable()
@@ -64,6 +65,7 @@ public class PhaseTimer : MonoBehaviour
         turnFlow.ListingFinished -= HandleListingFinished;
         turnFlow.AuctionStarted -= HandleAuctionStarted;
         turnFlow.AuctionFinished -= HandleAuctionFinished;
+        turnFlow.ItemEffects.Used -= HandleItemUsed;
         HandleAuctionFinished();
     }
 
@@ -126,6 +128,12 @@ public class PhaseTimer : MonoBehaviour
     void HandleBidPlaced(int player, int amount) => BeginStep();
 
     void HandleFolded(int player) => BeginStep();
+
+    void HandleItemUsed(ItemUse use)
+    {
+        if (auction != null)
+            BeginStep();
+    }
 
     void BeginStep()
     {

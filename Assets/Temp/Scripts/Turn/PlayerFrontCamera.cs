@@ -43,17 +43,54 @@ public class PlayerFrontCamera : MonoBehaviour
     /// <summary>その人の正面へ動かす。target は毎フレーム呼び、動いている相手にも付いていく</summary>
     public IEnumerator MoveToFront(Transform player, Func<Vector3> target, float distance, float height)
     {
-        if (shotCamera == null)
-        {
-            shotCamera = LocalCamera;
-            if (shotCamera == null)
-                yield break;
-
-            savedLocalPosition = shotCamera.transform.localPosition;
-            savedLocalRotation = shotCamera.transform.localRotation;
-        }
+        if (!BeginShot())
+            yield break;
 
         yield return Move(() => FrontPose(player, target(), distance, height));
+    }
+
+    /// <summary>位置は元の視点（自分の席）のまま、target を見る向きへ回す</summary>
+    public IEnumerator LookFromSeat(Func<Vector3> target)
+    {
+        if (!BeginShot())
+            yield break;
+
+        yield return Move(() => SeatLookPose(target()));
+    }
+
+    /// <summary>keepHolding が true を返す間、元の視点の位置から target を見続ける</summary>
+    public IEnumerator HoldLookFromSeatWhile(Func<Vector3> target, Func<bool> keepHolding)
+    {
+        while (keepHolding())
+        {
+            if (shotCamera != null)
+            {
+                Pose look = SeatLookPose(target());
+                shotCamera.transform.SetPositionAndRotation(look.position, look.rotation);
+            }
+            yield return null;
+        }
+    }
+
+    /// <summary>まだ動かしていなければ、自分のカメラと元の視点を覚える。カメラがなければ false</summary>
+    bool BeginShot()
+    {
+        if (shotCamera != null)
+            return true;
+
+        shotCamera = LocalCamera;
+        if (shotCamera == null)
+            return false;
+
+        savedLocalPosition = shotCamera.transform.localPosition;
+        savedLocalRotation = shotCamera.transform.localRotation;
+        return true;
+    }
+
+    Pose SeatLookPose(Vector3 target)
+    {
+        Vector3 position = SavedPose().position;
+        return new Pose(position, Quaternion.LookRotation(target - position, Vector3.up));
     }
 
     /// <summary>正面に止めたまま seconds 秒待つ（相手が動いても付いていく）</summary>

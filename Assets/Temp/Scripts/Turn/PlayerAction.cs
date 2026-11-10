@@ -9,7 +9,8 @@ public enum PlayerActionKind
     Fold,
     Retire,
     Timeout,
-    UseItem
+    UseItem,
+    ResetListing
 }
 
 /// <summary>

@@ -78,6 +78,8 @@ public sealed class PlayerActionDispatcher : IPlayerCommands, IPhaseTimeouts
 
     public void SetRaise(int player, bool raise) => Submit(player, PlayerActionKind.SetRaise, raise ? 1 : 0);
 
+    public void ResetListing(int player) => Submit(player, PlayerActionKind.ResetListing, 0);
+
     public void Confirm(int player) => Submit(player, PlayerActionKind.Confirm, 0);
 
     public void Bid(int player, int amount) => Submit(player, PlayerActionKind.Bid, amount);
@@ -150,6 +152,10 @@ public sealed class PlayerActionDispatcher : IPlayerCommands, IPhaseTimeouts
             case PlayerActionKind.SetRaise:
                 if (IsSeller(action.Player))
                     listing.TrySetRaise(action.Value != 0);
+                break;
+            case PlayerActionKind.ResetListing:
+                if (IsSeller(action.Player))
+                    listing.TryReset();
                 break;
             case PlayerActionKind.Confirm:
                 if (IsSeller(action.Player))

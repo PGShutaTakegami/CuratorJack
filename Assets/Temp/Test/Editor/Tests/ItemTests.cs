@@ -87,15 +87,28 @@ public class ItemTests
     public void オークション中は出品者も観戦者もアイテムを使える()
     {
         using var table = new VirtualGame(4);
-        table.Game.TryGiveItem(Seller, NewItem());
+        table.Game.TryGiveItem(Seller, NewItem(ItemKind.PowerPlug));
         table.Game.TryGiveItem(4, NewItem());
         PlayerActionDispatcher dispatcher = StartAuction(table);
 
-        dispatcher.UseItem(Seller, 0, NoTarget);
+        dispatcher.UseItem(Seller, 0, Seller);
         dispatcher.UseItem(4, 0, NoTarget);
 
         Assert.IsNull(table.Player(Seller).Items.Slots[0]);
         Assert.IsNull(table.Player(4).Items.Slots[0]);
+    }
+
+    [Test]
+    public void 出品者は自分の出品のオークションで虫眼鏡を使えない()
+    {
+        using var table = new VirtualGame(3);
+        ItemDefinition magnifier = NewItem(ItemKind.Magnifier);
+        table.Game.TryGiveItem(Seller, magnifier);
+        PlayerActionDispatcher dispatcher = StartAuction(table);
+
+        dispatcher.UseItem(Seller, 0, NoTarget);
+
+        Assert.AreSame(magnifier, table.Player(Seller).Items.Slots[0]);
     }
 
     [Test]
@@ -147,7 +160,7 @@ public class ItemTests
         PlayerActionDispatcher dispatcher = StartAuction(table);
         int passRights = table.Player(2).PassRights;
 
-        dispatcher.UseItem(2, 0, NoTarget);
+        dispatcher.UseItem(2, 0, 2);
         Assert.AreEqual(1, table.Player(2).StatusOf(PlayerStatus.Shield));
 
         table.Game.ConsumePassRight(2);
@@ -156,6 +169,51 @@ public class ItemTests
 
         table.Game.ConsumePassRight(2);
         Assert.AreEqual(passRights - 1, table.Player(2).PassRights);
+    }
+
+    [Test]
+    public void 電気プラグは選んだ相手にシールドを貼れる()
+    {
+        using var table = new VirtualGame(3);
+        table.Game.TryGiveItem(2, NewItem(ItemKind.PowerPlug));
+        PlayerActionDispatcher dispatcher = StartAuction(table);
+
+        dispatcher.UseItem(2, 0, 3);
+
+        Assert.IsNull(table.Player(2).Items.Slots[0]);
+        Assert.AreEqual(1, table.Player(3).StatusOf(PlayerStatus.Shield));
+        Assert.AreEqual(0, table.Player(2).StatusOf(PlayerStatus.Shield));
+    }
+
+    [Test]
+    public void 電気プラグは脱落した人や相手なしでは使わずに残る()
+    {
+        using var table = new VirtualGame(3);
+        ItemDefinition plug = NewItem(ItemKind.PowerPlug);
+        table.Game.TryGiveItem(2, plug);
+        table.Game.Retire(3);
+        PlayerActionDispatcher dispatcher = StartAuction(table);
+
+        dispatcher.UseItem(2, 0, 3);
+        dispatcher.UseItem(2, 0, NoTarget);
+
+        Assert.AreSame(plug, table.Player(2).Items.Slots[0]);
+        Assert.AreEqual(0, table.Player(3).StatusOf(PlayerStatus.Shield));
+    }
+
+    [Test]
+    public void シールドは落札が終わると全員消える()
+    {
+        using var table = new VirtualGame(3);
+        table.Game.AddStatus(2, PlayerStatus.Shield, 1);
+        table.Game.AddStatus(3, PlayerStatus.Shield, 2);
+        int passRights = table.Player(2).PassRights;
+
+        table.Game.ExpireShields();
+
+        Assert.AreEqual(0, table.Player(2).StatusOf(PlayerStatus.Shield));
+        Assert.AreEqual(0, table.Player(3).StatusOf(PlayerStatus.Shield));
+        Assert.AreEqual(passRights, table.Player(2).PassRights);
     }
 
     [Test]

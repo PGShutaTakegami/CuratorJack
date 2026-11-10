@@ -103,6 +103,9 @@ public class TurnFlowController : MonoBehaviour
     [Tooltip("落札した人の手元にカードを置き、所持コインのリールを巻く演出")]
     [SerializeField] private WinnerPresenter winnerPresenter;
 
+    [Tooltip("手元に置いたアイテムのモデル。手に入れたときに全員のカメラを向けて見せる")]
+    [SerializeField] private ItemTableDisplay itemTable;
+
     [Tooltip("オークション中に手札を隠すフェード")]
     [SerializeField] private CanvasGroupFader handFader;
 
@@ -451,9 +454,10 @@ public class TurnFlowController : MonoBehaviour
         else
         {
             yield return Settle(listing, winner, auction.Price);
-            GiveItem(winner);
+            yield return GiveItem(winner);
             yield return DrainSeller(listing.Seller, auction.DrainAmount);
         }
+        game.ExpireShields();
         if (!IsDecided)
             yield return PresentEffects(Effects.ResolveReceived(recipient, seller, listing.Buffs, listing.Goods.Special));
         EndListing();
@@ -576,13 +580,14 @@ public class TurnFlowController : MonoBehaviour
         yield return winnerPresenter.Present(buyer, sprite, coinsBefore, coinsAfter);
     }
 
-    /// <summary>落札した人にアイテムを 1 つランダムで配る（マスが満杯ならもらえない）</summary>
-    void GiveItem(int buyer)
+    /// <summary>落札した人にアイテムを 1 つランダムで配り、手元に置いたモデルを全員に見せる（マスが満杯ならもらえない）</summary>
+    IEnumerator GiveItem(int buyer)
     {
         if (itemCatalog == null || !game.TryGet(buyer, out PlayerState state) || state.Items.IsFull)
-            return;
+            yield break;
 
-        game.TryGiveItem(buyer, ItemRewards.Draw());
+        if (game.TryGiveItem(buyer, ItemRewards.Draw()) && itemTable != null)
+            yield return itemTable.PresentAcquired(buyer);
     }
 
     /// <summary>最後の 1v1 で 2 人とも見送り権がないとき：落札額のうち最低出品額を超えた分だけ、出品者のコインを削る（持っている分まで。削った分は消える）</summary>

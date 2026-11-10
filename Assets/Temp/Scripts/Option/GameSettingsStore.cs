@@ -23,6 +23,14 @@ public static class GameSettingsStore
         Saved?.Invoke(current.Clone());
     }
 
+    /// <summary>保存した設定を消して初期値に戻す（使う側へは Saved で初期値を知らせる）</summary>
+    public static void Clear()
+    {
+        PlayerPrefs.DeleteKey(SaveKey);
+        current = new GameSettings();
+        Saved?.Invoke(current.Clone());
+    }
+
     /// <summary>まとめてディスクへ書き出す（音量バーを動かしている間は書き出さず、画面を閉じるときに呼ぶ）</summary>
     public static void Flush() => PlayerPrefs.Save();
 

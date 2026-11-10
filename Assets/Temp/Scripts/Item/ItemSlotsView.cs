@@ -11,10 +11,14 @@ public class ItemSlotsView : MonoBehaviour
 
     [SerializeField] private PlayerRegistry registry;
 
+    [Tooltip("ゲームが始まるまではマスを隠す")]
+    [SerializeField] private GameStartGate startGate;
+
     [Tooltip("左から順に並べたマス（ItemInventory.Capacity 個）")]
     [SerializeField] private ItemSlotView[] slots;
 
     bool isUsable;
+    bool isOwnListing;
 
     /// <summary>マスが押された（左から 0 始まりの番号）</summary>
     public event Action<int> SlotClicked;
@@ -27,23 +31,35 @@ public class ItemSlotsView : MonoBehaviour
             slots[i].Clicked += () => SlotClicked?.Invoke(slot);
         }
         game.ItemsChanged += HandleItemsChanged;
+        startGate.Started += Refresh;
         Refresh();
     }
 
     void OnDestroy()
     {
         game.ItemsChanged -= HandleItemsChanged;
+        startGate.Started -= Refresh;
     }
 
-    /// <summary>マスのアイテムを使える間だけ true にする</summary>
-    public void SetUsable(bool usable)
+    /// <summary>マスのアイテムを使える間だけ usable を true にする。ownListing は自分の出品のオークション中か（そのとき使えないアイテムは暗くする）</summary>
+    public void SetUsable(bool usable, bool ownListing)
     {
-        if (isUsable == usable)
+        if (isUsable == usable && isOwnListing == ownListing)
             return;
 
         isUsable = usable;
+        isOwnListing = ownListing;
         Refresh();
     }
+
+    /// <summary>今 slot のアイテムを使えるか（空きなら false）</summary>
+    public bool CanUse(int slot)
+    {
+        ItemDefinition item = ItemAt(slot);
+        return isUsable && IsAllowed(item);
+    }
+
+    bool IsAllowed(ItemDefinition item) => item != null && (!isOwnListing || item.CanUseOnOwnListing);
 
     /// <summary>自分の slot のアイテム（空きなら null）</summary>
     public ItemDefinition ItemAt(int slot)
@@ -64,8 +80,10 @@ public class ItemSlotsView : MonoBehaviour
         bool hasPlayer = game.TryGet(registry.LocalPlayerNumber, out PlayerState me);
         for (int i = 0; i < slots.Length; i++)
         {
-            slots[i].Bind(hasPlayer && i < me.Items.Slots.Count ? me.Items.Slots[i] : null);
-            slots[i].SetUsable(isUsable);
+            slots[i].gameObject.SetActive(startGate.HasStarted);
+            ItemDefinition item = hasPlayer && i < me.Items.Slots.Count ? me.Items.Slots[i] : null;
+            slots[i].Bind(item);
+            slots[i].SetUsable(isUsable && (item == null || IsAllowed(item)));
         }
     }
 }

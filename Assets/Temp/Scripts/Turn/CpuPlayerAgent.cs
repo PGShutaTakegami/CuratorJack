@@ -11,6 +11,11 @@ using UnityEngine;
 /// 入札額は自分と同じく、0 からレアリティの刻みで変えて選べる額（刻みの倍数）だけを使う。
 /// 入札は、入札を映す演出が終わってから考え始め、送る直前にも演出中でないことを確かめる（演出は最後の入札者しか映さないため、
 /// 演出中に入札が重なると間の人が飛ばされ、同じ人が続けて吊り上げたように見える）。
+/// アイテム（オークション中、出品者でも入札者でも使う）：
+/// ・電気プラグ：降りる直前に自分に使い、降りて削られる見送り権をシールドで守る。
+/// ・リモコン：一定の確率で、自分以外の生きている人のうち一番コインが多い人に使う。
+/// ・虫眼鏡：参加するときに一定の確率で使う。
+/// アイテムも入札と同じく、演出が終わってから使う。
 /// 操作は窓口（IPlayerCommands）へ送る（ネットワークでは切断した人の代わりにホストで動き、操作は全員へ配られる）。
 /// </summary>
 public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
@@ -31,10 +36,19 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
     [Tooltip("オークションの上限額を、最低出品額の何倍にするか（最小・最大）")]
     [SerializeField] private Vector2 valuationRate = new Vector2(1.2f, 2f);
 
+    [Tooltip("オークションに参加するときに、虫眼鏡を持っていれば使う確率")]
+    [Range(0f, 1f)]
+    [SerializeField] private float magnifierChance = 0.35f;
+
+    [Tooltip("オークションごとに、リモコンを持っていれば使う確率")]
+    [Range(0f, 1f)]
+    [SerializeField] private float remoteChance = 0.4f;
+
     GameManager game;
     IPlayerCommands commands;
     System.Func<bool> isPresentingBid;
     Coroutine running;
+    Coroutine itemRunning;
 
     public int PlayerNumber { get; private set; }
 
@@ -51,8 +65,12 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
 
     public void BeginAuction(AuctionModel auction)
     {
-        if (auction.Participants.Contains(PlayerNumber))
+        bool participates = auction.Participants.Contains(PlayerNumber);
+        if (participates)
             Run(Auction(auction));
+        else
+            EndPhase();
+        itemRunning = StartCoroutine(UseItems(participates));
     }
 
     public void EndPhase()
@@ -60,6 +78,9 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
         if (running != null)
             StopCoroutine(running);
         running = null;
+        if (itemRunning != null)
+            StopCoroutine(itemRunning);
+        itemRunning = null;
     }
 
     void Run(IEnumerator routine)
@@ -108,7 +129,7 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
         if (!joins)
         {
             yield return Think();
-            commands.Fold(PlayerNumber);
+            Fold();
             yield break;
         }
 
@@ -129,8 +150,64 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
             if (next <= valuation && auction.CanBid(PlayerNumber, next))
                 commands.Bid(PlayerNumber, next);
             else
-                commands.Fold(PlayerNumber);
+                Fold();
         }
+    }
+
+    /// <summary>降りる。電気プラグを持っていれば先に自分に使い、降りて削られる見送り権をシールドで守る</summary>
+    void Fold()
+    {
+        if (TryFindItem(ItemKind.PowerPlug, out int plug))
+            commands.UseItem(PlayerNumber, plug, PlayerNumber);
+        commands.Fold(PlayerNumber);
+    }
+
+    /// <summary>オークション中に虫眼鏡とリモコンを使う（電気プラグは降りるときに使う）</summary>
+    IEnumerator UseItems(bool participates)
+    {
+        yield return Think();
+        if (participates && Random.value < magnifierChance && TryFindItem(ItemKind.Magnifier, out int magnifier))
+            yield return UseItem(magnifier, PlayerRegistry.NoPlayer);
+
+        yield return Think();
+        if (Random.value < remoteChance && TryFindItem(ItemKind.RemoteControl, out int remote) && TryFindRichestRival(out int rival))
+            yield return UseItem(remote, rival);
+    }
+
+    IEnumerator UseItem(int slot, int target)
+    {
+        yield return new WaitWhile(isPresentingBid);
+        commands.UseItem(PlayerNumber, slot, target);
+        yield return null;
+        yield return new WaitWhile(isPresentingBid);
+    }
+
+    bool TryFindItem(ItemKind kind, out int slot)
+    {
+        slot = -1;
+        if (!game.TryGet(PlayerNumber, out PlayerState me))
+            return false;
+
+        for (int i = 0; i < me.Items.Slots.Count; i++)
+        {
+            if (me.Items.Slots[i] != null && me.Items.Slots[i].Kind == kind)
+            {
+                slot = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>自分以外の生きている人のうち、一番コインが多い人</summary>
+    bool TryFindRichestRival(out int rival)
+    {
+        PlayerState richest = game.AlivePlayers
+            .Where(player => player.PlayerNumber != PlayerNumber)
+            .OrderByDescending(player => player.Coins)
+            .FirstOrDefault();
+        rival = richest != null ? richest.PlayerNumber : PlayerRegistry.NoPlayer;
+        return richest != null;
     }
 
     /// <summary>

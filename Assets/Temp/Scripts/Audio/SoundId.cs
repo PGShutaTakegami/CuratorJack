@@ -32,5 +32,7 @@ public enum SoundId
     /// <summary>落札などで所持金が増減した</summary>
     Coins = 13,
     /// <summary>使えない操作をした</summary>
-    Denied = 14
+    Denied = 14,
+    /// <summary>制限時間の残り秒数が終わり近くで 1 減った</summary>
+    CountdownTick = 15
 }

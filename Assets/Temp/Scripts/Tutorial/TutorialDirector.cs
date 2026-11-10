@@ -110,8 +110,11 @@ public class TutorialDirector : MonoBehaviour
     [Tooltip("虫眼鏡で効果カードを見せる演出（見せ終わるまで次の案内を待つ）")]
     [SerializeField] private EffectCardReveal effectReveal;
 
-    [Tooltip("虫眼鏡を使ってから効果カードが出始めるまで待つ上限（秒）")]
-    [SerializeField] private float revealStartTimeout = 1f;
+    [Tooltip("虫眼鏡を使ってから効果カードが出始めるまで待つ上限（秒。使ったアイテムへカメラを向ける演出の後に出る）")]
+    [SerializeField] private float revealStartTimeout = 4f;
+
+    [Tooltip("手元に置いたアイテムのモデル。練習用のアイテムを配ったときにカメラを向けて見せる")]
+    [SerializeField] private ItemTableDisplay itemTable;
 
     readonly Dictionary<int, TutorialCpuAgent> cpus = new Dictionary<int, TutorialCpuAgent>();
     TutorialCommandGate gate;
@@ -387,6 +390,8 @@ public class TutorialDirector : MonoBehaviour
             if (item != null)
                 game.TryGiveItem(Local, item);
         }
+        if (itemTable != null)
+            yield return itemTable.PresentAcquired(Local);
 
         yield return ShowAndWaitClick("tutorial.item.get", TutorialNavLayout.Top, true, itemSlotsArea);
         yield return ShowAndWaitClick("tutorial.item.when", TutorialNavLayout.Top, true, itemSlotsArea);
@@ -404,28 +409,32 @@ public class TutorialDirector : MonoBehaviour
 
         if (TryFindItem(ItemKind.PowerPlug, out int plug))
         {
-            gate.AllowUseItem(plug);
-            yield return Show("tutorial.item.plug", TutorialNavLayout.Top, true, () => !HasItem(ItemKind.PowerPlug), SlotRect(plug));
-            gate.Lock();
+            yield return UseWithTarget(ItemKind.PowerPlug, plug, "tutorial.item.plug", "tutorial.item.plug_pick");
             yield return ShowAndWaitClick("tutorial.item.shield", TutorialNavLayout.Top, false);
         }
 
         if (TryFindItem(ItemKind.RemoteControl, out int remote))
         {
-            gate.AllowUseItem(remote);
-            while (HasItem(ItemKind.RemoteControl))
-            {
-                yield return Show("tutorial.item.remote", TutorialNavLayout.Top, true, () => targetPicker.IsPicking || !HasItem(ItemKind.RemoteControl), SlotRect(remote));
-                if (!targetPicker.IsPicking)
-                    continue;
-
-                yield return null;
-                yield return Show("tutorial.item.remote_pick", TutorialNavLayout.Top, false, () => !targetPicker.IsPicking || !HasItem(ItemKind.RemoteControl), targetPicker.VisibleButtons);
-            }
-            gate.Lock();
+            yield return UseWithTarget(ItemKind.RemoteControl, remote, "tutorial.item.remote", "tutorial.item.remote_pick");
             yield return ShowAndWaitClick("tutorial.item.paralysis", TutorialNavLayout.Top, false);
         }
         navigator.Hide();
+    }
+
+    /// <summary>相手を選ぶアイテムを使わせる（マスを押す案内 → 相手を選ぶ案内。選ぶのをやめたらマスを押す案内へ戻る）</summary>
+    IEnumerator UseWithTarget(ItemKind kind, int slot, string useKey, string pickKey)
+    {
+        gate.AllowUseItem(slot);
+        while (HasItem(kind))
+        {
+            yield return Show(useKey, TutorialNavLayout.Top, true, () => targetPicker.IsPicking || !HasItem(kind), SlotRect(slot));
+            if (!targetPicker.IsPicking)
+                continue;
+
+            yield return null;
+            yield return Show(pickKey, TutorialNavLayout.Top, false, () => !targetPicker.IsPicking || !HasItem(kind), targetPicker.VisibleButtons);
+        }
+        gate.Lock();
     }
 
     bool HasItem(ItemKind kind) => TryFindItem(kind, out _);

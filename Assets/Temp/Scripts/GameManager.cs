@@ -84,6 +84,16 @@ public class GameManager : MonoBehaviour
         HandCardAdded?.Invoke(player, card);
     }
 
+    /// <summary>使うのをやめたカードを、手札の index の位置に戻す</summary>
+    public void ReturnToHand(int playerNumber, HandCard card, int index)
+    {
+        if (!players.TryGetValue(playerNumber, out PlayerState player))
+            return;
+
+        player.InsertToHand(card, index);
+        HandCardAdded?.Invoke(player, card);
+    }
+
     /// <summary>手札からカードを消費する。手札になければ false を返す。</summary>
     public bool RemoveFromHand(int playerNumber, HandCard card)
     {
@@ -241,6 +251,13 @@ public class GameManager : MonoBehaviour
 
         player.AddStatus(status, amount);
         StatusChanged?.Invoke(player);
+    }
+
+    /// <summary>全員のシールドを消す（シールドはそのターンの落札が終わるまでしか持たない）</summary>
+    public void ExpireShields()
+    {
+        foreach (PlayerState player in Players)
+            UseStatus(player.PlayerNumber, PlayerStatus.Shield, int.MaxValue);
     }
 
     /// <summary>持続効果を 1 回使う。残っていなければ false を返す。</summary>

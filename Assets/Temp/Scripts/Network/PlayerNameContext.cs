@@ -19,6 +19,16 @@ public static class PlayerNameContext
         PlayerPrefs.SetString(SaveKey, current);
     }
 
+    /// <summary>Set した名前をすぐディスクへ書き出す（強制終了しても消えないように）</summary>
+    public static void Flush() => PlayerPrefs.Save();
+
+    /// <summary>保存した名前を消す</summary>
+    public static void Clear()
+    {
+        PlayerPrefs.DeleteKey(SaveKey);
+        current = null;
+    }
+
     /// <summary>タグになる文字・改行・前後の空白を除き、長すぎる名前を切り詰める。サーバーも受け取った名前をこれで整える。</summary>
     public static string Sanitize(string name)
     {

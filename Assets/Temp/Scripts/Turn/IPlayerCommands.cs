@@ -10,6 +10,9 @@ public interface IPlayerCommands
 
     void SetRaise(int player, bool raise);
 
+    /// <summary>出品で選んだカードをすべて手札に戻し、最初から選び直す（確定する前だけ）</summary>
+    void ResetListing(int player);
+
     void Confirm(int player);
 
     void Bid(int player, int amount);
