@@ -20424,6 +20424,7 @@ MonoBehaviour:
   registry: {fileID: 1871205621}
   frontCamera: {fileID: 1189171195}
   paddles: {fileID: 1410798266}
+  monitorIcons: {fileID: 698239919}
   ui: {fileID: 479731435}
   countDelaySeconds: 0.5
   holdSeconds: 1
@@ -25406,6 +25407,8 @@ MonoBehaviour:
   - Monitor_Screen
   localEdge: {fileID: 1640918650}
   screenBolts: {fileID: 1302057210}
+  localFlashSeconds: 0.8
+  flashOnDecrease: 0
   bodyBolts: {fileID: 1672847404}
   viewer: {fileID: 206865838}
   bodyRadius: 1.1
@@ -35183,6 +35186,8 @@ MonoBehaviour:
   - Monitor_Screen
   localEdge: {fileID: 280569716}
   screenBolts: {fileID: 0}
+  localFlashSeconds: 0.8
+  flashOnDecrease: 1
   bodyBolts: {fileID: 0}
   viewer: {fileID: 206865838}
   bodyRadius: 0.4

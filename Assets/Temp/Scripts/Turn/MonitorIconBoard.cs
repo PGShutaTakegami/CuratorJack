@@ -4,6 +4,7 @@ using UnityEngine;
 /// <summary>
 /// 自分以外のプレイヤーの頭のモニターの画面いっぱいに、そのプレイヤーのアイコンを表示する（縦横は画面に合わせて引き伸ばす）。
 /// 準備中・オークション中を問わず常に表示する。アイコンのない人には何も出さない。
+/// 自分のモニターはカメラが頭の中にあるため出さないが、自分をカメラで映している間（ShowsLocal）だけは出す。
 /// 脱落したら、ノイズのかかった素材に切り替える（アイコンのない人はノイズだけの画面を出す）。
 /// </summary>
 public class MonitorIconBoard : MonoBehaviour
@@ -40,6 +41,9 @@ public class MonitorIconBoard : MonoBehaviour
     MaterialPropertyBlock properties;
     Mesh quad;
 
+    /// <summary>自分のモニターにも自分のアイコンを出すか（自分をカメラで映している間だけ true にする）</summary>
+    public bool ShowsLocal { get; set; }
+
     void Awake()
     {
         properties = new MaterialPropertyBlock();
@@ -61,12 +65,10 @@ public class MonitorIconBoard : MonoBehaviour
     {
         foreach (int playerNumber in registry.PlayerNumbers)
         {
-            if (playerNumber == registry.LocalPlayerNumber)
-                continue;
-
+            bool isLocal = playerNumber == registry.LocalPlayerNumber;
             bool isDroppedOut = game.TryGet(playerNumber, out PlayerState player) && !player.IsAlive;
             icons.TryGetIcon(playerNumber, out Texture2D icon);
-            bool show = icon != null || isDroppedOut;
+            bool show = (icon != null || isDroppedOut) && (!isLocal || ShowsLocal);
 
             if (!monitors.TryGetValue(playerNumber, out Monitor monitor) || monitor.renderer == null)
             {

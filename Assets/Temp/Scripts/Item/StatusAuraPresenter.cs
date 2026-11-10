@@ -4,7 +4,8 @@ using UnityEngine;
 /// <summary>
 /// 持続効果（シールド・マヒなど）が残っている生きている人を光らせ、効果が無くなったら消す。
 /// ほかの人はモデルの縁を光らせ（稲妻があれば上半身を囲む円に沿っても走らせる）、
-/// 自分はカメラが頭の中にあり体が見えないため画面の端を光らせる（稲妻があれば画面の端にも走らせる）。
+/// 自分はカメラが頭の中にあり体が見えないため、効果を受けた瞬間だけ画面の端を一瞬光らせる（稲妻があれば画面の端にも走らせる）。
+/// flashOnDecrease のときは、効果が減った瞬間（シールドがダメージを肩代わりしたときなど）にも一瞬光らせる。
 /// 同じ人に降りたときの赤い縁が付いても、互いの縁は消し合わない（OutlineGlow）。
 /// </summary>
 public class StatusAuraPresenter : MonoBehaviour
@@ -37,11 +38,17 @@ public class StatusAuraPresenter : MonoBehaviour
     [Tooltip("角ばったメッシュの名前。法線で広げると縁が途切れるため、中心から外へ広げる")]
     [SerializeField] private string[] boxyRendererNames = { "Monitor_Case", "Monitor_Screen" };
 
-    [Tooltip("自分に効果があるときに光らせる画面の端")]
+    [Tooltip("自分が効果を受けた瞬間に光らせる画面の端")]
     [SerializeField] private ScreenEdgeGlow localEdge;
 
-    [Tooltip("自分に効果があるときに画面の端に走らせる稲妻（無ければ走らせない）")]
+    [Tooltip("自分が効果を受けた瞬間に画面の端に走らせる稲妻（無ければ走らせない）")]
     [SerializeField] private ElectricBolts screenBolts;
+
+    [Tooltip("自分が効果を受けたときに画面の端を光らせておく秒数")]
+    [SerializeField] private float localFlashSeconds = 0.8f;
+
+    [Tooltip("自分の効果が減った瞬間（シールドがダメージを肩代わりしたときなど）にも光らせる")]
+    [SerializeField] private bool flashOnDecrease;
 
     [Tooltip("ほかの人の体の周りに走らせる稲妻（無ければ走らせない）")]
     [SerializeField] private ElectricBolts bodyBolts;
@@ -63,6 +70,9 @@ public class StatusAuraPresenter : MonoBehaviour
     float elapsed;
     float flickerTimer;
     float flickerIntensity = 1f;
+    int watchedLocal = PlayerRegistry.NoPlayer;
+    int lastLocalValue;
+    float localFlashTimer;
 
     void OnDisable()
     {
@@ -70,6 +80,8 @@ public class StatusAuraPresenter : MonoBehaviour
             glow.Detach();
         glows.Clear();
         heads.Clear();
+        watchedLocal = PlayerRegistry.NoPlayer;
+        localFlashTimer = 0f;
         localEdge.Visible = false;
         if (screenBolts != null)
             screenBolts.SetAreas(System.Array.Empty<Rect>());
@@ -80,18 +92,16 @@ public class StatusAuraPresenter : MonoBehaviour
     void Update()
     {
         int local = registry.LocalPlayerNumber;
-        bool localHas = false;
         foreach (PlayerState player in game.Players)
         {
             bool has = player.IsAlive && player.StatusOf(status) > 0;
-            if (player.PlayerNumber == local)
-                localHas = has;
-            else if (has && !glows.ContainsKey(player.PlayerNumber) && registry.TryGet(player.PlayerNumber, out Transform body))
+            if (player.PlayerNumber != local && has && !glows.ContainsKey(player.PlayerNumber) && registry.TryGet(player.PlayerNumber, out Transform body))
                 glows[player.PlayerNumber] = new OutlineGlow(body, outlineMaterial, boxyRendererNames);
         }
         RemoveEnded();
 
-        localEdge.Visible = localHas;
+        bool localFlashing = UpdateLocalFlash(local);
+        localEdge.Visible = localFlashing;
         elapsed += Time.deltaTime;
         Color color = glowColor * Intensity();
         foreach (OutlineGlow glow in glows.Values)
@@ -100,12 +110,32 @@ public class StatusAuraPresenter : MonoBehaviour
         if (screenBolts != null)
         {
             screenAreas.Clear();
-            if (localHas)
+            if (localFlashing)
                 screenAreas.Add(new Rect(0f, 0f, Screen.width, Screen.height));
             screenBolts.SetAreas(screenAreas);
         }
         if (bodyBolts != null)
             bodyBolts.SetAreas(BodyAreas());
+    }
+
+    /// <summary>自分の効果の残りが増えた（減ったときも光らせるなら減った）瞬間から localFlashSeconds の間だけ true。見始めた時点で残っている分では光らせない</summary>
+    bool UpdateLocalFlash(int local)
+    {
+        bool alive = game.TryGet(local, out PlayerState me) && me.IsAlive;
+        int value = alive ? me.StatusOf(status) : 0;
+        if (local != watchedLocal || !alive)
+        {
+            watchedLocal = local;
+            lastLocalValue = value;
+            localFlashTimer = 0f;
+        }
+
+        if (value > lastLocalValue || (flashOnDecrease && value < lastLocalValue))
+            localFlashTimer = localFlashSeconds;
+        lastLocalValue = value;
+
+        localFlashTimer -= Time.deltaTime;
+        return localFlashTimer > 0f;
     }
 
     void RemoveEnded()

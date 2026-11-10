@@ -4,7 +4,8 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーが札を掲げたときの演出。入札 UI をフェードで消し、自分のカメラをその人の正面へ動かして
 /// 頭と札をアップで映す。移動しきって少し待ってから札の数字を入札額まで数えて変え、少し止めてから元の視点へ戻り、入札 UI をフェードで出す。
-/// 自分が入札したときは、カメラが自分の頭から出て正面に着いてから自分の札を掲げ（札がカメラの目の前を覆わないように）、頭と札が入るように映し直す。
+/// 自分が入札したときは、カメラが自分の頭から出て正面に着いてから自分の札を掲げ（札がカメラの目の前を覆わないように）、
+/// 頭のモニターに自分のアイコンを出して、頭と札が入るように映し直す。
 /// 演出中に別の人が入札したら、元の視点へは戻らずにその人の正面へ続けて移動する（映さなかった人の札は最後に入札額にそろえる）。
 /// </summary>
 public class BidderCloseUpShot : MonoBehaviour
@@ -14,6 +15,9 @@ public class BidderCloseUpShot : MonoBehaviour
     [SerializeField] private PlayerFrontCamera frontCamera;
 
     [SerializeField] private BidPaddleBoard paddles;
+
+    [Tooltip("自分を映している間、自分の頭のモニターにも自分のアイコンを出す")]
+    [SerializeField] private MonitorIconBoard monitorIcons;
 
     [SerializeField] private TurnUI ui;
 
@@ -66,9 +70,11 @@ public class BidderCloseUpShot : MonoBehaviour
             {
                 yield return frontCamera.MoveToFront(player, Head, distance, height);
                 paddles.ShowLocal(amount);
+                monitorIcons.ShowsLocal = true;
                 yield return frontCamera.MoveToFront(player, Target, distance, height);
                 yield return frontCamera.HoldFront(player, Target, distance, height, holdSeconds);
                 paddles.HideLocal();
+                monitorIcons.ShowsLocal = false;
                 continue;
             }
 
