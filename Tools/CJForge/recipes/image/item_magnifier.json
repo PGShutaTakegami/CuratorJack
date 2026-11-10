@@ -1,0 +1,24 @@
+{
+  "_comment": "アイテム：虫眼鏡のアイコン（背景透過）",
+  "kind": "image",
+  "name": "item/magnifier",
+  "size": [256, 256],
+  "background": "transparent",
+  "palette": { "brass": "#D9B062", "brass_hi": "#F5DCA0", "brass_lo": "#8A6328", "wood": "#6B3E22", "wood_hi": "#9A6038", "dark": "#22150C" },
+  "layers": [
+    { "shape": "line", "from": [150, 150], "to": [212, 212], "width": 34, "cap": "round",
+      "fill": { "linear": { "from": [150, 150], "to": [212, 212] }, "stops": [[0, "$wood_hi"], [1, "$wood"]] },
+      "stroke": { "color": "$dark", "width": 4, "align": "outside" },
+      "shadow": { "color": "#00000080", "offset": [4, 6], "blur": 6 } },
+    { "shape": "line", "from": [140, 140], "to": [162, 162], "width": 40, "cap": "butt", "fill": "$brass_lo",
+      "stroke": { "color": "$dark", "width": 3, "align": "outside" } },
+    { "shape": "circle", "center": [104, 104], "radius": 74,
+      "fill": { "radial": { "center": [84, 80], "radius": 110 }, "stops": [[0, "#E8F6FFF0"], [0.6, "#A9D4F0C8"], [1, "#6FA6CCC0"]] },
+      "shadow": { "color": "#00000080", "offset": [4, 6], "blur": 6 } },
+    { "shape": "ring", "center": [104, 104], "radius": 74, "width": 16,
+      "fill": { "linear": { "from": [40, 40], "to": [170, 170] }, "stops": [[0, "$brass_hi"], [0.5, "$brass"], [1, "$brass_lo"]] },
+      "stroke": { "color": "$dark", "width": 4, "align": "outside" } },
+    { "shape": "arc", "center": [104, 104], "radius": 50, "width": 10, "start": 200, "end": 250, "fill": "#FFFFFFD0" },
+    { "shape": "circle", "center": [72, 70], "radius": 7, "fill": "#FFFFFFE0", "glow": { "color": "#FFFFFFA0", "blur": 4 } }
+  ]
+}

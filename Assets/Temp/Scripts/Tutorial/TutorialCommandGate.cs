@@ -12,12 +12,16 @@ public sealed class TutorialCommandGate : IPlayerCommands
         Raise,
         Confirm,
         Bid,
-        Fold
+        Fold,
+        UseItem
     }
+
+    const int NoSlot = -1;
 
     readonly IPlayerCommands inner;
     Allowed allowed;
     HandCard allowedCard;
+    int allowedSlot = NoSlot;
 
     public TutorialCommandGate(IPlayerCommands inner)
     {
@@ -39,10 +43,14 @@ public sealed class TutorialCommandGate : IPlayerCommands
 
     public void AllowFold() => Allow(Allowed.Fold, null);
 
-    void Allow(Allowed action, HandCard card)
+    /// <summary>slot のマスのアイテムを使うことだけを許す</summary>
+    public void AllowUseItem(int slot) => Allow(Allowed.UseItem, null, slot);
+
+    void Allow(Allowed action, HandCard card, int slot = NoSlot)
     {
         allowed = action;
         allowedCard = card;
+        allowedSlot = slot;
     }
 
     public void SelectGoods(int player, HandCard card)
@@ -79,6 +87,12 @@ public sealed class TutorialCommandGate : IPlayerCommands
     {
         if (allowed == Allowed.Fold)
             inner.Fold(player);
+    }
+
+    public void UseItem(int player, int slot, int target)
+    {
+        if (allowed == Allowed.UseItem && slot == allowedSlot)
+            inner.UseItem(player, slot, target);
     }
 
     public void Retire(int player) => inner.Retire(player);

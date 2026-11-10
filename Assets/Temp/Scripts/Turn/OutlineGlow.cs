@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 /// <summary>
-/// 1 人のモデルの縁を光らせる。縁のマテリアルを各レンダラーの最後に足し、Detach で元のマテリアルへ戻す。
+/// 1 人のモデルの縁を光らせる。縁のマテリアルを各レンダラーの最後に足し、Detach で足したマテリアルだけを外す。
+/// 同じモデルに別の縁（降りたときの赤とシールドの緑など）が付いていても、互いに消し合わない。
 /// 角ばったメッシュは法線で広げると縁が途切れるため、中心から外へ広げる。
 /// </summary>
 public sealed class OutlineGlow
@@ -12,7 +13,6 @@ public sealed class OutlineGlow
     static readonly int RadialId = Shader.PropertyToID("_Radial");
     static readonly int CenterId = Shader.PropertyToID("_Center");
 
-    readonly Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
     readonly Dictionary<Renderer, Material> glowMaterials = new Dictionary<Renderer, Material>();
 
     public OutlineGlow(Transform body, Material outlineMaterial, string[] boxyRendererNames)
@@ -27,7 +27,6 @@ public sealed class OutlineGlow
             glowMaterials[target] = glow;
 
             Material[] materials = target.sharedMaterials;
-            originalMaterials[target] = materials;
             var withOutline = new Material[materials.Length + 1];
             materials.CopyTo(withOutline, 0);
             withOutline[materials.Length] = glow;
@@ -55,15 +54,12 @@ public sealed class OutlineGlow
 
     public void Detach()
     {
-        foreach (KeyValuePair<Renderer, Material[]> pair in originalMaterials)
+        foreach (KeyValuePair<Renderer, Material> pair in glowMaterials)
         {
             if (pair.Key != null)
-                pair.Key.sharedMaterials = pair.Value;
+                pair.Key.sharedMaterials = System.Array.FindAll(pair.Key.sharedMaterials, material => material != pair.Value);
+            Object.Destroy(pair.Value);
         }
-        originalMaterials.Clear();
-
-        foreach (Material glow in glowMaterials.Values)
-            Object.Destroy(glow);
         glowMaterials.Clear();
     }
 

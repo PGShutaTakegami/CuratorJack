@@ -15,6 +15,7 @@ public sealed class PlayerActionDispatcher : IPlayerCommands, IPhaseTimeouts
     const int NoCard = -1;
 
     readonly GameManager game;
+    readonly ItemEffectResolver items;
     readonly List<PlayerAction> pending = new List<PlayerAction>();
     readonly Random timeoutRandom = new Random();
     IPlayerActionChannel channel;
@@ -23,9 +24,11 @@ public sealed class PlayerActionDispatcher : IPlayerCommands, IPhaseTimeouts
     HandCard[] sellerHand = Array.Empty<HandCard>();
     AuctionModel auction;
 
-    public PlayerActionDispatcher(GameManager game)
+    /// <param name="items">アイテムの効果を反映する窓口（null なら自分で作る）</param>
+    public PlayerActionDispatcher(GameManager game, ItemEffectResolver items = null)
     {
         this.game = game;
+        this.items = items ?? new ItemEffectResolver(game);
     }
 
     bool IsOpen => listing != null || auction != null;
@@ -80,6 +83,12 @@ public sealed class PlayerActionDispatcher : IPlayerCommands, IPhaseTimeouts
     public void Bid(int player, int amount) => Submit(player, PlayerActionKind.Bid, amount);
 
     public void Fold(int player) => Submit(player, PlayerActionKind.Fold, 0);
+
+    public void UseItem(int player, int slot, int target)
+    {
+        if (auction != null)
+            Submit(player, PlayerActionKind.UseItem, ItemEffectResolver.Encode(slot, target));
+    }
 
     public void Retire(int player)
     {
@@ -157,6 +166,10 @@ public sealed class PlayerActionDispatcher : IPlayerCommands, IPhaseTimeouts
                 break;
             case PlayerActionKind.Timeout:
                 ApplyTimeout(action.Value);
+                break;
+            case PlayerActionKind.UseItem:
+                if (auction != null)
+                    items.TryUse(action.Player, action.Value, auction.Listing);
                 break;
         }
     }

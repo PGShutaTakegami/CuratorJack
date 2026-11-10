@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour
     /// <summary>見送り権を使った（プレイヤーと使った枚数。足りずに死亡したときは PlayerDied だけを出す）</summary>
     public event Action<PlayerState, int> PassRightConsumed;
 
+    /// <summary>見送り権の代わりにシールドを使った（プレイヤーと使った枚数）</summary>
+    public event Action<PlayerState, int> ShieldConsumed;
+
+    /// <summary>アイテムのマスの中身が変わった（もらった・使った）</summary>
+    public event Action<PlayerState> ItemsChanged;
+
     void Awake()
     {
         startGate.Started += CreatePlayers;
@@ -88,10 +94,24 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    /// <summary>見送り権を count 枚消費する。count 枚に足りないプレイヤーは死亡する。</summary>
+    /// <summary>
+    /// 見送り権を count 枚消費する。シールドがあれば見送り権 1 枚につきシールド 1 枚を先に使う。
+    /// 残りの枚数に見送り権が足りないプレイヤーは死亡する。
+    /// </summary>
     public void ConsumePassRight(int playerNumber, int count = 1)
     {
         if (count <= 0 || !players.TryGetValue(playerNumber, out PlayerState player) || !player.IsAlive)
+            return;
+
+        int shielded = player.UseStatus(PlayerStatus.Shield, count);
+        if (shielded > 0)
+        {
+            StatusChanged?.Invoke(player);
+            Debug.Log($"[Game] Player{playerNumber} は見送り権の代わりにシールド {shielded} 枚を使いました");
+            ShieldConsumed?.Invoke(player, shielded);
+        }
+        count -= shielded;
+        if (count <= 0)
             return;
 
         bool died = player.ConsumePassRights(count);
@@ -238,6 +258,28 @@ public class GameManager : MonoBehaviour
         if (used > 0)
             StatusChanged?.Invoke(player);
         return used;
+    }
+
+    /// <summary>アイテムを空いているマスに渡す。満杯なら渡さずに false を返す。</summary>
+    public bool TryGiveItem(int playerNumber, ItemDefinition item)
+    {
+        if (!players.TryGetValue(playerNumber, out PlayerState player) || !player.Items.TryAdd(item))
+            return false;
+
+        ItemsChanged?.Invoke(player);
+        Debug.Log($"[Game] Player{playerNumber} がアイテム {item.DisplayName} を手に入れました");
+        return true;
+    }
+
+    /// <summary>生きているプレイヤーが slot のアイテムを使ってマスを空ける（効果は ItemEffectResolver が処理する）。空きなら false を返す。</summary>
+    public bool TryUseItem(int playerNumber, int slot)
+    {
+        if (!players.TryGetValue(playerNumber, out PlayerState player) || !player.IsAlive || !player.Items.TryTake(slot, out ItemDefinition item))
+            return false;
+
+        ItemsChanged?.Invoke(player);
+        Debug.Log($"[Game] Player{playerNumber} がアイテム {item.DisplayName} を使いました");
+        return true;
     }
 
     /// <summary>受けたバフデバフカードを記録する（効果の中身は CardEffectResolver が処理する）。</summary>

@@ -21,7 +21,7 @@ public class PhaseTimer : MonoBehaviour
     [Tooltip("IRoomControl を持つコンポーネント（SinglePlay / マルチプレイ）")]
     [SerializeField] private MonoBehaviour[] rooms;
 
-    [Tooltip("他の人の入札をアップで映す演出。演出中は数え始めない")]
+    [Tooltip("入札した人をアップで映す演出。演出中は数え始めない")]
     [SerializeField] private BidderCloseUpShot bidderShot;
 
     [Tooltip("マルチプレイで全員の残り秒数をそろえる時計（マルチプレイのゲーム中でなければ SinglePlay の時計を使う）")]

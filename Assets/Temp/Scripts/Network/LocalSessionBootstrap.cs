@@ -57,6 +57,9 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     [Tooltip("ホストの引き継ぎで、ホスト開始や再接続をやり直す間隔（秒）。作り直した部屋の見張りもこの間隔で行う")]
     [SerializeField] private float hostRecoveryInterval = 0.5f;
 
+    [Tooltip("ゲーム開始前、繋がっているのに自分のプレイヤーが出てこないとき、ロビーへ戻るまで待つ秒数")]
+    [SerializeField] private float playerSpawnWaitSeconds = 15f;
+
     [Tooltip("相手の応答が途絶えてから切断とみなすまでの時間（ミリ秒）")]
     [SerializeField] private int disconnectTimeoutMS = 3000;
 
@@ -85,6 +88,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     RematchTicket rematchTicket;
     float hostingPollTimer;
     float matchFinishedAt = -1f;
+    LocalPlayerSpawnWatch spawnWatch;
 
     public bool IsActive { get; private set; }
 
@@ -97,6 +101,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             yield break;
 
         IsActive = true;
+        spawnWatch = new LocalPlayerSpawnWatch(playerSpawnWaitSeconds);
         roomState.OwnershipRequested += HandleOwnershipRequested;
         roomState.NextHostAnnounced += HandleNextHostAnnounced;
 
@@ -421,9 +426,16 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         {
             RecordRoomMembers();
             TryRequestOwnership();
+            if (IsLocalPlayerOverdue())
+            {
+                isWatchingHost = false;
+                EnvironmentNetwork.LogError("自分のプレイヤーが用意されなかったため、ロビーへ戻ります");
+                ReturnToLobby();
+            }
             return;
         }
 
+        spawnWatch.Reset();
         if (networkManager.ShutdownInProgress)
             return;
 
@@ -449,6 +461,19 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         bool ownerPending = !isDesignated && lastOwnerPending;
         nextHostId = null;
         StartCoroutine(RecoverFromHostLeft(isSuccessor, ownerPending));
+    }
+
+    /// <summary>ゲーム開始前に、繋がっているのに自分のプレイヤー（カメラ）が出てこないまま待ちすぎたか。</summary>
+    bool IsLocalPlayerOverdue()
+    {
+        if (startGate.HasStarted)
+        {
+            spawnWatch.Reset();
+            return false;
+        }
+
+        bool hasLocalPlayer = networkManager.SpawnManager != null && networkManager.SpawnManager.GetLocalPlayerObject() != null;
+        return spawnWatch.IsOverdue(hasLocalPlayer, Time.realtimeSinceStartup);
     }
 
     /// <summary>元の部屋主として入った部屋が部屋主待ちなら、一度だけ部屋主に戻りたいと申し出る。</summary>

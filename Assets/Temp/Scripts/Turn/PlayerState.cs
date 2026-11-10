@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// プレイヤー 1 人分のゲーム状態（コイン・見送り権・生死・手札・落札した商品・かかっているバフデバフ・持続効果）。
+/// プレイヤー 1 人分のゲーム状態（コイン・見送り権・生死・手札・落札した商品・かかっているバフデバフ・持続効果・アイテム）。
 /// 書き換えは GameManager を通して行い、変更の通知も GameManager が出す。
 /// </summary>
 public sealed class PlayerState
@@ -32,6 +32,9 @@ public sealed class PlayerState
     public IReadOnlyList<HandCard> Collection => collection;
 
     public IReadOnlyList<HandCard> ActiveBuffs => activeBuffs;
+
+    /// <summary>持っているアイテムのマス</summary>
+    public ItemInventory Items { get; } = new ItemInventory();
 
     public bool HasGoods => hand.Exists(card => card.IsGoods);
 

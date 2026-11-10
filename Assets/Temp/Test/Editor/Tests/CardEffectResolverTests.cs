@@ -145,8 +145,7 @@ public class CardEffectResolverTests
 
         bool OthersHave(PlayerStatus status) =>
             table.Player(Seller).StatusOf(status) == 1 && table.Player(3).StatusOf(status) == 1;
-        bool appraisedAll = report.Messages.Count > 0 && report.Messages[0].Contains("全鑑定");
-        Assert.IsTrue(OthersHave(PlayerStatus.Interference) || OthersHave(PlayerStatus.Pressure) || appraisedAll, string.Join("\n", report.Messages));
+        Assert.IsTrue(OthersHave(PlayerStatus.Interference) || OthersHave(PlayerStatus.Pressure), string.Join("\n", report.Messages));
         Assert.AreEqual(0, table.Player(Buyer).StatusOf(PlayerStatus.Interference) + table.Player(Buyer).StatusOf(PlayerStatus.Pressure));
     }
 }

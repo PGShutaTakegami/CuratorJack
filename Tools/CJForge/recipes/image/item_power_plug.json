@@ -1,0 +1,24 @@
+{
+  "_comment": "アイテム：電気プラグのアイコン（背景透過）。緑の稲妻でシールドの効果を示す",
+  "kind": "image",
+  "name": "item/power_plug",
+  "size": [256, 256],
+  "background": "transparent",
+  "palette": { "body": "#E9E4D8", "body_lo": "#A79F8E", "metal": "#D8DDE2", "metal_lo": "#7D868F", "cable": "#2E2E33", "dark": "#1A1A1E", "green": "#3CFF6A" },
+  "layers": [
+    { "shape": "polyline", "points": [[128, 196], [128, 216], [96, 232], [40, 232]], "width": 16, "cap": "round", "fill": "$cable",
+      "shadow": { "color": "#00000070", "offset": [3, 4], "blur": 4 } },
+    { "shape": "rect", "rect": [92, 18, 18, 62], "radius": 4,
+      "fill": { "linear": { "from": [92, 0], "to": [110, 0] }, "stops": [[0, "$metal"], [1, "$metal_lo"]] },
+      "stroke": { "color": "$dark", "width": 3, "align": "outside" } },
+    { "shape": "rect", "rect": [146, 18, 18, 62], "radius": 4,
+      "fill": { "linear": { "from": [146, 0], "to": [164, 0] }, "stops": [[0, "$metal"], [1, "$metal_lo"]] },
+      "stroke": { "color": "$dark", "width": 3, "align": "outside" } },
+    { "shape": "rect", "rect": [62, 70, 132, 132], "radius": 26,
+      "fill": { "linear": { "from": [62, 70], "to": [194, 202] }, "stops": [[0, "$body"], [1, "$body_lo"]] },
+      "stroke": { "color": "$dark", "width": 5, "align": "inside" },
+      "shadow": { "color": "#00000080", "offset": [4, 6], "blur": 6 } },
+    { "shape": "polygon", "points": [[138, 88], [100, 142], [126, 142], [114, 186], [158, 124], [132, 124], [146, 88]],
+      "fill": "$green", "stroke": { "color": "#0B4A1C", "width": 3 }, "glow": { "color": "#3CFF6AC0", "blur": 8, "strength": 1.5 } }
+  ]
+}

@@ -5,17 +5,16 @@ using System.Linq;
 /// <summary>
 /// 効果カード・スペシャルカードの効果を処理する。状態の書き換えは GameManager を通して行い、
 /// 画面で見せること（公開・追加のドロー・逆転・メッセージ）は EffectReport にまとめて返す。
-/// ・出品時：真贋証明が付いていれば、付いている効果カードを全員に公開する。
 /// ・受け取り時：出品に付いていた効果カードと商品のスペシャルカードを公開してから、受け取った人（落札者、いなければ出品者）に発動する。
 ///   受け取った人に免罪符が残っていれば、そのとき受けた効果はすべて無効になり、免罪符を 1 回使う。
-/// ・全鑑定・全横やり・全圧力は、受け取った人以外の生きている全員（出品者も含む）にかかる（免罪符が残っている人には無効）。
+/// ・全横やり・全圧力は、受け取った人以外の生きている全員（出品者も含む）にかかる（免罪符が残っている人には無効）。
 /// ・ランダムは、ランダムのカードからディゾルブで選ばれたスペシャルカードへ変えて公開してから発動する。
 /// </summary>
 public sealed class CardEffectResolver
 {
     const int GoldenBoonCoins = 20;
     const int GraceTokenPassRights = 1;
-    static readonly CardEffect[] RandomChoices = { CardEffect.AppraisalAll, CardEffect.InterferenceAll, CardEffect.PressureAll };
+    static readonly CardEffect[] RandomChoices = { CardEffect.InterferenceAll, CardEffect.PressureAll };
 
     readonly GameManager game;
     readonly Func<int, string> nameOf;
@@ -35,18 +34,6 @@ public sealed class CardEffectResolver
     public void Reseed(int seed)
     {
         random = new Random(seed);
-    }
-
-    /// <summary>出品が決まったときの効果（真贋証明）</summary>
-    public EffectReport ResolveListing(Listing listing)
-    {
-        var report = new EffectReport();
-        if (listing.Buffs.Any(buff => EffectOf(buff) == CardEffect.CertificateOfAuthenticity))
-        {
-            CardData[] attached = listing.Buffs.Where(buff => buff.Data != null).Select(buff => buff.Data).ToArray();
-            report.AddReveal(listing.Seller, $"{nameOf(listing.Seller)} の出品に付いている効果カード（真贋証明）", attached);
-        }
-        return report;
     }
 
     /// <summary>出品に付いていた効果カードとスペシャルカードを、受け取った人に発動する</summary>
@@ -113,8 +100,6 @@ public sealed class CardEffectResolver
         report.AddTransform(recipient, $"{title}（{special.Parameter.CardName} → {chosen.Parameter.CardName}）", new[] { special }, new[] { chosen });
     }
 
-    static CardEffect EffectOf(HandCard card) => card.Data != null ? card.Data.Effect : CardEffect.None;
-
     void Apply(CardData card, int recipient, int seller, EffectReport report)
     {
         string who = nameOf(recipient);
@@ -157,9 +142,6 @@ public sealed class CardEffectResolver
                 game.AddStatus(recipient, PlayerStatus.Interference, 1);
                 report.AddMessage($"{label}：{who} は次の出品で効果カードを付けられません{RemainingText(recipient, PlayerStatus.Interference)}");
                 break;
-            case CardEffect.Appraisal:
-                ApplyAppraisal(label, recipient, report);
-                break;
             case CardEffect.GoldenBoon:
                 int before = game.TryGet(recipient, out PlayerState state) ? state.Coins : 0;
                 game.AddCoins(recipient, GoldenBoonCoins);
@@ -170,7 +152,6 @@ public sealed class CardEffectResolver
                 game.AddPassRights(recipient, GraceTokenPassRights);
                 report.AddMessage($"{label}：{who} の見送り権が {GraceTokenPassRights} 枚増えました");
                 break;
-            case CardEffect.AppraisalAll:
             case CardEffect.InterferenceAll:
             case CardEffect.PressureAll:
                 ApplyToOthers(card.Effect, recipient, report);
@@ -197,21 +178,7 @@ public sealed class CardEffectResolver
             : $"{label}：{nameOf(recipient)} が {paid} コインを追加で払いました（最後の 1v1 のため出品者には入りません）");
     }
 
-    /// <summary>鑑定：受け取った人の手札の効果カードを 1 枚ランダムで公開する</summary>
-    void ApplyAppraisal(string label, int recipient, EffectReport report)
-    {
-        CardData[] cards = EffectCardsInHand(recipient);
-        if (cards.Length == 0)
-        {
-            report.AddMessage($"{label}：{nameOf(recipient)} は公開する効果カードを持っていません");
-            return;
-        }
-
-        CardData picked = cards[random.Next(cards.Length)];
-        report.AddReveal(recipient, $"{nameOf(recipient)} の効果カード（{label}）", new[] { picked });
-    }
-
-    /// <summary>全鑑定・全横やり・全圧力を、受け取った人以外の生きている全員（出品者も含む）にかける</summary>
+    /// <summary>全横やり・全圧力を、受け取った人以外の生きている全員（出品者も含む）にかける</summary>
     void ApplyToOthers(CardEffect effect, int recipient, EffectReport report)
     {
         string label = LabelOf(effect);
@@ -236,13 +203,6 @@ public sealed class CardEffectResolver
 
             switch (effect)
             {
-                case CardEffect.AppraisalAll:
-                    CardData[] cards = EffectCardsInHand(target);
-                    if (cards.Length == 0)
-                        report.AddMessage($"{label}：{nameOf(target)} は効果カードを持っていません");
-                    else
-                        report.AddReveal(target, $"{nameOf(target)} の効果カード（{label}）", cards);
-                    break;
                 case CardEffect.InterferenceAll:
                     game.AddStatus(target, PlayerStatus.Interference, 1);
                     affected.Add(nameOf(target) + RemainingText(target, PlayerStatus.Interference));
@@ -269,19 +229,10 @@ public sealed class CardEffectResolver
         return remaining > 1 ? $"（残り {remaining} 回）" : string.Empty;
     }
 
-    CardData[] EffectCardsInHand(int player)
-    {
-        if (!game.TryGet(player, out PlayerState state))
-            return Array.Empty<CardData>();
-
-        return state.Hand.Where(card => !card.IsGoods && card.Data != null).Select(card => card.Data).ToArray();
-    }
-
     static string LabelOf(CardEffect effect)
     {
         switch (effect)
         {
-            case CardEffect.AppraisalAll: return "全鑑定";
             case CardEffect.InterferenceAll: return "全横やり";
             case CardEffect.PressureAll: return "全圧力";
             default: return effect.ToString();

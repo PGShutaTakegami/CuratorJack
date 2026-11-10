@@ -15,7 +15,8 @@ using UnityEngine.UI;
 ///   落札者・落札者なしのときのエフェクトカードの発動先、見送り権、インフォメーションを案内する。
 /// ・ターン 2（A の出品）：虫眼鏡で手元（見送り権のチケット・落札したカード）を見る → 自分が入札する → 最高額の間は降りられない
 ///   → ライバルと raiseRounds 回競り合って値段を上げる → ライバルが上回ったら降りる、を案内する。C は降りて脱落し、ライバルが落札する。
-/// ・ターン 3（ライバルの出品）：自分が入札して落札する。A は降りて脱落し、FINAL BATTLE になる。
+/// ・ターン 3（ライバルの出品。ライバルは虫眼鏡で見せる効果カードを付ける）：練習用のアイテムを 3 つ渡し、
+///   虫眼鏡 → 電気プラグ → リモコンの順に 1 つずつ使わせてから、自分が入札して落札する。A は降りて脱落し、FINAL BATTLE になる。
 /// ・ターン 4：1 周後のドローの後、FINAL BATTLE で変わるルールを案内してから、引いた最高レアリティのカードでスペシャルカードを案内する。
 ///   そこからは制限を外して自由に操作させ、ライバルが降りて自分が勝ったらクリアを出す。
 /// 案内中は、案内している操作だけを進行へ送る（TutorialCommandGate）。自分が脱落したらチュートリアルをやめる。
@@ -89,6 +90,28 @@ public class TutorialDirector : MonoBehaviour
 
     [Tooltip("ターン 2 で降りる前に、ライバルと競り合って入札し返す回数")]
     [SerializeField, Min(0)] private int raiseRounds = 2;
+
+    [Header("アイテムの案内（ターン 3 のオークション）")]
+    [Tooltip("練習用に自分へ渡すアイテム（虫眼鏡・電気プラグ・リモコン）")]
+    [SerializeField] private ItemDefinition[] practiceItems;
+
+    [Tooltip("ターン 3 でライバルが出品に付ける効果カード（虫眼鏡で見せる）")]
+    [SerializeField] private CardData rivalBuffCard;
+
+    [Tooltip("アイテムのマスを並べた範囲")]
+    [SerializeField] private RectTransform itemSlotsArea;
+
+    [Tooltip("アイテムのマス（左から順に）")]
+    [SerializeField] private RectTransform[] itemSlots;
+
+    [Tooltip("リモコンの相手を選ぶ画面")]
+    [SerializeField] private ItemTargetPicker targetPicker;
+
+    [Tooltip("虫眼鏡で効果カードを見せる演出（見せ終わるまで次の案内を待つ）")]
+    [SerializeField] private EffectCardReveal effectReveal;
+
+    [Tooltip("虫眼鏡を使ってから効果カードが出始めるまで待つ上限（秒）")]
+    [SerializeField] private float revealStartTimeout = 1f;
 
     readonly Dictionary<int, TutorialCpuAgent> cpus = new Dictionary<int, TutorialCpuAgent>();
     TutorialCommandGate gate;
@@ -275,7 +298,10 @@ public class TutorialDirector : MonoBehaviour
         yield return ShowAndWaitClick("tutorial.auction.unsold", TutorialNavLayout.Top, false);
         yield return ShowAndWaitClick("tutorial.auction.fold", TutorialNavLayout.Top, false);
         if (rival != null)
+        {
             rival.BidInNextAuction(raiseRounds + 1);
+            rival.AttachInNextListing(rivalBuffCard);
+        }
     }
 
     /// <summary>インフォメーションマークでカードの一覧を開き、閉じるまでを案内する</summary>
@@ -339,17 +365,91 @@ public class TutorialDirector : MonoBehaviour
         yield return ShowAndWaitClick("tutorial.inspect.view", TutorialNavLayout.Top, false);
     }
 
-    /// <summary>ターン 3：ライバルの出品に入札して落札する</summary>
+    /// <summary>ターン 3：アイテムの使い方を案内してから、ライバルの出品に入札して落札する</summary>
     IEnumerator RunBidding()
     {
         yield return new WaitUntil(() => auction != null && auction.Participants.Contains(Local));
         AuctionModel model = auction;
         int finished = finishedAuctions;
+        yield return RunItems();
+
         gate.AllowBid();
         yield return Show("tutorial.bid.win", TutorialNavLayout.Top, true, () => model.BidOf(Local) > 0, TutorialPointerSide.Left, bidButton, amountReels);
         gate.Lock();
         yield return LetCpusAct(finished);
     }
+
+    /// <summary>練習用のアイテムを渡し、虫眼鏡 → 電気プラグ → リモコンの順に 1 つずつ使わせる。案内中は使っている途中のアイテムしか送らない</summary>
+    IEnumerator RunItems()
+    {
+        foreach (ItemDefinition item in practiceItems)
+        {
+            if (item != null)
+                game.TryGiveItem(Local, item);
+        }
+
+        yield return ShowAndWaitClick("tutorial.item.get", TutorialNavLayout.Top, true, itemSlotsArea);
+        yield return ShowAndWaitClick("tutorial.item.when", TutorialNavLayout.Top, true, itemSlotsArea);
+
+        if (TryFindItem(ItemKind.Magnifier, out int magnifier))
+        {
+            gate.AllowUseItem(magnifier);
+            yield return Show("tutorial.item.magnifier", TutorialNavLayout.Top, true, () => !HasItem(ItemKind.Magnifier), SlotRect(magnifier));
+            gate.Lock();
+            navigator.Hide();
+            float deadline = Time.time + revealStartTimeout;
+            yield return new WaitUntil(() => effectReveal.IsPlaying || Time.time > deadline);
+            yield return new WaitWhile(() => effectReveal.IsPlaying);
+        }
+
+        if (TryFindItem(ItemKind.PowerPlug, out int plug))
+        {
+            gate.AllowUseItem(plug);
+            yield return Show("tutorial.item.plug", TutorialNavLayout.Top, true, () => !HasItem(ItemKind.PowerPlug), SlotRect(plug));
+            gate.Lock();
+            yield return ShowAndWaitClick("tutorial.item.shield", TutorialNavLayout.Top, false);
+        }
+
+        if (TryFindItem(ItemKind.RemoteControl, out int remote))
+        {
+            gate.AllowUseItem(remote);
+            while (HasItem(ItemKind.RemoteControl))
+            {
+                yield return Show("tutorial.item.remote", TutorialNavLayout.Top, true, () => targetPicker.IsPicking || !HasItem(ItemKind.RemoteControl), SlotRect(remote));
+                if (!targetPicker.IsPicking)
+                    continue;
+
+                yield return null;
+                yield return Show("tutorial.item.remote_pick", TutorialNavLayout.Top, false, () => !targetPicker.IsPicking || !HasItem(ItemKind.RemoteControl), targetPicker.VisibleButtons);
+            }
+            gate.Lock();
+            yield return ShowAndWaitClick("tutorial.item.paralysis", TutorialNavLayout.Top, false);
+        }
+        navigator.Hide();
+    }
+
+    bool HasItem(ItemKind kind) => TryFindItem(kind, out _);
+
+    /// <summary>自分のマスのうち、kind のアイテムが入っている最初のマス</summary>
+    bool TryFindItem(ItemKind kind, out int slot)
+    {
+        slot = -1;
+        if (!game.TryGet(Local, out PlayerState me))
+            return false;
+
+        for (int i = 0; i < me.Items.Slots.Count; i++)
+        {
+            ItemDefinition item = me.Items.Slots[i];
+            if (item != null && item.Kind == kind)
+            {
+                slot = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    RectTransform SlotRect(int slot) => slot >= 0 && slot < itemSlots.Length ? itemSlots[slot] : itemSlotsArea;
 
     /// <summary>FINAL BATTLE で変わるルールを案内する。読んでいる間は CPU を止める</summary>
     IEnumerator RunFinalBattleRules()

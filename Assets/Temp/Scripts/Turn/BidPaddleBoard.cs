@@ -7,6 +7,7 @@ using UnityEngine;
 /// <summary>
 /// オークションで、入札したプレイヤーに札（入札額を書いた板）を掲げさせる。
 /// 札はプレイヤーごとに初めて使うときに作り、以後は使い回す。自分の札は自分の画面には出さない（他の人の画面に出る）。
+/// ただし自分の入札をカメラで映している間だけは、ShowLocal で自分の札も出す。
 /// 数字をすぐ変えずに掲げておき（RaiseLater）、あとで今の数字から入札額まで 1 ずつ数えて変える（StartCountUp）こともできる。
 /// </summary>
 public class BidPaddleBoard : MonoBehaviour
@@ -39,6 +40,22 @@ public class BidPaddleBoard : MonoBehaviour
     readonly Dictionary<int, int> targetAmounts = new Dictionary<int, int>();
     readonly Dictionary<int, Coroutine> counting = new Dictionary<int, Coroutine>();
     int lastAmount;
+    bool localShown;
+
+    /// <summary>カメラが自分を映している間だけ、自分の札を金額を書いて掲げる</summary>
+    public void ShowLocal(int amount)
+    {
+        localShown = true;
+        Raise(registry.LocalPlayerNumber, amount);
+    }
+
+    /// <summary>自分の札を下ろし、自分の画面に出さない状態へ戻す</summary>
+    public void HideLocal()
+    {
+        localShown = false;
+        if (!showLocalPlayer)
+            Lower(registry.LocalPlayerNumber);
+    }
 
     /// <summary>そのプレイヤーに金額を書いた札を掲げさせる</summary>
     public void Raise(int playerNumber, int amount)
@@ -151,11 +168,11 @@ public class BidPaddleBoard : MonoBehaviour
         counting.Remove(playerNumber);
     }
 
-    /// <summary>この画面に出す札があれば返す（自分の札は showLocalPlayer のときだけ）</summary>
+    /// <summary>この画面に出す札があれば返す（自分の札は showLocalPlayer のときか、自分を映している間だけ）</summary>
     bool TryGetShownPaddle(int playerNumber, out BidPaddle paddle)
     {
         paddle = null;
-        return (playerNumber != registry.LocalPlayerNumber || showLocalPlayer) && TryGetPaddle(playerNumber, out paddle);
+        return (playerNumber != registry.LocalPlayerNumber || showLocalPlayer || localShown) && TryGetPaddle(playerNumber, out paddle);
     }
 
     /// <summary>そのプレイヤーが札を出しているなら、数字を描いた板の中心を返す</summary>

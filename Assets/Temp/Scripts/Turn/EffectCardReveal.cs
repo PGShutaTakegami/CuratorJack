@@ -5,9 +5,11 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// 効果カードを公開する画面の演出（鑑定・全鑑定・真贋証明・スペシャルカードの発動）。
+/// 効果カードを公開する画面の演出（落札時の効果カード・スペシャルカードの発動・虫眼鏡）。
+/// 枠は 1 組しかないため、演出中（IsPlaying）に次を始めるときは終わるまで待つ。
 /// 見出し（誰のカードか）と下地のカード（指定がなければグレーのカード）を並べて表示し、ディゾルブで公開するカードへ同時に変えてから、フェードで消す。
 /// 1 人分のカードは横に並べ、入りきらないときはカードを小さくする。
+/// 公開するカードの名前と能力は、ディゾルブに合わせて各カードの上に出す。
 /// </summary>
 public class EffectCardReveal : MonoBehaviour
 {
@@ -25,6 +27,9 @@ public class EffectCardReveal : MonoBehaviour
 
     [Tooltip("ディゾルブのシェーダー（CJ/UIDissolve）を使うマテリアル。実行時は複製して使う")]
     [SerializeField] private Material dissolveMaterial;
+
+    [Tooltip("公開するカードの上に重ねる、カード名と能力の見本")]
+    [SerializeField] private CardFaceLabels labelsPrefab;
 
     [SerializeField] private Vector2 cardSize = new Vector2(300f, 400f);
 
@@ -45,14 +50,29 @@ public class EffectCardReveal : MonoBehaviour
 
     [SerializeField] private float fadeSeconds = 0.4f;
 
-    readonly List<(RectTransform root, Image back, Image front)> slots = new List<(RectTransform, Image, Image)>();
+    sealed class Slot
+    {
+        public RectTransform Root;
+        public Image Back;
+        public Image Front;
+        public CardFaceLabels Labels;
+    }
+
+    readonly List<Slot> slots = new List<Slot>();
     Material material;
+
+    public bool IsPlaying { get; private set; }
 
     void Awake()
     {
         material = new Material(dissolveMaterial);
         group.alpha = 0f;
         group.blocksRaycasts = false;
+    }
+
+    void OnDisable()
+    {
+        IsPlaying = false;
     }
 
     void OnDestroy()
@@ -67,16 +87,31 @@ public class EffectCardReveal : MonoBehaviour
         if (cards == null || cards.Count == 0)
             yield break;
 
+        IsPlaying = true;
         titleLabel.text = title;
         Layout(cards, from);
-        material.SetFloat(ProgressId, 0f);
+        SetProgress(0f);
 
         yield return Tween(appearSeconds, t => group.alpha = t);
         yield return new WaitForSeconds(baseHoldSeconds);
         SoundEffectPlayer.Play(SoundId.CardDissolve);
-        yield return Tween(dissolveSeconds, t => material.SetFloat(ProgressId, t));
+        yield return Tween(dissolveSeconds, SetProgress);
         yield return new WaitForSeconds(cardHoldSeconds);
         yield return Tween(fadeSeconds, t => group.alpha = 1f - t);
+        IsPlaying = false;
+    }
+
+    /// <summary>公開するカードが無いことを、見出しだけで知らせて消えるまで待つ</summary>
+    public IEnumerator PresentNone(string title)
+    {
+        IsPlaying = true;
+        titleLabel.text = title;
+        Layout(System.Array.Empty<CardData>(), null);
+
+        yield return Tween(appearSeconds, t => group.alpha = t);
+        yield return new WaitForSeconds(cardHoldSeconds);
+        yield return Tween(fadeSeconds, t => group.alpha = 1f - t);
+        IsPlaying = false;
     }
 
     /// <summary>カードの数だけ下地と公開するカードを中央揃えで並べる（使わない枠は隠す）</summary>
@@ -91,20 +126,29 @@ public class EffectCardReveal : MonoBehaviour
         float step = size.x + spacing;
         for (int i = 0; i < slots.Count; i++)
         {
+            Slot slot = slots[i];
             bool used = i < count;
-            slots[i].root.gameObject.SetActive(used);
+            slot.Root.gameObject.SetActive(used);
             if (!used)
                 continue;
 
-            slots[i].root.sizeDelta = size;
-            slots[i].root.anchoredPosition = new Vector2((i - (count - 1) * 0.5f) * step, 0f);
-            slots[i].front.sprite = cards[i] != null ? cards[i].Parameter.CardSprite : null;
+            slot.Root.sizeDelta = size;
+            slot.Root.anchoredPosition = new Vector2((i - (count - 1) * 0.5f) * step, 0f);
+            slot.Front.sprite = cards[i] != null ? cards[i].Parameter.CardSprite : null;
+            slot.Labels.Show(cards[i]);
             CardData back = from != null && i < from.Count ? from[i] : null;
-            slots[i].back.sprite = back != null ? back.Parameter.CardSprite : baseSprite;
+            slot.Back.sprite = back != null ? back.Parameter.CardSprite : baseSprite;
         }
     }
 
-    (RectTransform, Image, Image) CreateSlot(int index)
+    void SetProgress(float progress)
+    {
+        material.SetFloat(ProgressId, progress);
+        foreach (Slot slot in slots)
+            slot.Labels.Alpha = progress;
+    }
+
+    Slot CreateSlot(int index)
     {
         var root = new GameObject($"Card{index}", typeof(RectTransform), typeof(Image));
         root.layer = gameObject.layer;
@@ -125,7 +169,14 @@ public class EffectCardReveal : MonoBehaviour
         var frontImage = front.GetComponent<Image>();
         frontImage.material = material;
         frontImage.raycastTarget = false;
-        return (rootRect, baseImage, frontImage);
+
+        CardFaceLabels labels = Instantiate(labelsPrefab, rootRect, false);
+        var labelsRect = (RectTransform)labels.transform;
+        labelsRect.anchorMin = Vector2.zero;
+        labelsRect.anchorMax = Vector2.one;
+        labelsRect.offsetMin = Vector2.zero;
+        labelsRect.offsetMax = Vector2.zero;
+        return new Slot { Root = rootRect, Back = baseImage, Front = frontImage, Labels = labels };
     }
 
     static IEnumerator Tween(float seconds, System.Action<float> apply)

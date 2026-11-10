@@ -6,9 +6,10 @@ using UnityEngine;
 /// <summary>
 /// 出品者のターンを順に進める。
 /// 1 ターン：ターンの告知（FIRST TURN / NEXT TURN）→ 出品者の演出 → 出品（グッズがなければ見送り権を消費）
-/// →（スペシャルカード付きならスペシャルカードを明かす）→（真贋証明が付いていれば付いている効果カードを公開）
+/// →（スペシャルカード付きならスペシャルカードを明かす）
 /// → 出品者以外の全員でオークション（入札か降りるか）
 /// → 落札者がいれば入札額で購入し（最後の 1v1 では代金は出品者に入らない）、効果カードとスペシャルカードは落札者に、全員が降りたら出品者に発動する
+/// （購入した落札者は、アイテムのマスに空きがあればアイテムを 1 つランダムでもらう）
 /// （最後の 1v1 で 2 人とも見送り権がなければ、落札額のうち最低出品額を超えた分だけ出品者のコインを削る）
 /// （落札額を払えなければ購入は成立せず見送り権を失い（足りなければ脱落）、全員が降りたときと同じく出品者に発動する）
 /// （付いていた効果カード・スペシャルカード・ランダムで選ばれたスペシャルカードは、ディゾルブで公開してから発動する）。
@@ -17,6 +18,7 @@ using UnityEngine;
 /// 脱落で生き残りが 2 人（最後の 1v1）になったら、DROP OUT の後に FINAL BATTLE を 1 回だけ告知する（最初から 2 人のゲームでは出さない）。
 /// 出品者が出品を決める前にリタイアしたら、そのターンは打ち切る（脱落した出品者のターンは行わない）。
 /// 2度目を受けた人がいれば、そのターンの後に追加の出品ターンを行う（1 周の数には入れない。出品できるグッズがなければ飛ばす）。
+/// マヒ（リモコン）している人の出品ターン（追加ターンを含む）は、マヒを 1 回使って飛ばす（1 周の数には入れる）。
 /// 生きている全員が 1 回ずつ出品者を終えたらドローし、今の向き（最初は時計回り、逆転で反対）で次の生きているプレイヤーへ。
 /// 最後の 1 人が勝者で、名前入りの WIN を告知してから結果を表示する。
 /// 操作役（IPlayerAgent）を Activate で渡されるまでは、最初の出品者の演出だけを行う。
@@ -80,11 +82,14 @@ public class TurnFlowController : MonoBehaviour
     [Tooltip("明かしたスペシャルカードを、出品が終わるまで一覧で光らせる")]
     [SerializeField] private SpecialCardCatalog specialCatalog;
 
-    [Tooltip("鑑定・全鑑定・真贋証明・落札時の付いていた効果カード・ランダムで選ばれたスペシャルカードを公開する演出")]
+    [Tooltip("落札時の付いていた効果カード・ランダムで選ばれたスペシャルカードを公開する演出")]
     [SerializeField] private EffectCardReveal effectReveal;
 
     [Tooltip("ランダムで選ばれたスペシャルカードのデータを探す山札")]
     [SerializeField] private SpecialCardDeck specialDeck;
+
+    [Tooltip("落札した人に 1 つランダムで配るアイテムの候補（未設定なら配らない）")]
+    [SerializeField] private ItemCatalog itemCatalog;
 
     [Tooltip("オークションで降りたことを表示する")]
     [SerializeField] private PlayerLabelBoard bidBoard;
@@ -92,7 +97,7 @@ public class TurnFlowController : MonoBehaviour
     [Tooltip("オークションで入札したプレイヤーに、入札額の札を掲げさせる")]
     [SerializeField] private BidPaddleBoard bidPaddles;
 
-    [Tooltip("他のプレイヤーが入札したら、その人を正面からアップで映す")]
+    [Tooltip("入札した人（自分も含む）を正面からアップで映す")]
     [SerializeField] private BidderCloseUpShot bidderShot;
 
     [Tooltip("落札した人の手元にカードを置き、所持コインのリールを巻く演出")]
@@ -109,6 +114,9 @@ public class TurnFlowController : MonoBehaviour
     [Tooltip("落札額を払えなかったときに失う見送り権の枚数（足りなければ脱落）")]
     [SerializeField] private int shortfallPenalty = 2;
 
+    /// <summary>山札（DrawPhaseController が +1〜+3 を使う）と重ならないよう、アイテムの乱数はシードをずらす</summary>
+    const int ItemSeedOffset = 4;
+
     readonly Dictionary<int, IPlayerAgent> agents = new Dictionary<int, IPlayerAgent>();
     bool isActive;
     string turnHeader;
@@ -117,6 +125,8 @@ public class TurnFlowController : MonoBehaviour
     bool hasAnnouncedFinalBattle;
     CardEffectResolver effectsInstance;
     PlayerActionDispatcher actionsInstance;
+    ItemDeck itemDeckInstance;
+    ItemEffectResolver itemEffectsInstance;
     TurnOrder order;
     ListingSession activeListing;
     AuctionModel activeAuction;
@@ -124,7 +134,12 @@ public class TurnFlowController : MonoBehaviour
     /// <summary>他のコンポーネントの Awake から Activate されても使えるよう、最初に使うときに作る</summary>
     CardEffectResolver Effects => effectsInstance ??= new CardEffectResolver(game, NameOf, SpecialOf);
 
-    PlayerActionDispatcher Actions => actionsInstance ??= new PlayerActionDispatcher(game);
+    PlayerActionDispatcher Actions => actionsInstance ??= new PlayerActionDispatcher(game, ItemEffects);
+
+    ItemDeck ItemRewards => itemDeckInstance ??= new ItemDeck(itemCatalog != null ? itemCatalog.Items : null);
+
+    /// <summary>アイテムの効果を反映する窓口（使われたことは Used で分かる）</summary>
+    public ItemEffectResolver ItemEffects => itemEffectsInstance ??= new ItemEffectResolver(game);
 
     /// <summary>操作役が今の手続きへ操作を送る窓口</summary>
     public IPlayerCommands Commands => Actions;
@@ -135,7 +150,7 @@ public class TurnFlowController : MonoBehaviour
     /// <summary>部屋主が今の手続きを待ち時間切れにする窓口</summary>
     public IPhaseTimeouts Timeouts => Actions;
 
-    /// <summary>他のプレイヤーの入札を映す演出の最中か</summary>
+    /// <summary>入札した人を映す演出の最中か</summary>
     public bool IsPresentingBid => bidderShot != null && bidderShot.IsPlaying;
 
     /// <summary>出品者が出品する商品を選び始めた</summary>
@@ -172,6 +187,7 @@ public class TurnFlowController : MonoBehaviour
         {
             drawPhase.Reseed(seed.Value);
             Effects.Reseed(seed.Value);
+            ItemRewards.Reseed(seed.Value + ItemSeedOffset);
         }
         isActive = true;
     }
@@ -254,13 +270,20 @@ public class TurnFlowController : MonoBehaviour
         while (seller != PlayerRegistry.NoPlayer)
         {
             turnHeader = $"ラウンド {round}　{NameOf(seller)} のターン";
-            SetInfo("出品者の番です");
-            TurnStarted?.Invoke(seller);
-            sellerHighlight.Show(seller);
-            yield return PresentSeller(seller, isFirstTurn);
-            isFirstTurn = false;
-            yield return RunTurn(seller);
-            sellerHighlight.Hide();
+            if (game.TryUseStatus(seller, PlayerStatus.Paralysis))
+            {
+                yield return ShowResult(ParalyzedText(seller));
+            }
+            else
+            {
+                SetInfo("出品者の番です");
+                TurnStarted?.Invoke(seller);
+                sellerHighlight.Show(seller);
+                yield return PresentSeller(seller, isFirstTurn);
+                isFirstTurn = false;
+                yield return RunTurn(seller);
+                sellerHighlight.Hide();
+            }
             order.MarkTurnDone(seller);
             yield return AnnounceDropOuts();
             yield return RunExtraTurns(round);
@@ -329,6 +352,13 @@ public class TurnFlowController : MonoBehaviour
         while (game.AlivePlayers.Count() > 1 && TryFindExtraTurn(out int player))
         {
             turnHeader = $"ラウンド {round}　{NameOf(player)} の追加ターン（2度目）";
+            if (game.TryUseStatus(player, PlayerStatus.Paralysis))
+            {
+                yield return ShowResult(ParalyzedText(player));
+                game.TryUseStatus(player, PlayerStatus.ExtraTurn);
+                continue;
+            }
+
             if (!game.TryGet(player, out PlayerState state) || !state.HasGoods)
             {
                 yield return ShowResult($"{NameOf(player)} は出品できるグッズがないため、追加ターンはありません");
@@ -346,6 +376,8 @@ public class TurnFlowController : MonoBehaviour
             yield return AnnounceDropOuts();
         }
     }
+
+    string ParalyzedText(int player) => $"{NameOf(player)} はマヒしていて出品できません（ターンを飛ばします）";
 
     bool TryFindExtraTurn(out int player)
     {
@@ -392,7 +424,6 @@ public class TurnFlowController : MonoBehaviour
         if (listing.Goods.Special != null)
             yield return specialReveal.Present(listing.Goods.Special);
         specialCatalog.SetAuctioned(listing.Goods.Special);
-        yield return PresentEffects(Effects.ResolveListing(listing));
         if (hidesHand)
             handFader.FadeIn(null);
 
@@ -420,6 +451,7 @@ public class TurnFlowController : MonoBehaviour
         else
         {
             yield return Settle(listing, winner, auction.Price);
+            GiveItem(winner);
             yield return DrainSeller(listing.Seller, auction.DrainAmount);
         }
         if (!IsDecided)
@@ -484,14 +516,10 @@ public class TurnFlowController : MonoBehaviour
         {
             leader = player;
             if (player == registry.LocalPlayerNumber)
-            {
                 bidPaddles.Raise(player, amount);
-            }
             else
-            {
                 bidPaddles.RaiseLater(player, amount);
-                bidderShot.Show(player);
-            }
+            bidderShot.Show(player, amount);
             ShowAuction();
         };
         auction.Folded += player =>
@@ -548,6 +576,15 @@ public class TurnFlowController : MonoBehaviour
         yield return winnerPresenter.Present(buyer, sprite, coinsBefore, coinsAfter);
     }
 
+    /// <summary>落札した人にアイテムを 1 つランダムで配る（マスが満杯ならもらえない）</summary>
+    void GiveItem(int buyer)
+    {
+        if (itemCatalog == null || !game.TryGet(buyer, out PlayerState state) || state.Items.IsFull)
+            return;
+
+        game.TryGiveItem(buyer, ItemRewards.Draw());
+    }
+
     /// <summary>最後の 1v1 で 2 人とも見送り権がないとき：落札額のうち最低出品額を超えた分だけ、出品者のコインを削る（持っている分まで。削った分は消える）</summary>
     IEnumerator DrainSeller(int seller, int amount)
     {
@@ -588,6 +625,8 @@ public class TurnFlowController : MonoBehaviour
             order?.Reverse();
         if (report.Messages.Count > 0)
             SetInfo(string.Join("\n", report.Messages));
+        if (report.Reveals.Count > 0)
+            yield return new WaitWhile(() => effectReveal.IsPlaying);
         foreach (EffectReport.Reveal reveal in report.Reveals)
             yield return effectReveal.Present(reveal.Title, reveal.Cards, reveal.From);
         foreach (EffectReport.CoinChange change in report.CoinChanges)

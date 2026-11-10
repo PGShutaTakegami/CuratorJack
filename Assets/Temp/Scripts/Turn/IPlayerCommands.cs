@@ -16,6 +16,9 @@ public interface IPlayerCommands
 
     void Fold(int player);
 
+    /// <summary>slot のアイテムを使う（オークション中だけ。参加していなくても使える）。target は相手を選ぶアイテムの相手（選ばないときは PlayerRegistry.NoPlayer）</summary>
+    void UseItem(int player, int slot, int target);
+
     /// <summary>リタイアして脱落する（手続きの途中でなくても送れる）</summary>
     void Retire(int player);
 }

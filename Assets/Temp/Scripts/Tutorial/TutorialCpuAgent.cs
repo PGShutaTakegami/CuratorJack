@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// チュートリアルの CPU。出品では手札の最初のグッズをそのまま出品し、オークションでは降りる。
+/// チュートリアルの CPU。出品では手札の最初のグッズをそのまま出品し（AttachInNextListing を受けたときだけ決めた効果カードを付ける）、オークションでは降りる。
 /// BidInNextAuction を受けたときだけ、次のオークションで落札を狙い、上回られるたびに決めた回数まで raiseStep ずつ上げて入札し返す（今の最高額を上回れないときは降りる）。
 /// 出品・入札・降りるのは、案内を読み終えて進めてよくなってから（mayList / mayAct が true になってから）。
 /// </summary>
@@ -20,6 +20,7 @@ public class TutorialCpuAgent : MonoBehaviour, IPlayerAgent
     Func<bool> mayList;
     Func<bool> mayAct;
     int bidsNextAuction;
+    CardData attachNextListing;
     Coroutine running;
 
     public int PlayerNumber { get; private set; }
@@ -35,6 +36,9 @@ public class TutorialCpuAgent : MonoBehaviour, IPlayerAgent
 
     /// <summary>次に参加するオークションでは降りずに入札する。上回られたら times 回まで入札し返す</summary>
     public void BidInNextAuction(int times = 1) => bidsNextAuction = Math.Max(1, times);
+
+    /// <summary>次の出品では、手札に card があればその効果カードを付けて出品する</summary>
+    public void AttachInNextListing(CardData card) => attachNextListing = card;
 
     public void BeginListing(ListingSession session) => Run(Listing(session));
 
@@ -72,6 +76,18 @@ public class TutorialCpuAgent : MonoBehaviour, IPlayerAgent
             HandCard goods = me.Hand.FirstOrDefault(card => card.IsGoods);
             if (goods != null)
                 commands.SelectGoods(PlayerNumber, goods);
+        }
+
+        CardData attach = attachNextListing;
+        attachNextListing = null;
+        if (attach != null && game.TryGet(PlayerNumber, out PlayerState seller))
+        {
+            HandCard buff = seller.Hand.FirstOrDefault(card => !card.IsGoods && card.Data == attach);
+            if (buff != null)
+            {
+                yield return Think();
+                commands.AttachBuff(PlayerNumber, buff);
+            }
         }
 
         yield return Think();

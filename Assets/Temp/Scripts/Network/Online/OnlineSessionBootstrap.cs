@@ -60,6 +60,12 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     [Tooltip("ゲーム開始前にホストとの接続が切れたとき、ホストの引き継ぎで繋ぎ直されるのを待つ秒数")]
     [SerializeField] private float hostMigrationWaitSeconds = 30f;
 
+    [Tooltip("ゲーム開始前、繋がっているのに自分のプレイヤーが出てこないとき、ロビーへ戻るまで待つ秒数")]
+    [SerializeField] private float playerSpawnWaitSeconds = 15f;
+
+    [Tooltip("ロビーへ戻る前に部屋から抜ける応答を待つ秒数。返ってこなくてもロビーへ戻る")]
+    [SerializeField] private float leaveTimeoutSeconds = 5f;
+
     [Tooltip("ホストが、部屋のメンバーと確認できない接続を切るまで待つ秒数")]
     [SerializeField] private float memberVerifySeconds = 60f;
 
@@ -69,6 +75,7 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     readonly KickedPlayerList kickedPlayers = new KickedPlayerList();
     OnlineMemberGuard memberGuard;
     OnlineConnectionClaim connectionClaim;
+    LocalPlayerSpawnWatch spawnWatch;
     ISession session;
     bool isWatchingHost;
     bool isLeaving;
@@ -110,6 +117,7 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         sessionService.Bind(networkManager, room.capacity);
         memberGuard = new OnlineMemberGuard(networkManager, () => session, kickedPlayers, memberVerifySeconds);
         connectionClaim = new OnlineConnectionClaim(networkManager, () => session, claimRetrySeconds);
+        spawnWatch = new LocalPlayerSpawnWatch(playerSpawnWaitSeconds);
         sessionService.SetGuard(memberGuard);
         readyRoster.SetTotal(room.capacity);
         publishedCapacity = room.capacity;
@@ -335,7 +343,6 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         if (this == null || session == null || !isWatchingHost)
             return;
 
-        migrationDeadline = -1f;
         if (!session.IsHost)
         {
             ownerTimer = null;
@@ -434,9 +441,16 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             if (!lastOwnerPending && !networkManager.IsServer)
                 hasRequestedOwnership = false;
             TryRequestOwnership();
+            if (IsLocalPlayerOverdue())
+            {
+                isWatchingHost = false;
+                EnvironmentNetwork.LogError("自分のプレイヤーが用意されなかったため、ロビーへ戻ります");
+                _ = LeaveAndReturnToLobbyAsync();
+            }
             return;
         }
 
+        spawnWatch.Reset();
         if (TryGetLeaveReason(out string reason))
         {
             isWatchingHost = false;
@@ -464,6 +478,19 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             reason = "ホストを引き継げなかったため、ロビーへ戻ります";
 
         return reason != null;
+    }
+
+    /// <summary>ゲーム開始前に、繋がっているのに自分のプレイヤー（カメラ）が出てこないまま待ちすぎたか。</summary>
+    bool IsLocalPlayerOverdue()
+    {
+        if (startGate.HasStarted)
+        {
+            spawnWatch.Reset();
+            return false;
+        }
+
+        bool hasLocalPlayer = networkManager.SpawnManager != null && networkManager.SpawnManager.GetLocalPlayerObject() != null;
+        return spawnWatch.IsOverdue(hasLocalPlayer, Time.realtimeSinceStartup);
     }
 
     /// <summary>元の部屋主が戻らないまま期限を過ぎたら、作り直した画面がそのまま部屋主になる。</summary>
@@ -547,7 +574,10 @@ public class OnlineSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             return;
 
         isLeaving = true;
-        await LeaveSessionAsync();
+        Task leaving = LeaveSessionAsync();
+        await Task.WhenAny(leaving, Task.Delay(TimeSpan.FromSeconds(leaveTimeoutSeconds)));
+        if (!leaving.IsCompleted)
+            Debug.LogWarning("[Session] 部屋から抜ける応答が返らないため、待たずにロビーへ戻ります");
         if (this != null)
             ReturnToLobby();
     }

@@ -1,0 +1,21 @@
+{
+  "_comment": "アイテム：リモコンのアイコン（背景透過）。先端から青白い電波が出る",
+  "kind": "image",
+  "name": "item/remote",
+  "size": [256, 256],
+  "background": "transparent",
+  "palette": { "body": "#3A3F4A", "body_hi": "#5C6372", "dark": "#14161B", "red": "#E0473C", "button": "#9AA3B2", "wave": "#9FE4FF" },
+  "layers": [
+    { "shape": "rect", "rect": [84, 60, 88, 172], "radius": 26,
+      "fill": { "linear": { "from": [84, 0], "to": [172, 0] }, "stops": [[0, "$body_hi"], [1, "$body"]] },
+      "stroke": { "color": "$dark", "width": 5, "align": "inside" },
+      "shadow": { "color": "#00000080", "offset": [4, 6], "blur": 6 } },
+    { "shape": "circle", "center": [128, 92], "radius": 14, "fill": "$red", "stroke": { "color": "$dark", "width": 3, "align": "inside" } },
+    { "shape": "circle", "center": [128, 140], "radius": 22, "fill": "$button", "stroke": { "color": "$dark", "width": 3, "align": "inside" } },
+    { "shape": "circle", "center": [128, 140], "radius": 8, "fill": "$body" },
+    { "shape": "rect", "rect": [104, 178, 18, 12], "radius": 4, "fill": "$button", "repeat": { "count": 2, "offset": [30, 0] } },
+    { "shape": "rect", "rect": [104, 200, 18, 12], "radius": 4, "fill": "$button", "repeat": { "count": 2, "offset": [30, 0] } },
+    { "shape": "arc", "center": [128, 56], "radius": 22, "width": 7, "start": 225, "end": 315, "fill": "$wave", "glow": { "color": "#9FE4FFA0", "blur": 5 } },
+    { "shape": "arc", "center": [128, 56], "radius": 40, "width": 7, "start": 230, "end": 310, "fill": "$wave", "glow": { "color": "#9FE4FFA0", "blur": 5 } }
+  ]
+}

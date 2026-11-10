@@ -8,7 +8,9 @@ using UnityEngine.InputSystem;
 /// 出品の確定ボタンは出品できる間、手札を広げているときだけ画面の右端に表示する。
 /// オークションでは金額を 0 から W/S・↑/↓・十字キー上下で指定し（長押しで連続して変わる）、入札できる額のときだけ入札ボタンで入札する。
 /// コントローラーは A で確定・入札、B で降りる、Y で増額の切り替え（画面のボタンが押せるときだけ）。
-/// 確定・入札・降りるは、連打しても PressThrottle の間隔より短い間隔では送らない。
+/// アイテムはオークションの間だけ（参加していなくても、生きていれば）、マスのクリックかキーボードの 1/2/3 で使う。
+/// 相手が要るアイテムは、選ぶ画面で自分以外の生きている人を選んでから使う（右クリック・同じマスをもう一度・使えなくなったらやめる）。
+/// 確定・入札・降りる・アイテムは、連打しても PressThrottle の間隔より短い間隔では送らない。
 /// ポーズ画面を開いている間はキー・コントローラーの操作を受け付けない（メニューの選択と重ならないように）。脱落した後は出品を受け持たない。
 /// </summary>
 public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
@@ -25,8 +27,16 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
     [Tooltip("開いている間は金額のキー操作を受け付けない")]
     [SerializeField] private PauseMenu pause;
 
+    [Tooltip("自分のアイテムのマス")]
+    [SerializeField] private ItemSlotsView items;
+
+    [Tooltip("相手が要るアイテム（リモコン）の相手を選ぶ画面")]
+    [SerializeField] private ItemTargetPicker targetPicker;
+
     ListingSession listing;
     AuctionModel auction;
+    bool isItemPhase;
+    int pickingSlot = -1;
     IPlayerCommands commands;
     int amount;
     readonly KeyRepeat raiseKey = new KeyRepeat();
@@ -34,6 +44,7 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
     readonly PressThrottle confirmThrottle = new PressThrottle();
     readonly PressThrottle bidThrottle = new PressThrottle();
     readonly PressThrottle foldThrottle = new PressThrottle();
+    readonly PressThrottle itemThrottle = new PressThrottle();
 
     public int PlayerNumber { get; private set; } = PlayerRegistry.NoPlayer;
 
@@ -51,12 +62,16 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         ui.FoldClicked += HandleFold;
         ui.RaiseClicked += HandleRaise;
         hand.CardClicked += HandleCardClicked;
+        items.SlotClicked += HandleItemClicked;
+        targetPicker.Picked += HandleTargetPicked;
         game.PlayerDied += HandlePlayerDied;
     }
 
     void OnDestroy()
     {
         hand.CardClicked -= HandleCardClicked;
+        items.SlotClicked -= HandleItemClicked;
+        targetPicker.Picked -= HandleTargetPicked;
         game.PlayerDied -= HandlePlayerDied;
     }
 
@@ -81,6 +96,7 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
     public void BeginAuction(AuctionModel model)
     {
         EndPhase();
+        isItemPhase = game.IsAlive(PlayerNumber);
         if (!model.Participants.Contains(PlayerNumber))
         {
             ui.SetPrompt("オークションを観戦中");
@@ -100,6 +116,9 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
             listing.Changed -= RefreshListing;
         listing = null;
         auction = null;
+        isItemPhase = false;
+        items.SetUsable(false);
+        CancelTargetPick();
         ui.ShowConfirm(false, false);
         ui.SetBidInteractable(false);
         ui.ShowRaise(false, false);
@@ -119,6 +138,15 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
             if (!pause.BlocksGameInput)
                 HandleListingButtons();
         }
+
+        bool itemsUsable = isItemPhase && game.IsAlive(PlayerNumber) && !pause.BlocksGameInput;
+        items.SetUsable(itemsUsable);
+        if (!itemsUsable)
+            CancelTargetPick();
+        else if (targetPicker.IsPicking && Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+            CancelTargetPick();
+        else
+            HandleItemKeys();
 
         if (auction == null)
             return;
@@ -156,6 +184,89 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
             ui.PressBid();
         else if (ControllerInput.BackPressed)
             ui.PressFold();
+    }
+
+    /// <summary>キーボードの 1/2/3 で、左から 1〜3 番目のマスのアイテムを使う</summary>
+    void HandleItemKeys()
+    {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard == null)
+            return;
+
+        if (keyboard.digit1Key.wasPressedThisFrame)
+            HandleItemClicked(0);
+        else if (keyboard.digit2Key.wasPressedThisFrame)
+            HandleItemClicked(1);
+        else if (keyboard.digit3Key.wasPressedThisFrame)
+            HandleItemClicked(2);
+    }
+
+    void HandleItemClicked(int slot)
+    {
+        if (!isItemPhase || !game.IsAlive(PlayerNumber) || pause.BlocksGameInput)
+            return;
+
+        if (targetPicker.IsPicking)
+        {
+            bool sameSlot = slot == pickingSlot;
+            CancelTargetPick();
+            if (sameSlot)
+                return;
+        }
+
+        ItemDefinition item = items.ItemAt(slot);
+        if (item == null)
+        {
+            SoundEffectPlayer.Play(SoundId.Denied);
+            return;
+        }
+
+        if (item.NeedsTarget)
+            BeginTargetPick(slot);
+        else
+            UseItem(slot, PlayerRegistry.NoPlayer);
+    }
+
+    /// <summary>相手が要るアイテムは、使う前に自分以外の生きている人を選ばせる</summary>
+    void BeginTargetPick(int slot)
+    {
+        int[] candidates = game.Players
+            .Where(player => player.IsAlive && player.PlayerNumber != PlayerNumber)
+            .Select(player => player.PlayerNumber)
+            .ToArray();
+        if (candidates.Length == 0)
+        {
+            SoundEffectPlayer.Play(SoundId.Denied);
+            return;
+        }
+
+        SoundEffectPlayer.Play(SoundId.CardTap);
+        pickingSlot = slot;
+        targetPicker.Begin(candidates, "マヒさせる相手を選んでください（右クリックでやめる）");
+    }
+
+    void HandleTargetPicked(int target)
+    {
+        int slot = pickingSlot;
+        CancelTargetPick();
+        if (isItemPhase && game.IsAlive(PlayerNumber) && !pause.BlocksGameInput)
+            UseItem(slot, target);
+    }
+
+    void CancelTargetPick()
+    {
+        pickingSlot = -1;
+        if (targetPicker.IsPicking)
+            targetPicker.End();
+    }
+
+    void UseItem(int slot, int target)
+    {
+        if (itemThrottle.TryAccept())
+        {
+            SoundEffectPlayer.Play(SoundId.CardTap);
+            commands.UseItem(PlayerNumber, slot, target);
+        }
     }
 
     /// <summary>W/S・↑/↓・十字キー上下で金額を何段変えるか（長押しで連続して変わる）</summary>
