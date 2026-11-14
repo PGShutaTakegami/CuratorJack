@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// ポーズ画面。Esc か画面のポーズボタンで開閉する。
+/// ポーズ画面。Esc・コントローラーの Start か画面のポーズボタンで開閉する（開いている間はコントローラーの B も Esc と同じ）。
 /// ボタンは上から再開・リタイア・設定・ルーム設定・Quit。リタイアはゲーム中（開始後、決着まで）だけ押せる。
 /// Quit はゲーム開始前（準備中）と、自分が脱落して抜けてよいとき（MatchLeaveRule）に押せる。押せないときは灰色にする。
 /// ルーム設定は部屋主（SinglePlay は自分、マルチプレイは今のホスト）にだけ表示する。開いている間はボタン群を隠し、Esc でボタン群へ戻る。
@@ -56,6 +56,11 @@ public class PauseMenu : MonoBehaviour
 
     public bool IsOpen { get; private set; }
 
+    int closedFrame = -1;
+
+    /// <summary>開いている間と、閉じたフレーム（閉じるのに使ったボタンをゲームの操作として重ねて受け取らないように）</summary>
+    public bool BlocksGameInput => IsOpen || closedFrame == Time.frameCount;
+
     public event Action Opened;
 
     public event Action Closed;
@@ -64,12 +69,18 @@ public class PauseMenu : MonoBehaviour
 
     public event Action QuitClicked;
 
+    readonly PressThrottle quitThrottle = new PressThrottle();
+
     void Awake()
     {
         openButton.onClick.AddListener(Toggle);
         resumeButton.onClick.AddListener(Close);
         retireButton.Button.onClick.AddListener(OpenRetireConfirm);
-        quitButton.Button.onClick.AddListener(() => QuitClicked?.Invoke());
+        quitButton.Button.onClick.AddListener(() =>
+        {
+            if (quitThrottle.TryAccept())
+                QuitClicked?.Invoke();
+        });
         settingsButton.onClick.AddListener(OpenSettings);
         settings.BackRequested += CloseSettings;
         settings.gameObject.SetActive(false);
@@ -101,8 +112,7 @@ public class PauseMenu : MonoBehaviour
 
     void Update()
     {
-        Keyboard keyboard = Keyboard.current;
-        if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame && !SceneFader.IsFading)
+        if (IsBackPressed() && !SceneFader.IsFading)
         {
             if (IsSettingsOpen)
             {
@@ -122,6 +132,16 @@ public class PauseMenu : MonoBehaviour
             RefreshRoomSettings();
             RefreshQuit();
         }
+    }
+
+    /// <summary>Esc・コントローラーの Start で開閉し、開いている間はコントローラーの B でも戻る</summary>
+    bool IsBackPressed()
+    {
+        Keyboard keyboard = Keyboard.current;
+        if (keyboard != null && keyboard.escapeKey.wasPressedThisFrame)
+            return true;
+
+        return ControllerInput.PausePressed || (IsOpen && ControllerInput.BackPressed);
     }
 
     /// <summary>開いている間に脱落しても押せるよう、変わったときだけ合わせる</summary>
@@ -209,6 +229,7 @@ public class PauseMenu : MonoBehaviour
             return;
 
         IsOpen = false;
+        closedFrame = Time.frameCount;
         CloseSettings();
         roomSettings.Close();
         retireConfirm.Close();

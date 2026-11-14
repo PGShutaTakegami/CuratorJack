@@ -9,7 +9,8 @@ public static class LocalRoomFactory
 {
     const string LoopbackAddress = "127.0.0.1";
 
-    public static RoomInfo Create(int capacity, string roomName, string message)
+    /// <summary>password が空ならパスワードなしの部屋にする。</summary>
+    public static RoomInfo Create(int capacity, string roomName, string message, string password)
     {
         return new RoomInfo
         {
@@ -20,14 +21,17 @@ public static class LocalRoomFactory
             playerCount = 0,
             address = LoopbackAddress,
             port = FindFreePort(),
-            createdUtcTicks = DateTime.UtcNow.Ticks
+            createdUtcTicks = DateTime.UtcNow.Ticks,
+            hasPassword = !string.IsNullOrEmpty(password),
+            password = password ?? string.Empty,
+            version = GameVersion.Current
         };
     }
 
     /// <summary>リトライ用に、直前の部屋（previousRoomId）と同じ設定の部屋を新しいポートで作る。</summary>
     public static RoomInfo CreateRematch(RoomInfo settings, string previousRoomId)
     {
-        RoomInfo room = Create(settings.capacity, settings.roomName, settings.message);
+        RoomInfo room = Create(settings.capacity, settings.roomName, settings.message, settings.hasPassword ? settings.password : null);
         room.waitSeconds = settings.waitSeconds;
         room.voiceChatOff = settings.voiceChatOff;
         room.rematchOf = previousRoomId;

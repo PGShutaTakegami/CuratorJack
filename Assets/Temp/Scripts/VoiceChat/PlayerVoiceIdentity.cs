@@ -1,10 +1,12 @@
 using Unity.Collections;
 using Unity.Netcode;
+using UnityEngine;
 
 /// <summary>
 /// プレイヤー 1 人分の VC 上の ID（Unity Authentication の PlayerId。Vivox の参加者の PlayerId と同じ）と、
 /// 今声を送っているか（プッシュトゥトークのキーを押している／常時）を全員へ同期する。
 /// ID は自分のプレイヤーから送ってサーバーだけが書き込み、送っているかは本人だけが書き込む。CPU や VC に入っていない人は空のまま。
+/// 別のプレイヤーがすでに使っている ID はサーバーが受け付けない（他人の声や表示を自分のものに見せかけられないように）。
 /// </summary>
 public class PlayerVoiceIdentity : NetworkBehaviour
 {
@@ -43,6 +45,19 @@ public class PlayerVoiceIdentity : NetworkBehaviour
 
         var value = new FixedString64Bytes();
         value.CopyFromTruncated(id);
+        if (value.IsEmpty || IsUsedByOther(value))
+            return;
+
         voiceId.Value = value;
+    }
+
+    bool IsUsedByOther(FixedString64Bytes value)
+    {
+        foreach (PlayerVoiceIdentity other in FindObjectsByType<PlayerVoiceIdentity>(FindObjectsSortMode.None))
+        {
+            if (other != this && other.IsSpawned && other.voiceId.Value == value)
+                return true;
+        }
+        return false;
     }
 }

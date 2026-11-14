@@ -12,10 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: Picture1
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u8D0B\u4F5C"
     englishName: Forgery
     cardSprite: {fileID: 21300000, guid: e802270a61e5514458f6c81ec9651e9a, type: 3}
     discription: "\u7D75\u753B\u30AB\u30FC\u30C9\u306E\u98A8\u666F\u753B(\u8D0B\u4F5C)\n\u7D75\u753B\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u306F\u4F4E\u54C1\u8CEA\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u304B\u3064\u3066\u4EBA\u9593\u304C\u66F8\u3044\u305F\u7D75\u3092\u30ED\u30DC\u30C3\u30C8\u304C\u8907\u88FD\u3057\u305F\u3082\u306E"
     initialPrice: 15
+    englishDescription: 'A painting card: a landscape (forgery)
+
+      A low rarity
+      among painting cards
+
+      A robot''s copy of a painting once made by a human'
+    chineseSimplifiedName: "\u8D5D\u54C1"
+    chineseSimplifiedDescription: "\u7ED8\u753B\u5361\uFF1A\u98CE\u666F\u753B\uFF08\u8D5D\u54C1\uFF09\n\u7ED8\u753B\u5361\u4E2D\u7A00\u6709\u5EA6\u8F83\u4F4E\n\u7531\u673A\u5668\u4EBA\u590D\u5236\u7684\u3001\u4EBA\u7C7B\u66FE\u7ECF\u753B\u4E0B\u7684\u753B"
+    chineseTraditionalName: "\u8D17\u54C1"
+    chineseTraditionalDescription: "\u7E6A\u756B\u5361\uFF1A\u98A8\u666F\u756B\uFF08\u8D17\u54C1\uFF09\n\u7E6A\u756B\u5361\u4E2D\u7A00\u6709\u5EA6\u8F03\u4F4E\n\u7531\u6A5F\u5668\u4EBA\u8907\u88FD\u7684\u3001\u4EBA\u985E\u66FE\u7D93\u756B\u4E0B\u7684\u756B"
   rarity: 0
+  effect: 0

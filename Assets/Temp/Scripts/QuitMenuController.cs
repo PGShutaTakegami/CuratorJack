@@ -50,7 +50,7 @@ public class QuitMenuController : MonoBehaviour
 
         if (monitorManager == null)
         {
-            Debug.LogError($"{nameof(QuitMenuController)}: MonitorManager が未設定です。", this);
+            Debug.LogError(GameText.Format("log.field_missing", nameof(QuitMenuController), "MonitorManager"), this);
             return;
         }
 

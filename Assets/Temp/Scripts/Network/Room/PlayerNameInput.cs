@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// MultiPlay 画面の名前入力欄。入力した名前は部屋の作成・入室のどちらでもゲーム内に表示される。
+/// タイトルのプロフィールの名前入力欄。入力した名前は部屋の作成・入室のどちらでもゲーム内に表示される。
 /// 名前はモニターの告知にも出すため、告知のフォントにある文字だけを入力できる（保存されていた名前からも、ない文字は取り除く）。
 /// </summary>
 public class PlayerNameInput : MonoBehaviour
@@ -20,23 +20,31 @@ public class PlayerNameInput : MonoBehaviour
         inputField.onValidateInput = ValidateCharacter;
 
         string saved = PlayerNameContext.Current;
-        string allowed = new string(saved.Where(IsAllowed).ToArray());
+        string allowed = new string(saved.Where(character => IsAllowed(character) && !RichTextGuard.IsTagCharacter(character)).ToArray());
         if (allowed != saved)
+        {
             PlayerNameContext.Set(allowed);
+            PlayerNameContext.Flush();
+        }
         inputField.text = PlayerNameContext.Current;
     }
 
     void OnEnable()
     {
         inputField.onValueChanged.AddListener(PlayerNameContext.Set);
+        inputField.onEndEdit.AddListener(FlushName);
     }
 
     void OnDisable()
     {
         inputField.onValueChanged.RemoveListener(PlayerNameContext.Set);
+        inputField.onEndEdit.RemoveListener(FlushName);
+        PlayerNameContext.Flush();
     }
 
-    char ValidateCharacter(string text, int index, char addedChar) => IsAllowed(addedChar) ? addedChar : '\0';
+    void FlushName(string _) => PlayerNameContext.Flush();
+
+    char ValidateCharacter(string text, int index, char addedChar) => IsAllowed(addedChar) && !RichTextGuard.IsTagCharacter(addedChar) ? addedChar : '\0';
 
     /// <summary>フォントの元のファイルにある文字か（ダイナミックフォントのため、まだアトラスにない文字は元のファイルから探す）</summary>
     bool IsAllowed(char character) => allowedFont.HasCharacter(character, false, true);

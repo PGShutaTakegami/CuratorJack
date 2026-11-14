@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ターン中に使う画面の UI（状態表示・案内・進行状況・出品の確定ボタン・オークションの金額と入札/降りる・勝利表示とリトライ/タイトル）。
+/// ターン中に使う画面の UI（状態表示・案内・進行状況・出品の確定ボタンとやり直しボタン・オークションの金額と入札/降りる・勝利表示とリトライ/タイトル）。
 /// 表示と押された通知だけを受け持ち、判断は操作役（LocalPlayerAgent）が行う。
 /// </summary>
 public class TurnUI : MonoBehaviour
@@ -19,13 +19,16 @@ public class TurnUI : MonoBehaviour
     [Tooltip("出品できる間だけ表示する丸いボタン。押せないときは灰色、押せるときは橙色にする")]
     [SerializeField] private Button confirmButton;
 
-    [Tooltip("確定ボタンのフェードに使う。手札を広げている間だけ表示する")]
+    [Tooltip("確定ボタンのフェードに使う。手札を広げている間か、確定を押せる間だけ表示する")]
     [SerializeField] private CanvasGroup confirmGroup;
 
     [SerializeField] private float confirmFadeSeconds = 0.25f;
 
-    [Tooltip("確定ボタンの画面右端からの余白と、手札を広げたときの列の上端からの高さ")]
-    [SerializeField] private Vector2 confirmOffset = new Vector2(-20f, 20f);
+    [Tooltip("確定ボタンの右下の、画面右下からの位置（手札の列の数で動かさない）")]
+    [SerializeField] private Vector2 confirmPosition = new Vector2(-20f, 440f);
+
+    [Tooltip("出品の選択を最初からやり直すボタン（確定ボタンの子。確定ボタンと一緒に出し入れする）")]
+    [SerializeField] private Button resetButton;
 
     [Tooltip("確定ボタンと増額の選択の間隔")]
     [SerializeField] private float raiseGap = 20f;
@@ -69,6 +72,8 @@ public class TurnUI : MonoBehaviour
 
     public event Action ConfirmClicked;
 
+    public event Action ResetClicked;
+
     public event Action RetryClicked;
 
     public event Action TitleClicked;
@@ -83,13 +88,15 @@ public class TurnUI : MonoBehaviour
     void Awake()
     {
         confirmButton.onClick.AddListener(() => ConfirmClicked?.Invoke());
+        resetButton.onClick.AddListener(() => ResetClicked?.Invoke());
         bidButton.onClick.AddListener(() => BidClicked?.Invoke());
         foldButton.onClick.AddListener(() => FoldClicked?.Invoke());
         retryButton.onClick.AddListener(() => RetryClicked?.Invoke());
         titleButton.onClick.AddListener(() => TitleClicked?.Invoke());
         raiseReel.Clicked += () => RaiseClicked?.Invoke(!isRaised);
 
-        ShowConfirm(false, false);
+        PlaceConfirm();
+        ShowConfirm(false, false, false);
         SetBidInteractable(false);
         ShowRaise(false, false);
         ShowAuction(false);
@@ -132,8 +139,11 @@ public class TurnUI : MonoBehaviour
         auctionGroup.blocksRaycasts = !hidden;
     }
 
-    /// <summary>出品できる間だけ確定ボタンを有効にする。表示されるのは RevealConfirm で手札を広げている間だけ</summary>
-    public void ShowConfirm(bool visible, bool interactable)
+    /// <summary>
+    /// 出品できる間だけ確定ボタンを有効にし、やり直せる間だけやり直しボタンを出す。
+    /// 表示されるのは RevealConfirm で表示を許している間だけ
+    /// </summary>
+    public void ShowConfirm(bool visible, bool interactable, bool resettable)
     {
         if (!visible)
         {
@@ -143,32 +153,48 @@ public class TurnUI : MonoBehaviour
         }
         confirmButton.gameObject.SetActive(visible);
         SetButtonState(confirmButton, interactable);
+        resetButton.gameObject.SetActive(resettable);
     }
 
-    /// <summary>手札を広げたらフェードで表示し、閉じたらフェードで消す（消えている間は押せない）</summary>
+    /// <summary>表示を許したらフェードで表示し、許さなくなったらフェードで消す（消えている間は押せない）</summary>
     public void RevealConfirm(bool revealed)
     {
         confirmRevealed = revealed;
         confirmGroup.blocksRaycasts = revealed;
     }
 
-    /// <summary>確定ボタンを画面の右端・手札の列の上端（ワールド座標）の高さに置き、増額の選択をその左に並べる</summary>
-    public void PlaceConfirm(Vector3 handTopRight)
+    /// <summary>確定ボタンを画面右下を基準にした決まった位置に置き、増額の選択をその左に並べる</summary>
+    void PlaceConfirm()
     {
         var confirmRect = (RectTransform)confirmButton.transform;
-        confirmRect.anchorMin = new Vector2(1f, confirmRect.anchorMin.y);
-        confirmRect.anchorMax = new Vector2(1f, confirmRect.anchorMax.y);
+        confirmRect.anchorMin = new Vector2(1f, 0f);
+        confirmRect.anchorMax = new Vector2(1f, 0f);
         confirmRect.pivot = new Vector2(1f, 0f);
-        confirmRect.position = handTopRight;
-        confirmRect.anchoredPosition = new Vector2(confirmOffset.x, confirmRect.anchoredPosition.y + confirmOffset.y);
+        confirmRect.anchoredPosition = confirmPosition;
 
         var raiseRect = (RectTransform)raisePanel.transform;
+        raiseRect.anchorMin = new Vector2(1f, 0f);
+        raiseRect.anchorMax = new Vector2(1f, 0f);
         raiseRect.pivot = new Vector2(1f, 0.5f);
-        raiseRect.position = confirmRect.TransformPoint(new Vector2(confirmRect.rect.xMin, confirmRect.rect.center.y));
-        raiseRect.anchoredPosition += new Vector2(-raiseGap, 0f);
+        Vector2 confirmSize = confirmRect.sizeDelta;
+        raiseRect.anchoredPosition = confirmPosition + new Vector2(-confirmSize.x - raiseGap, confirmSize.y * 0.5f);
     }
 
     public void SetBidInteractable(bool interactable) => SetButtonState(bidButton, interactable);
+
+    public void SetFoldInteractable(bool interactable) => SetButtonState(foldButton, interactable);
+
+    /// <summary>コントローラーから確定を押す。確定が表示され、押せるときだけ押す</summary>
+    public bool PressConfirm() => confirmRevealed && UIButtonPresser.TryPress(confirmButton);
+
+    /// <summary>コントローラーから入札を押す。入札 UI が出ていて押せるときだけ押す</summary>
+    public bool PressBid() => auctionPanel.activeSelf && !IsAuctionHidden && UIButtonPresser.TryPress(bidButton);
+
+    /// <summary>コントローラーから降りるを押す。入札 UI が出ていて押せるときだけ押す</summary>
+    public bool PressFold() => auctionPanel.activeSelf && !IsAuctionHidden && UIButtonPresser.TryPress(foldButton);
+
+    /// <summary>コントローラーから増額の切り替えを押す。増額の選択が出ているときだけ押す</summary>
+    public bool PressRaise() => raisePanel.activeSelf && raiseReel.TryPress();
 
     void SetButtonState(Button button, bool interactable)
     {
@@ -188,6 +214,7 @@ public class TurnUI : MonoBehaviour
     }
 
     bool amountShown;
+    int shownAmount;
 
     /// <summary>入札 UI を開く / 閉じる。演出で消している最中なら消えたまま開き、演出の後にフェードで出る</summary>
     public void ShowAuction(bool visible)
@@ -200,8 +227,11 @@ public class TurnUI : MonoBehaviour
     /// <summary>金額は、オークションを開いて最初の表示だけ巻かずに出し、その後は変わるたびに巻く</summary>
     public void SetAuction(int amount, string info)
     {
+        if (amountShown && amount != shownAmount)
+            SoundEffectPlayer.Play(amount > shownAmount ? SoundId.ReelUp : SoundId.ReelDown);
         amountReels.SetValue(amount, amountShown);
         amountShown = true;
+        shownAmount = amount;
         auctionInfoText.text = info;
     }
 

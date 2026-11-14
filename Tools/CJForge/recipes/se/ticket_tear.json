@@ -1,0 +1,13 @@
+{
+  "_comment": "見送り権のチケットを切る（紙を破るビリッ）",
+  "kind": "se",
+  "layers": [
+    { "osc": "pink", "duration": 0.25, "env": { "a": 0.005, "d": 0.22, "s": 0, "r": 0.03 },
+      "filter": { "type": "bandpass", "cutoff": [1200, 4000], "q": 0.8 }, "gain_db": -4 },
+    { "osc": "noise", "duration": 0.02, "env": { "a": 0.001, "d": 0.018, "s": 0, "r": 0.004 },
+      "filter": { "type": "bandpass", "cutoff": 3000, "q": 1.0 }, "gain_db": -6,
+      "repeat": { "count": 10, "interval": 0.022, "gain_step_db": -0.5 } }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.06, "decay": 0.25 }],
+  "master": { "peak_db": -3 }
+}

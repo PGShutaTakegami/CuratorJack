@@ -8,5 +8,9 @@ public interface IRoomCatalog
 {
     Task<IReadOnlyList<RoomInfo>> FetchRoomsAsync();
 
-    RoomInfo CreateRoom(int capacity, string roomName, string message);
+    /// <summary>password が空ならパスワードなしの部屋にする。</summary>
+    RoomInfo CreateRoom(int capacity, string roomName, string message, string password);
+
+    /// <summary>入室前に確かめられる範囲で、パスワード付きの部屋に入力したパスワードが合っているか。</summary>
+    bool AcceptsPassword(RoomInfo room, string password);
 }

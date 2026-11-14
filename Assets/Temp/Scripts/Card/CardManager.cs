@@ -29,13 +29,27 @@ public class CardManager : MonoBehaviour
         [Tooltip("初期価格")]
         [SerializeField] private int initialPrice;
 
+        [Header("翻訳（空の言語は LanguageCodes.Pick の順で代わりの言語を使う）")]
+        [TextArea]
+        [SerializeField] private string englishDescription;
+
+        [SerializeField] private string chineseSimplifiedName;
+
+        [TextArea]
+        [SerializeField] private string chineseSimplifiedDescription;
+
+        [SerializeField] private string chineseTraditionalName;
+
+        [TextArea]
+        [SerializeField] private string chineseTraditionalDescription;
+
         /// <summary>現在の表示言語のカード名</summary>
-        public string CardName =>
-            GameLanguage.Current == LanguageCode.English && !string.IsNullOrEmpty(englishName) ? englishName : cardName;
+        public string CardName => LanguageCodes.Pick(GameLanguage.Current, cardName, englishName, chineseSimplifiedName, chineseTraditionalName);
 
         public Sprite CardSprite => cardSprite;
 
-        public string Discription => discription;
+        /// <summary>現在の表示言語のカードの説明</summary>
+        public string Discription => LanguageCodes.Pick(GameLanguage.Current, discription, englishDescription, chineseSimplifiedDescription, chineseTraditionalDescription);
 
         public int InitialPrice => initialPrice;
     }

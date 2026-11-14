@@ -10,11 +10,17 @@ public interface IPlayerCommands
 
     void SetRaise(int player, bool raise);
 
+    /// <summary>出品で選んだカードをすべて手札に戻し、最初から選び直す（確定する前だけ）</summary>
+    void ResetListing(int player);
+
     void Confirm(int player);
 
     void Bid(int player, int amount);
 
     void Fold(int player);
+
+    /// <summary>slot のアイテムを使う（オークション中だけ。参加していなくても使える）。target は相手を選ぶアイテムの相手（選ばないときは PlayerRegistry.NoPlayer）</summary>
+    void UseItem(int player, int slot, int target);
 
     /// <summary>リタイアして脱落する（手続きの途中でなくても送れる）</summary>
     void Retire(int player);

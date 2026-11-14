@@ -59,7 +59,7 @@ public class LoadingScreen : MonoBehaviour
         AsyncOperation operation = SceneManager.LoadSceneAsync(SceneName, LoadSceneMode.Additive);
         if (operation == null)
         {
-            Debug.LogWarning($"[LoadingScreen] {SceneName} を読み込めませんでした。ビルド設定に追加されているか確認してください");
+            Debug.LogWarning(GameText.Format("log.loading.load_failed", SceneName));
             return;
         }
 
@@ -83,7 +83,7 @@ public class LoadingScreen : MonoBehaviour
         SceneManager.UnloadSceneAsync(scene);
 
         if (view == null)
-            Debug.LogWarning($"[LoadingScreen] {SceneName} に LoadingScreenView がありません");
+            Debug.LogWarning(GameText.Format("log.loading.no_view", SceneName));
         else
             Refresh();
     }

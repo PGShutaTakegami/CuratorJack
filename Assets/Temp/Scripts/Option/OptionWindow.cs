@@ -8,7 +8,7 @@ using UnityEngine.UI;
 /// VC のノイズキャンセリング・話し方・プッシュトゥトークのキー（キーボードだけ変えられ、コントローラーは割り当てアセットの表示だけ）、言語を変える。
 /// デバイスの一覧は画面を開くたびに取り直し、先頭に「既定のデバイス」（保存値は空文字）を置く。
 /// 変えた値はすぐに保存し、機能があるもの（マスター音量・画質・解像度と表示方法・言語）はすぐに反映する。VC の設定は VoiceChatSession が保存のたびに読んで反映する。
-/// ↑↓（W/S・十字キー・左スティック）で行を選び、←→（A/D）で値を変え、決定（Enter/Space/A）で一覧を開く。マウスを乗せた行も選ぶ。
+/// ↑↓（W/S・十字キー）で行を選び、←→（A/D・十字キー）で値を変え、決定（Enter/Space/A）で一覧を開く（左スティックは疑似カーソルに使う）。マウスを乗せた行も選ぶ。
 /// 一覧を開いている間は、上下と決定の入力をその行へ渡す。行が入りきらない分はスクロールし、選んだ行は見える位置まで送る。
 /// 戻るボタンで BackRequested を知らせ、タイトルの画面（monitorManager を設定したとき）ではタイトルへ戻る。
 /// 選択肢などの文言は言語テーブルから表示言語に合わせて作り、言語が変わったら作り直す。
@@ -17,15 +17,12 @@ using UnityEngine.UI;
 public class OptionWindow : MonoBehaviour
 {
     static readonly string[] ResolutionLabels = { "1920×1080 (FHD)", "1280×720 (HD)", "960×540" };
-    static readonly string[] LanguageLabels = { "日本語", "English" };
     static readonly string[] QualityKeys = { "option.quality.high", "option.quality.medium", "option.quality.low" };
     static readonly string[] WindowModeKeys = { "option.window_mode.fullscreen", "option.window_mode.windowed" };
     static readonly string[] OnOffKeys = { "option.on", "option.off" };
     static readonly string[] TalkModeKeys = { "option.talk_mode.push_to_talk", "option.talk_mode.open", "option.talk_mode.off" };
     const string DefaultDeviceKey = "option.default_device";
     const string WaitingKey = "option.waiting";
-
-    const float StickThreshold = 0.5f;
 
     [Tooltip("オプション画面の文言の言語テーブル")]
     [SerializeField] private LanguageTable table;
@@ -77,7 +74,6 @@ public class OptionWindow : MonoBehaviour
     IReadOnlyList<string> outputDevices = new string[0];
     IReadOnlyList<string> microphoneDevices = new string[0];
     int selectedRow;
-    Vector2 previousStick;
     bool isSaving;
 
     void Awake()
@@ -91,7 +87,7 @@ public class OptionWindow : MonoBehaviour
             row.FocusRequested += Select;
 
         resolution.Setup(ResolutionLabels);
-        language.Setup(LanguageLabels);
+        language.Setup(LanguageCodes.NativeNames);
 
         masterVolume.Changed += value => Change(s => s.MasterVolume = value, GameSettingsApplier.ApplyAudio);
         voiceChatVolume.Changed += value => Change(s => s.VoiceChatVolume = value);
@@ -101,7 +97,7 @@ public class OptionWindow : MonoBehaviour
         graphicsQuality.Changed += index => Change(s => s.GraphicsQuality = (GraphicsQuality)index, GameSettingsApplier.ApplyGraphics);
         windowMode.Changed += index => Change(s => s.WindowMode = (WindowMode)index, GameSettingsApplier.ApplyDisplay);
         vibration.Changed += index => Change(s => s.Vibration = index == 0);
-        outputDevice.Changed += index => Change(s => s.OutputDevice = DeviceAt(outputDevices, index));
+        outputDevice.Changed += index => Change(s => s.OutputDevice = DeviceAt(outputDevices, index), GameSettingsApplier.ApplyOutputDevice);
         microphoneDevice.Changed += index => Change(s => s.MicrophoneDevice = DeviceAt(microphoneDevices, index));
         noiseSuppression.Changed += index => Change(s => s.NoiseSuppression = index == 0);
         talkMode.Changed += index => Change(s => s.TalkMode = (VoiceTalkMode)index);
@@ -270,8 +266,6 @@ public class OptionWindow : MonoBehaviour
 
     void Update()
     {
-        Gamepad gamepad = Gamepad.current;
-        Vector2 stick = gamepad != null ? gamepad.leftStick.ReadValue() : Vector2.zero;
         Keyboard keyboard = Keyboard.current;
 
         int vertical = 0;
@@ -286,23 +280,23 @@ public class OptionWindow : MonoBehaviour
             else if (keyboard.rightArrowKey.wasPressedThisFrame || keyboard.dKey.wasPressedThisFrame) horizontal = 1;
         }
 
-        if (gamepad != null)
-        {
-            submit |= gamepad.buttonSouth.wasPressedThisFrame;
-            if (gamepad.dpad.up.wasPressedThisFrame || Crossed(previousStick.y, stick.y)) vertical = -1;
-            else if (gamepad.dpad.down.wasPressedThisFrame || Crossed(-previousStick.y, -stick.y)) vertical = 1;
-            if (gamepad.dpad.left.wasPressedThisFrame || Crossed(-previousStick.x, -stick.x)) horizontal = -1;
-            else if (gamepad.dpad.right.wasPressedThisFrame || Crossed(previousStick.x, stick.x)) horizontal = 1;
-        }
+        // 左スティックは疑似カーソルに使うため、選択は十字キーだけで行う
+        submit |= ControllerInput.SubmitPressed;
+        if (ControllerInput.UpPressed) vertical = -1;
+        else if (ControllerInput.DownPressed) vertical = 1;
+        if (ControllerInput.LeftPressed) horizontal = -1;
+        else if (ControllerInput.RightPressed) horizontal = 1;
 
-        previousStick = stick;
         OptionRow current = rows[selectedRow];
         if (current.IsExpanded)
         {
             if (vertical != 0)
                 current.Navigate(vertical);
             if (submit)
+            {
+                UISoundPlayer.PlayClick();
                 current.Submit();
+            }
             return;
         }
 
@@ -311,9 +305,9 @@ public class OptionWindow : MonoBehaviour
         if (horizontal != 0)
             rows[selectedRow].Step(horizontal);
         if (submit)
+        {
+            UISoundPlayer.PlayClick();
             rows[selectedRow].Submit();
+        }
     }
-
-    /// <summary>スティックの値が閾値を下から上へまたいだ瞬間（逆向きは符号を反転して渡す）</summary>
-    static bool Crossed(float previous, float current) => previous < StickThreshold && current >= StickThreshold;
 }

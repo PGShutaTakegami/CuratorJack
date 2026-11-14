@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// キーごとの日本語／英語文言を持つ言語テーブル。タイトル用とゲーム内用でアセットを分ける。
+/// キーごとの日本語・英語・中国語（簡体字・繁体字）の文言を持つ言語テーブル。画面ごとにアセットを分ける。
+/// 訳が空の言語は LanguageCodes.Pick の順で代わりの言語を使う。
 /// </summary>
 [CreateAssetMenu(fileName = "LanguageTable", menuName = "CJ/LanguageTable")]
 public class LanguageTable : ScriptableObject
@@ -21,6 +22,16 @@ public class LanguageTable : ScriptableObject
         [Tooltip("英語")]
         [TextArea]
         public string english;
+
+        [Tooltip("中国語（簡体字）")]
+        [TextArea]
+        public string chineseSimplified;
+
+        [Tooltip("中国語（繁体字）")]
+        [TextArea]
+        public string chineseTraditional;
+
+        public string TextOf(LanguageCode language) => LanguageCodes.Pick(language, japanese, english, chineseSimplified, chineseTraditional);
     }
 
     [SerializeField] private List<Entry> entries = new List<Entry>();
@@ -28,6 +39,16 @@ public class LanguageTable : ScriptableObject
     Dictionary<string, Entry> lookup;
 
     public IReadOnlyList<Entry> Entries => entries;
+
+    /// <summary>キーがあるか</summary>
+    public bool Contains(string key)
+    {
+        if (string.IsNullOrEmpty(key))
+            return false;
+
+        EnsureLookup();
+        return lookup.ContainsKey(key);
+    }
 
     /// <summary>現在の表示言語の文言を返す。キーがなければ空文字。</summary>
     public string Get(string key) => Get(key, GameLanguage.Current);
@@ -39,10 +60,7 @@ public class LanguageTable : ScriptableObject
             return string.Empty;
 
         EnsureLookup();
-        if (!lookup.TryGetValue(key, out Entry entry))
-            return string.Empty;
-
-        return language == LanguageCode.English ? entry.english : entry.japanese;
+        return lookup.TryGetValue(key, out Entry entry) ? entry.TextOf(language) : string.Empty;
     }
 
     /// <summary>書式付き文言（string.Format）。キーがなければ空文字。</summary>

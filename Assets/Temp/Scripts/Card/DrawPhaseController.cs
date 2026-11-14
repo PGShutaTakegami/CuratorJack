@@ -176,7 +176,7 @@ public class DrawPhaseController : MonoBehaviour
     {
         if (kind == CardManager.CardKinds.GoodCard && game.TryUseStatus(player, PlayerStatus.Pressure))
         {
-            Debug.Log($"[Draw] Player{player} は圧力で出品カードを引けませんでした");
+            Debug.Log(GameText.Format("log.draw.pressure_blocked", player));
             GoodsDrawBlocked?.Invoke(player);
             return;
         }

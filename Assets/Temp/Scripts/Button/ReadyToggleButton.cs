@@ -20,11 +20,8 @@ public class ReadyToggleButton : MonoBehaviour
 
     [SerializeField] private Sprite readySprite;
 
-    [Tooltip("{0} = 準備完了の人数, {1} = 全体の人数")]
-    [SerializeField] private string notReadyFormat = "準備中{0}/{1}";
 
-    [Tooltip("{0} = 準備完了の人数, {1} = 全体の人数")]
-    [SerializeField] private string readyFormat = "準備完了{0}/{1}";
+    readonly PressThrottle toggleThrottle = new PressThrottle();
 
     public bool IsReady { get; private set; }
 
@@ -60,12 +57,13 @@ public class ReadyToggleButton : MonoBehaviour
 
     void Toggle()
     {
-        SetReady(!IsReady);
+        if (toggleThrottle.TryAccept())
+            SetReady(!IsReady);
     }
 
     void Refresh()
     {
         image.sprite = IsReady ? readySprite : notReadySprite;
-        label.text = string.Format(IsReady ? readyFormat : notReadyFormat, roster.ReadyCount, roster.TotalPlayers);
+        label.text = GameText.Format(IsReady ? "title.ready.ready" : "title.ready.not_ready", roster.ReadyCount, roster.TotalPlayers);
     }
 }

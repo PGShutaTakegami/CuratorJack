@@ -12,11 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: FireSale
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u6295\u3052\u58F2\u308A"
-    englishName: 
+    englishName: Fire Sale
     cardSprite: {fileID: 21300000, guid: dfad7f93573e6344ebf73b4c8d7f0f70, type: 3}
     discription: "\u4ED8\u4E0E\u3055\u308C\u305F\u3082\u306E\u306F\u6B21\u306E\u51FA\u54C1\u6700\u4F4E\u958B\u59CB\u4FA1\u683C\u304C\u30E9\u30F3\u30C0\u30E0\u3067-1~-5\u3067\u4E0B\u304C\u308B"
     initialPrice: 0
+    englishDescription: "The affected player's next listing has its minimum starting
+      price lowered by a random 1\u20135"
+    chineseSimplifiedName: "\u7529\u5356"
+    chineseSimplifiedDescription: "\u88AB\u9644\u52A0\u8005\u4E0B\u4E00\u6B21\u4E0A\u62CD\u7684\u6700\u4F4E\u8D77\u62CD\u4EF7\u968F\u673A\u964D\u4F4E
+      1~5"
+    chineseTraditionalName: "\u7529\u8CE3"
+    chineseTraditionalDescription: "\u88AB\u9644\u52A0\u8005\u4E0B\u4E00\u6B21\u4E0A\u62CD\u7684\u6700\u4F4E\u8D77\u62CD\u50F9\u96A8\u6A5F\u964D\u4F4E
+      1~5"
   rarity: 0
   effect: 5

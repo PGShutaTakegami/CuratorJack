@@ -1,0 +1,20 @@
+{
+  "_comment": "GAME START（オークションの木槌のコン・コンに、低い木琴風の和音を重ねる。チャイム系の音色は使わない）",
+  "kind": "se",
+  "layers": [
+    { "osc": "sine", "freq": [520, 240], "duration": 0.07, "env": { "a": 0.001, "d": 0.06, "s": 0, "r": 0.01 }, "gain_db": 0,
+      "repeat": { "count": 2, "interval": 0.26 } },
+    { "osc": "noise", "duration": 0.02, "env": { "a": 0.0005, "d": 0.015, "s": 0, "r": 0.005 },
+      "filter": { "type": "bandpass", "cutoff": 1400, "q": 1.2 }, "gain_db": -6,
+      "repeat": { "count": 2, "interval": 0.26 } },
+    { "osc": "triangle", "start": 0.58, "freq": 261.6, "duration": 1.0, "fm": { "ratio": 4.0, "index": 0.6, "decay": 0.05 },
+      "env": { "a": 0.002, "d": 0.9, "s": 0, "r": 0.2 }, "filter": { "type": "lowpass", "cutoff": 1800 }, "gain_db": -6 },
+    { "osc": "triangle", "start": 0.6, "freq": 329.6, "duration": 1.0, "fm": { "ratio": 4.0, "index": 0.6, "decay": 0.05 },
+      "env": { "a": 0.002, "d": 0.9, "s": 0, "r": 0.2 }, "filter": { "type": "lowpass", "cutoff": 1800 }, "gain_db": -8 },
+    { "osc": "triangle", "start": 0.62, "freq": 392, "duration": 1.0, "fm": { "ratio": 4.0, "index": 0.6, "decay": 0.05 },
+      "env": { "a": 0.002, "d": 0.9, "s": 0, "r": 0.2 }, "filter": { "type": "lowpass", "cutoff": 1800 }, "gain_db": -8 },
+    { "osc": "sine", "start": 0.58, "freq": 130.8, "duration": 0.9, "env": { "a": 0.002, "d": 0.8, "s": 0, "r": 0.2 }, "gain_db": -12 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.15, "decay": 0.9 }],
+  "master": { "peak_db": -6, "loudness_db": -26 }
+}

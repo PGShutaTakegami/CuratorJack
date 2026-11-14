@@ -25,9 +25,9 @@ public static class TestAutoPilot
             return IsOn;
 
         pilot = body.gameObject.AddComponent<CpuPlayerAgent>();
-        pilot.Initialize(refs.LocalPlayer, refs.Game, refs.Flow.Commands);
+        pilot.Initialize(refs.LocalPlayer, refs.Game, refs.Flow.Commands, () => refs.Flow.IsPresentingBid);
         refs.Flow.ReplaceAgent(pilot);
-        Debug.Log($"[Test] オートプレイ ON（Player{refs.LocalPlayer} を CPU が操作）");
+        Debug.Log(GameText.Format("log.test.autopilot_on", refs.LocalPlayer));
         return true;
     }
 
@@ -40,7 +40,7 @@ public static class TestAutoPilot
             refs.Flow.ReplaceAgent(refs.LocalAgent);
         Object.Destroy(pilot);
         pilot = null;
-        Debug.Log("[Test] オートプレイ OFF");
+        Debug.Log(GameText.Get("log.test.autopilot_off"));
     }
 }
 #endif

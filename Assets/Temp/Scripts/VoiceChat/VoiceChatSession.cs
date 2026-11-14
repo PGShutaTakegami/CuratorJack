@@ -200,14 +200,14 @@ public class VoiceChatSession : MonoBehaviour
             reportedIdentity = null;
             ApplyVolume();
             await ApplyDevicesAsync(false);
-            Debug.Log($"[VC] 部屋の VC に参加しました（{channel}）");
+            Debug.Log(GameText.Format("log.vc.joined", channel));
         }
         catch (Exception e)
         {
             joiningChannel = null;
             ForgetParticipants();
             nextAttemptTime = Time.unscaledTime + retrySeconds;
-            Debug.LogWarning($"[VC] VC に参加できませんでした。{retrySeconds} 秒後にもう一度試します: {e.Message}");
+            Debug.LogWarning(GameText.Format("log.vc.join_failed", retrySeconds, e.Message));
         }
         finally
         {
@@ -222,11 +222,11 @@ public class VoiceChatSession : MonoBehaviour
         try
         {
             await Vivox.LeaveChannelAsync(channel);
-            Debug.Log("[VC] 部屋の VC から抜けました");
+            Debug.Log(GameText.Get("log.vc.left"));
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"[VC] VC から抜けられませんでした: {e.Message}");
+            Debug.LogWarning(GameText.Format("log.vc.leave_failed", e.Message));
         }
         finally
         {
@@ -290,7 +290,7 @@ public class VoiceChatSession : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"[VC] VC の終了に失敗しました: {e.Message}");
+            Debug.LogWarning(GameText.Format("log.vc.shutdown_failed", e.Message));
         }
     }
 
@@ -347,7 +347,7 @@ public class VoiceChatSession : MonoBehaviour
         }
         catch (Exception e)
         {
-            Debug.LogWarning($"[VC] デバイスを切り替えられませんでした: {e.Message}");
+            Debug.LogWarning(GameText.Format("log.vc.device_failed", e.Message));
         }
         finally
         {

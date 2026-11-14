@@ -1,0 +1,175 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffa302fe71f764f4f8464c345ab9ca1c, type: 3}
+  m_Name: AchievementLanguageTable
+  m_EditorClassIdentifier: Assembly-CSharp::LanguageTable
+  entries:
+  - key: achievement.toast.header
+    japanese: "\u5B9F\u7E3E\u89E3\u9664"
+    english: Achievement Unlocked
+    chineseSimplified: "\u6210\u5C31\u89E3\u9501"
+    chineseTraditional: "\u6210\u5C31\u89E3\u9396"
+  - key: trophy.title
+    japanese: "\u30C8\u30ED\u30D5\u30A3\u30FC"
+    english: Trophies
+    chineseSimplified: "\u5956\u676F"
+    chineseTraditional: "\u734E\u76C3"
+  - key: trophy.progress
+    japanese: "{0} / {1} \u89E3\u9664\uFF08{2}%\uFF09"
+    english: '{0} / {1} unlocked ({2}%)'
+    chineseSimplified: "\u5DF2\u89E3\u9501 {0} / {1}\uFF08{2}%\uFF09"
+    chineseTraditional: "\u5DF2\u89E3\u9396 {0} / {1}\uFF08{2}%\uFF09"
+  - key: trophy.hidden_name
+    japanese: "\uFF1F\uFF1F\uFF1F"
+    english: ???
+    chineseSimplified: "\uFF1F\uFF1F\uFF1F"
+    chineseTraditional: "\uFF1F\uFF1F\uFF1F"
+  - key: trophy.hidden_description
+    japanese: "\u96A0\u3057\u5B9F\u7E3E"
+    english: Hidden achievement
+    chineseSimplified: "\u9690\u85CF\u6210\u5C31"
+    chineseTraditional: "\u96B1\u85CF\u6210\u5C31"
+  - key: trophy.unlocked_at
+    japanese: "{0:yyyy/MM/dd} \u89E3\u9664"
+    english: Unlocked {0:yyyy/MM/dd}
+    chineseSimplified: "{0:yyyy/MM/dd} \u89E3\u9501"
+    chineseTraditional: "{0:yyyy/MM/dd} \u89E3\u9396"
+  - key: trophy.locked
+    japanese: "\u672A\u89E3\u9664"
+    english: Locked
+    chineseSimplified: "\u672A\u89E3\u9501"
+    chineseTraditional: "\u672A\u89E3\u9396"
+  - key: trophy.back
+    japanese: "\u623B\u308B"
+    english: Back
+    chineseSimplified: "\u8FD4\u56DE"
+    chineseTraditional: "\u8FD4\u56DE"
+  - key: achievement.tutorial_clear.name
+    japanese: "\u898B\u7FD2\u3044\u30AD\u30E5\u30EC\u30FC\u30BF\u30FC"
+    english: Apprentice Curator
+    chineseSimplified: "\u89C1\u4E60\u7B56\u5C55\u4EBA"
+    chineseTraditional: "\u898B\u7FD2\u7B56\u5C55\u4EBA"
+  - key: achievement.tutorial_clear.description
+    japanese: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB\u3092\u30AF\u30EA\u30A2\u3059\u308B"
+    english: Clear the tutorial.
+    chineseSimplified: "\u5B8C\u6210\u6559\u7A0B\u3002"
+    chineseTraditional: "\u5B8C\u6210\u6559\u7A0B\u3002"
+  - key: achievement.first_purchase.name
+    japanese: "\u306F\u3058\u3081\u3066\u306E\u843D\u672D"
+    english: First Acquisition
+    chineseSimplified: "\u521D\u6B21\u62CD\u5F97"
+    chineseTraditional: "\u521D\u6B21\u62CD\u5F97"
+  - key: achievement.first_purchase.description
+    japanese: "\u30AA\u30FC\u30AF\u30B7\u30E7\u30F3\u3067\u521D\u3081\u3066\u843D\u672D\u3059\u308B"
+    english: Win an auction for the first time.
+    chineseSimplified: "\u9996\u6B21\u5728\u62CD\u5356\u4E2D\u62CD\u5F97\u3002"
+    chineseTraditional: "\u9996\u6B21\u5728\u62CD\u8CE3\u4E2D\u62CD\u5F97\u3002"
+  - key: achievement.first_sale.name
+    japanese: "\u5546\u8AC7\u6210\u7ACB"
+    english: Deal Closed
+    chineseSimplified: "\u6210\u4EA4"
+    chineseTraditional: "\u6210\u4EA4"
+  - key: achievement.first_sale.description
+    japanese: "\u81EA\u5206\u306E\u51FA\u54C1\u304C\u521D\u3081\u3066\u843D\u672D\u3055\u308C\u308B"
+    english: Have one of your listings sold.
+    chineseSimplified: "\u81EA\u5DF1\u7684\u62CD\u54C1\u9996\u6B21\u88AB\u62CD\u5F97\u3002"
+    chineseTraditional: "\u81EA\u5DF1\u7684\u62CD\u54C1\u9996\u6B21\u88AB\u62CD\u5F97\u3002"
+  - key: achievement.final_battle.name
+    japanese: "\u6700\u5F8C\u306E\u4E8C\u4EBA"
+    english: The Final Two
+    chineseSimplified: "\u6700\u540E\u7684\u4E24\u4EBA"
+    chineseTraditional: "\u6700\u5F8C\u7684\u5169\u4EBA"
+  - key: achievement.final_battle.description
+    japanese: "FINAL BATTLE \u306B\u9032\u3080"
+    english: Reach the FINAL BATTLE.
+    chineseSimplified: "\u8FDB\u5165 FINAL BATTLE\u3002"
+    chineseTraditional: "\u9032\u5165 FINAL BATTLE\u3002"
+  - key: achievement.first_win.name
+    japanese: "\u540D\u30AD\u30E5\u30EC\u30FC\u30BF\u30FC"
+    english: Master Curator
+    chineseSimplified: "\u540D\u7B56\u5C55\u4EBA"
+    chineseTraditional: "\u540D\u7B56\u5C55\u4EBA"
+  - key: achievement.first_win.description
+    japanese: "\u30B2\u30FC\u30E0\u306B\u52DD\u3064"
+    english: Win a game.
+    chineseSimplified: "\u8D62\u5F97\u4E00\u573A\u6E38\u620F\u3002"
+    chineseTraditional: "\u8D0F\u5F97\u4E00\u5834\u904A\u6232\u3002"
+  - key: achievement.online_win.name
+    japanese: "\u9802\u70B9\u306E\u9451\u5B9A\u58EB"
+    english: Peerless Appraiser
+    chineseSimplified: "\u9876\u5C16\u9274\u5B9A\u5E08"
+    chineseTraditional: "\u9802\u5C16\u9451\u5B9A\u5E2B"
+  - key: achievement.online_win.description
+    japanese: "\u30DE\u30EB\u30C1\u30D7\u30EC\u30A4\u3067\u52DD\u3064"
+    english: Win a multiplayer game.
+    chineseSimplified: "\u5728\u591A\u4EBA\u6E38\u620F\u4E2D\u83B7\u80DC\u3002"
+    chineseTraditional: "\u5728\u591A\u4EBA\u904A\u6232\u4E2D\u7372\u52DD\u3002"
+  - key: achievement.special_listing.name
+    japanese: "\u76EE\u7389\u5546\u54C1"
+    english: Star Attraction
+    chineseSimplified: "\u62DB\u724C\u5546\u54C1"
+    chineseTraditional: "\u62DB\u724C\u5546\u54C1"
+  - key: achievement.special_listing.description
+    japanese: "\u30B9\u30DA\u30B7\u30E3\u30EB\u30AB\u30FC\u30C9\u4ED8\u304D\u306E\u30AB\u30FC\u30C9\u3092\u51FA\u54C1\u3059\u308B"
+    english: List a card that has a special card.
+    chineseSimplified: "\u4E0A\u62CD\u4E00\u5F20\u9644\u6709\u7279\u6B8A\u5361\u7684\u5361\u724C\u3002"
+    chineseTraditional: "\u4E0A\u62CD\u4E00\u5F35\u9644\u6709\u7279\u6B8A\u5361\u7684\u5361\u724C\u3002"
+  - key: achievement.collector.name
+    japanese: "\u30B3\u30EC\u30AF\u30BF\u30FC"
+    english: Collector
+    chineseSimplified: "\u6536\u85CF\u5BB6"
+    chineseTraditional: "\u6536\u85CF\u5BB6"
+  - key: achievement.collector.description
+    japanese: "1\u56DE\u306E\u30B2\u30FC\u30E0\u30675\u679A\u843D\u672D\u3059\u308B"
+    english: Win 5 auctions in a single game.
+    chineseSimplified: "\u5728\u4E00\u573A\u6E38\u620F\u4E2D\u62CD\u5F975\u5F20\u5361\u724C\u3002"
+    chineseTraditional: "\u5728\u4E00\u5834\u904A\u6232\u4E2D\u62CD\u5F975\u5F35\u5361\u724C\u3002"
+  - key: achievement.drain.name
+    japanese: "\u524A\u308A\u53D6\u308A"
+    english: Bleed Them Dry
+    chineseSimplified: "\u69A8\u5E72\u5BF9\u624B"
+    chineseTraditional: "\u69A8\u4E7E\u5C0D\u624B"
+  - key: achievement.drain.description
+    japanese: "FINAL BATTLE \u3067\u76F8\u624B\u306E\u30B3\u30A4\u30F3\u3092\u524A\u308B"
+    english: Drain your opponent's coins in the FINAL BATTLE.
+    chineseSimplified: "\u5728 FINAL BATTLE \u4E2D\u524A\u51CF\u5BF9\u624B\u7684\u91D1\u5E01\u3002"
+    chineseTraditional: "\u5728 FINAL BATTLE \u4E2D\u524A\u6E1B\u5C0D\u624B\u7684\u91D1\u5E63\u3002"
+  - key: achievement.last_stand.name
+    japanese: "\u80CC\u6C34\u306E\u9663"
+    english: Last Stand
+    chineseSimplified: "\u80CC\u6C34\u4E00\u6218"
+    chineseTraditional: "\u80CC\u6C34\u4E00\u6230"
+  - key: achievement.last_stand.description
+    japanese: "\u898B\u9001\u308A\u6A290\u679A\u306E\u72B6\u614B\u3067\u52DD\u3064"
+    english: Win with zero passes left.
+    chineseSimplified: "\u5728\u5F03\u6743\u5238\u4E3A0\u5F20\u7684\u72B6\u6001\u4E0B\u83B7\u80DC\u3002"
+    chineseTraditional: "\u5728\u68C4\u6B0A\u5238\u70BA0\u5F35\u7684\u72C0\u614B\u4E0B\u7372\u52DD\u3002"
+  - key: achievement.flawless.name
+    japanese: "\u7121\u50B7\u306E\u52DD\u5229"
+    english: Flawless Victory
+    chineseSimplified: "\u65E0\u4F24\u80DC\u5229"
+    chineseTraditional: "\u7121\u50B7\u52DD\u5229"
+  - key: achievement.flawless.description
+    japanese: "\u898B\u9001\u308A\u6A29\u3092\u4E00\u5EA6\u3082\u4F7F\u308F\u305A\u306B\u52DD\u3064"
+    english: Win without using a single pass.
+    chineseSimplified: "\u4E00\u6B21\u4E5F\u4E0D\u4F7F\u7528\u5F03\u6743\u5238\u5C31\u83B7\u80DC\u3002"
+    chineseTraditional: "\u4E00\u6B21\u4E5F\u4E0D\u4F7F\u7528\u68C4\u6B0A\u5238\u5C31\u7372\u52DD\u3002"
+  - key: achievement.retire.name
+    japanese: "\u6226\u7565\u7684\u64A4\u9000"
+    english: Strategic Retreat
+    chineseSimplified: "\u6218\u7565\u64A4\u9000"
+    chineseTraditional: "\u6230\u7565\u64A4\u9000"
+  - key: achievement.retire.description
+    japanese: "\u30B2\u30FC\u30E0\u3092\u30EA\u30BF\u30A4\u30A2\u3059\u308B"
+    english: Retire from a game.
+    chineseSimplified: "\u4E2D\u9014\u9000\u51FA\u4E00\u573A\u6E38\u620F\u3002"
+    chineseTraditional: "\u4E2D\u9014\u9000\u51FA\u4E00\u5834\u904A\u6232\u3002"

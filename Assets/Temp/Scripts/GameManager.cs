@@ -40,6 +40,12 @@ public class GameManager : MonoBehaviour
     /// <summary>見送り権を使った（プレイヤーと使った枚数。足りずに死亡したときは PlayerDied だけを出す）</summary>
     public event Action<PlayerState, int> PassRightConsumed;
 
+    /// <summary>見送り権の代わりにシールドを使った（プレイヤーと使った枚数）</summary>
+    public event Action<PlayerState, int> ShieldConsumed;
+
+    /// <summary>アイテムのマスの中身が変わった（もらった・使った）</summary>
+    public event Action<PlayerState> ItemsChanged;
+
     void Awake()
     {
         startGate.Started += CreatePlayers;
@@ -78,6 +84,16 @@ public class GameManager : MonoBehaviour
         HandCardAdded?.Invoke(player, card);
     }
 
+    /// <summary>使うのをやめたカードを、手札の index の位置に戻す</summary>
+    public void ReturnToHand(int playerNumber, HandCard card, int index)
+    {
+        if (!players.TryGetValue(playerNumber, out PlayerState player))
+            return;
+
+        player.InsertToHand(card, index);
+        HandCardAdded?.Invoke(player, card);
+    }
+
     /// <summary>手札からカードを消費する。手札になければ false を返す。</summary>
     public bool RemoveFromHand(int playerNumber, HandCard card)
     {
@@ -88,17 +104,31 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    /// <summary>見送り権を count 枚消費する。count 枚に足りないプレイヤーは死亡する。</summary>
+    /// <summary>
+    /// 見送り権を count 枚消費する。シールドがあれば見送り権 1 枚につきシールド 1 枚を先に使う。
+    /// 残りの枚数に見送り権が足りないプレイヤーは死亡する。
+    /// </summary>
     public void ConsumePassRight(int playerNumber, int count = 1)
     {
         if (count <= 0 || !players.TryGetValue(playerNumber, out PlayerState player) || !player.IsAlive)
+            return;
+
+        int shielded = player.UseStatus(PlayerStatus.Shield, count);
+        if (shielded > 0)
+        {
+            StatusChanged?.Invoke(player);
+            Debug.Log(GameText.Format("log.game.shield_used", playerNumber, shielded));
+            ShieldConsumed?.Invoke(player, shielded);
+        }
+        count -= shielded;
+        if (count <= 0)
             return;
 
         bool died = player.ConsumePassRights(count);
         StatusChanged?.Invoke(player);
         if (died)
         {
-            Debug.Log($"[Game] Player{playerNumber} は見送り権 {count} 枚を使えず死亡しました");
+            Debug.Log(GameText.Format("log.game.died", playerNumber, count));
             PlayerDied?.Invoke(player);
         }
         else
@@ -115,7 +145,7 @@ public class GameManager : MonoBehaviour
 
         player.Retire();
         StatusChanged?.Invoke(player);
-        Debug.Log($"[Game] Player{playerNumber} がリタイアしました");
+        Debug.Log(GameText.Format("log.game.retired", playerNumber));
         PlayerDied?.Invoke(player);
     }
 
@@ -124,6 +154,25 @@ public class GameManager : MonoBehaviour
     /// 生き残りが 2 人（最後の 1v1）のときは受け取れず、購入者が払った分は消える。
     /// </summary>
     public bool SellerEarnsProceeds => AlivePlayers.Count() > 2;
+
+    /// <summary>最後の 1v1 で、2 人とも見送り権を持っていないか（このとき、最低出品額より多く入札して落札した分だけ出品者のコインを削れる）</summary>
+    public bool CanDrainInFinalDuel => IsFinalDuel && AlivePlayers.All(player => player.PassRights == 0);
+
+    /// <summary>コインを amount だけ削る（持っている分まで。削った分はどこにも入らない）。削った額を返す</summary>
+    public int DrainCoins(int playerNumber, int amount)
+    {
+        if (!players.TryGetValue(playerNumber, out PlayerState player))
+            return 0;
+
+        int drained = Mathf.Clamp(amount, 0, Mathf.Max(0, player.Coins));
+        if (drained == 0)
+            return 0;
+
+        player.AddCoins(-drained);
+        StatusChanged?.Invoke(player);
+        Debug.Log(GameText.Format("log.game.drained", playerNumber, drained));
+        return drained;
+    }
 
     /// <summary>購入者から代金を払い、商品を購入者へ渡す。代金は SellerEarnsProceeds のときだけ出品者に入る。</summary>
     public void SettlePurchase(int buyerNumber, int sellerNumber, HandCard goods, int price)
@@ -138,8 +187,8 @@ public class GameManager : MonoBehaviour
         buyer.AddToCollection(goods);
         StatusChanged?.Invoke(buyer);
         StatusChanged?.Invoke(seller);
-        string proceeds = sellerEarns ? string.Empty : "。最後の 1v1 のため代金は出品者に入りません";
-        Debug.Log($"[Game] Player{buyerNumber} が {goods.DisplayName} を {price} コインで購入（出品者 Player{sellerNumber}）{proceeds}");
+        string proceeds = sellerEarns ? string.Empty : GameText.Get("log.game.proceeds_lost");
+        Debug.Log(GameText.Format("log.game.purchased", buyerNumber, goods.DisplayName, price, sellerNumber) + proceeds);
     }
 
     /// <summary>購入者から出品者へ追加の代金を払う（持っている分まで）。出品者に入るのは SellerEarnsProceeds のときだけ。払った額を返す。</summary>
@@ -204,6 +253,13 @@ public class GameManager : MonoBehaviour
         StatusChanged?.Invoke(player);
     }
 
+    /// <summary>全員のシールドを消す（シールドはそのターンの落札が終わるまでしか持たない）</summary>
+    public void ExpireShields()
+    {
+        foreach (PlayerState player in Players)
+            UseStatus(player.PlayerNumber, PlayerStatus.Shield, int.MaxValue);
+    }
+
     /// <summary>持続効果を 1 回使う。残っていなければ false を返す。</summary>
     public bool TryUseStatus(int playerNumber, PlayerStatus status) => UseStatus(playerNumber, status, 1) > 0;
 
@@ -221,6 +277,28 @@ public class GameManager : MonoBehaviour
         return used;
     }
 
+    /// <summary>アイテムを空いているマスに渡す。満杯なら渡さずに false を返す。</summary>
+    public bool TryGiveItem(int playerNumber, ItemDefinition item)
+    {
+        if (!players.TryGetValue(playerNumber, out PlayerState player) || !player.Items.TryAdd(item))
+            return false;
+
+        ItemsChanged?.Invoke(player);
+        Debug.Log(GameText.Format("log.game.item_got", playerNumber, item.DisplayName));
+        return true;
+    }
+
+    /// <summary>生きているプレイヤーが slot のアイテムを使ってマスを空ける（効果は ItemEffectResolver が処理する）。空きなら false を返す。</summary>
+    public bool TryUseItem(int playerNumber, int slot)
+    {
+        if (!players.TryGetValue(playerNumber, out PlayerState player) || !player.IsAlive || !player.Items.TryTake(slot, out ItemDefinition item))
+            return false;
+
+        ItemsChanged?.Invoke(player);
+        Debug.Log(GameText.Format("log.game.item_used", playerNumber, item.DisplayName));
+        return true;
+    }
+
     /// <summary>受けたバフデバフカードを記録する（効果の中身は CardEffectResolver が処理する）。</summary>
     public void ApplyBuffs(int playerNumber, IReadOnlyList<HandCard> buffs)
     {
@@ -229,6 +307,6 @@ public class GameManager : MonoBehaviour
 
         player.AddBuffs(buffs);
         StatusChanged?.Invoke(player);
-        Debug.Log($"[Game] Player{playerNumber} にバフデバフ {buffs.Count} 枚がかかりました");
+        Debug.Log(GameText.Format("log.game.buffs_applied", playerNumber, buffs.Count));
     }
 }

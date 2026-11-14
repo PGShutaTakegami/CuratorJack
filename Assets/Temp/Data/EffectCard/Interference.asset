@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: Interference
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u6A2A\u3084\u308A"
-    englishName: 
+    englishName: Interference
     cardSprite: {fileID: 21300000, guid: d643d925b256e7541bff3dc99f8fe867, type: 3}
     discription: "\u30AB\u30FC\u30C9\u3092\u51FA\u54C1\u30AB\u30FC\u30C9\u306B\u4ED8\u4E0E\u3067\u304D\u306A\u3044"
     initialPrice: 0
+    englishDescription: Can't attach cards to goods cards
+    chineseSimplifiedName: "\u63D2\u624B"
+    chineseSimplifiedDescription: "\u65E0\u6CD5\u5C06\u5361\u9644\u52A0\u5230\u5546\u54C1\u5361\u4E0A"
+    chineseTraditionalName: "\u63D2\u624B"
+    chineseTraditionalDescription: "\u7121\u6CD5\u5C07\u5361\u9644\u52A0\u5230\u5546\u54C1\u5361\u4E0A"
   rarity: 0
   effect: 10

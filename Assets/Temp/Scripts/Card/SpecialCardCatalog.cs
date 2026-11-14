@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 /// <summary>
 /// インフォメーションマークを押すと、画面中央にカードの一覧を開く。ウィンドウの外を押すと閉じる。
-/// 上の切り替えで「商品」「エフェクト」「スペシャル」の一覧を選び、それぞれの山札に登録されたカードを横一列に並べる。
-/// 入りきらない分は、ウィンドウを押したまま左右に動かすか、左右の方向キーを押している間スライドして見る。
+/// 上の切り替えで「商品」「エフェクト」「スペシャル」「アイテム」の一覧を選び、それぞれの山札に登録されたカード（アイテムはアイテムの一覧）を横一列に並べる。
+/// 入りきらない分は、ウィンドウを押したまま左右に動かすか、左右の方向キー・十字キー左右を押している間スライドして見る。
 /// オークション中のスペシャルカードは外側を光らせ、開いたときは「スペシャル」にしてそのカードが見える位置までスライドする。
 /// </summary>
 public class SpecialCardCatalog : MonoBehaviour
@@ -15,7 +15,8 @@ public class SpecialCardCatalog : MonoBehaviour
     {
         Goods,
         Effects,
-        Specials
+        Specials,
+        Items
     }
 
     [SerializeField] private GoodsCardDeck goodsDeck;
@@ -23,6 +24,8 @@ public class SpecialCardCatalog : MonoBehaviour
     [SerializeField] private EffectCardDeck effectDeck;
 
     [SerializeField] private SpecialCardDeck deck;
+
+    [SerializeField] private ItemCatalog itemCatalog;
 
     [Tooltip("一覧を開くインフォメーションマーク")]
     [SerializeField] private Button openButton;
@@ -42,6 +45,9 @@ public class SpecialCardCatalog : MonoBehaviour
     [Tooltip("スペシャルの一覧に切り替える")]
     [SerializeField] private Button specialTab;
 
+    [Tooltip("アイテムの一覧に切り替える")]
+    [SerializeField] private Button itemTab;
+
     [SerializeField] private Color selectedTabColor = new Color(0.85f, 0.68f, 0.35f, 1f);
 
     [SerializeField] private Color tabColor = new Color(0.18f, 0.15f, 0.12f, 1f);
@@ -52,10 +58,14 @@ public class SpecialCardCatalog : MonoBehaviour
     [Tooltip("並べるカードの見本（実行時は非表示）")]
     [SerializeField] private SpecialCardCatalogItem itemTemplate;
 
+    [Tooltip("並べるアイテムの見本（実行時は非表示）")]
+    [SerializeField] private ItemCatalogEntry itemEntryTemplate;
+
     [Tooltip("方向キーを押している間にスライドする速さ（1 秒あたりの距離）")]
     [SerializeField] private float keyScrollSpeed = 1200f;
 
-    readonly Dictionary<Page, List<SpecialCardCatalogItem>> pages = new Dictionary<Page, List<SpecialCardCatalogItem>>();
+    readonly Dictionary<Page, List<GameObject>> pages = new Dictionary<Page, List<GameObject>>();
+    List<SpecialCardCatalogItem> specials = new List<SpecialCardCatalogItem>();
     Page current = Page.Goods;
     CardData auctioned;
     bool built;
@@ -63,12 +73,14 @@ public class SpecialCardCatalog : MonoBehaviour
     void Awake()
     {
         itemTemplate.gameObject.SetActive(false);
+        itemEntryTemplate.gameObject.SetActive(false);
         root.SetActive(false);
         openButton.onClick.AddListener(Open);
         backdrop.onClick.AddListener(Close);
         goodsTab.onClick.AddListener(ShowGoods);
         effectTab.onClick.AddListener(ShowEffects);
         specialTab.onClick.AddListener(ShowSpecials);
+        itemTab.onClick.AddListener(ShowItems);
     }
 
     void OnDestroy()
@@ -78,6 +90,7 @@ public class SpecialCardCatalog : MonoBehaviour
         goodsTab.onClick.RemoveListener(ShowGoods);
         effectTab.onClick.RemoveListener(ShowEffects);
         specialTab.onClick.RemoveListener(ShowSpecials);
+        itemTab.onClick.RemoveListener(ShowItems);
     }
 
     void ShowGoods() => Show(Page.Goods);
@@ -86,6 +99,8 @@ public class SpecialCardCatalog : MonoBehaviour
 
     void ShowSpecials() => Show(Page.Specials);
 
+    void ShowItems() => Show(Page.Items);
+
     public void Open()
     {
         if (!built)
@@ -93,7 +108,7 @@ public class SpecialCardCatalog : MonoBehaviour
         root.SetActive(true);
         Show(auctioned != null ? Page.Specials : current);
 
-        SpecialCardCatalogItem highlighted = auctioned != null ? pages[Page.Specials].Find(item => item.Data == auctioned) : null;
+        SpecialCardCatalogItem highlighted = auctioned != null ? specials.Find(item => item.Data == auctioned) : null;
         if (highlighted != null)
             ScrollTo(highlighted);
     }
@@ -110,7 +125,7 @@ public class SpecialCardCatalog : MonoBehaviour
         if (!built)
             return;
 
-        foreach (SpecialCardCatalogItem item in pages[Page.Specials])
+        foreach (SpecialCardCatalogItem item in specials)
             item.SetHighlighted(special != null && item.Data == special);
     }
 
@@ -118,15 +133,16 @@ public class SpecialCardCatalog : MonoBehaviour
     void Show(Page page)
     {
         current = page;
-        foreach (KeyValuePair<Page, List<SpecialCardCatalogItem>> entry in pages)
+        foreach (KeyValuePair<Page, List<GameObject>> entry in pages)
         {
-            foreach (SpecialCardCatalogItem item in entry.Value)
-                item.gameObject.SetActive(entry.Key == page);
+            foreach (GameObject item in entry.Value)
+                item.SetActive(entry.Key == page);
         }
 
         SetTabColor(goodsTab, page == Page.Goods);
         SetTabColor(effectTab, page == Page.Effects);
         SetTabColor(specialTab, page == Page.Specials);
+        SetTabColor(itemTab, page == Page.Items);
 
         scroll.StopMovement();
         Canvas.ForceUpdateCanvases();
@@ -141,10 +157,9 @@ public class SpecialCardCatalog : MonoBehaviour
             return;
 
         Keyboard keyboard = Keyboard.current;
-        if (keyboard == null)
-            return;
-
-        float direction = (keyboard.rightArrowKey.isPressed ? 1f : 0f) - (keyboard.leftArrowKey.isPressed ? 1f : 0f);
+        bool right = ControllerInput.RightHeld || (keyboard != null && keyboard.rightArrowKey.isPressed);
+        bool left = ControllerInput.LeftHeld || (keyboard != null && keyboard.leftArrowKey.isPressed);
+        float direction = (right ? 1f : 0f) - (left ? 1f : 0f);
         if (direction != 0f)
             ScrollBy(direction * keyScrollSpeed * Time.unscaledDeltaTime);
     }
@@ -176,10 +191,30 @@ public class SpecialCardCatalog : MonoBehaviour
     void Build()
     {
         built = true;
-        pages[Page.Goods] = BuildPage(goodsDeck.Goods, GoodsDescription);
-        pages[Page.Effects] = BuildPage(effectDeck.Effects, card => card.Parameter.Discription);
-        pages[Page.Specials] = BuildPage(deck.Specials, card => card.Parameter.Discription);
+        pages[Page.Goods] = ToObjects(BuildPage(goodsDeck.Goods, GoodsDescription));
+        pages[Page.Effects] = ToObjects(BuildPage(effectDeck.Effects, card => card.Parameter.Discription));
+        specials = BuildPage(deck.Specials, card => card.Parameter.Discription);
+        pages[Page.Specials] = ToObjects(specials);
+        pages[Page.Items] = BuildItemPage();
         SetAuctioned(auctioned);
+    }
+
+    static List<GameObject> ToObjects(List<SpecialCardCatalogItem> items) => items.ConvertAll(item => item.gameObject);
+
+    List<GameObject> BuildItemPage()
+    {
+        var entries = new List<GameObject>();
+        foreach (ItemDefinition definition in itemCatalog.Items)
+        {
+            if (definition == null)
+                continue;
+
+            ItemCatalogEntry entry = Instantiate(itemEntryTemplate, scroll.content);
+            entry.name = definition.name;
+            entry.Bind(definition);
+            entries.Add(entry.gameObject);
+        }
+        return entries;
     }
 
     List<SpecialCardCatalogItem> BuildPage(IReadOnlyList<CardData> cards, System.Func<CardData, string> describe)
@@ -202,7 +237,7 @@ public class SpecialCardCatalog : MonoBehaviour
     /// <summary>商品の説明：開始価格とレアリティを先に出し、説明があれば続ける</summary>
     static string GoodsDescription(CardData card)
     {
-        string text = $"開始価格 {card.Parameter.InitialPrice}\nレアリティ {RarityText(card.Rarity)}";
+        string text = GameText.Format("catalog.goods_stats", card.Parameter.InitialPrice, RarityText(card.Rarity));
         return string.IsNullOrEmpty(card.Parameter.Discription) ? text : $"{text}\n\n{card.Parameter.Discription}";
     }
 
@@ -210,9 +245,9 @@ public class SpecialCardCatalog : MonoBehaviour
     {
         switch (rarity)
         {
-            case GoodsRarity.Low: return "低";
-            case GoodsRarity.Middle: return "中";
-            default: return "高";
+            case GoodsRarity.Low: return GameText.Get("game.rarity.low");
+            case GoodsRarity.Middle: return GameText.Get("game.rarity.middle");
+            default: return GameText.Get("game.rarity.high");
         }
     }
 }

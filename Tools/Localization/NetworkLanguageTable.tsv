@@ -1,0 +1,23 @@
+key	ja	en	zh-Hans	zh-Hant
+net.version_mismatch	ゲームのバージョンが違うため入れません	Can't join because the game version is different	游戏版本不同，无法加入	遊戲版本不同，無法加入
+net.room_start_failed	部屋を開始できませんでした: {0}（{1}:{2}）	Could not start the room: {0} ({1}:{2})	无法开启房间：{0}（{1}:{2}）	無法開啟房間：{0}（{1}:{2}）
+net.room_join_failed	部屋に入れませんでした: {0}	Could not join the room: {0}	无法进入房间：{0}	無法進入房間：{0}
+net.rematch_join_failed	リトライ後の部屋に入れませんでした: {0}	Could not join the rematch room: {0}	无法进入重开后的房间：{0}	無法進入重開後的房間：{0}
+net.room_unavailable	部屋を用意できませんでした	Could not prepare a room	无法准备房间	無法準備房間
+net.rejected_full	参加を拒否されました: 満員です（最大 {0} 人）	Join refused: the room is full (max {0} players)	加入被拒绝：房间已满（最多 {0} 人）	加入被拒絕：房間已滿（最多 {0} 人）
+net.rejected	参加を拒否されました: {0}	Join refused: {0}	加入被拒绝：{0}	加入被拒絕：{0}
+net.local_session_failed	Local セッションを開始できませんでした（{0}:{1}）	Could not start the Local session ({0}:{1})	无法开启 Local 会话（{0}:{1}）	無法開啟 Local 會話（{0}:{1}）
+net.no_local_player	自分のプレイヤーが用意されなかったため、ロビーへ戻ります	Your player was not created, returning to the lobby	未能准备你的玩家，返回大厅	未能準備你的玩家，返回大廳
+net.kicked	部屋主にキックされたため、ロビーへ戻ります	You were kicked by the host, returning to the lobby	你被房主踢出，返回大厅	你被房主踢出，返回大廳
+net.host_takeover_failed	ホストを引き継げませんでした: {0}	Could not take over as host: {0}	无法接任主机：{0}	無法接任主機：{0}
+net.online_requires_lobby	OnlineNet ではロビーで部屋を選んでから GameScene に入ってください	In OnlineNet, choose a room in the lobby before entering GameScene	在 OnlineNet 中，请先在大厅选择房间再进入 GameScene	在 OnlineNet 中，請先在大廳選擇房間再進入 GameScene
+net.action.join_rematch	リトライ後の部屋に入室	join the rematch room	进入重开后的房间	進入重開後的房間
+net.action.create	部屋を作成	create a room	创建房间	建立房間
+net.action.join	部屋に入室	join the room	进入房间	進入房間
+net.action_failed	{0}できませんでした: {1}	Could not {0}: {1}	无法{0}：{1}	無法{0}：{1}
+net.room_host_start_failed	部屋のホストを開始できませんでした	Could not start hosting the room	无法开始作为房间主机	無法開始作為房間主機
+net.game_started	ゲームが始まっています	The game has already started	游戏已经开始了	遊戲已經開始了
+net.kicked_room	キックされた部屋には入れません	You can't join a room you were kicked from	无法进入你被踢出的房间	無法進入你被踢出的房間
+net.host_connect_failed	ホストに接続できませんでした	Could not connect to the host	无法连接到主机	無法連線到主機
+net.host_disconnected	ホストとの接続が切れたため、ロビーへ戻ります	Lost connection to the host, returning to the lobby	与主机的连接已断开，返回大厅	與主機的連線已斷開，返回大廳
+net.migration_failed	ホストを引き継げなかったため、ロビーへ戻ります	Could not take over as host, returning to the lobby	无法接任主机，返回大厅	無法接任主機，返回大廳

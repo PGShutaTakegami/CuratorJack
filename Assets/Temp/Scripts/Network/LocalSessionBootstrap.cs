@@ -57,6 +57,9 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     [Tooltip("ホストの引き継ぎで、ホスト開始や再接続をやり直す間隔（秒）。作り直した部屋の見張りもこの間隔で行う")]
     [SerializeField] private float hostRecoveryInterval = 0.5f;
 
+    [Tooltip("ゲーム開始前、繋がっているのに自分のプレイヤーが出てこないとき、ロビーへ戻るまで待つ秒数")]
+    [SerializeField] private float playerSpawnWaitSeconds = 15f;
+
     [Tooltip("相手の応答が途絶えてから切断とみなすまでの時間（ミリ秒）")]
     [SerializeField] private int disconnectTimeoutMS = 3000;
 
@@ -85,6 +88,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     RematchTicket rematchTicket;
     float hostingPollTimer;
     float matchFinishedAt = -1f;
+    LocalPlayerSpawnWatch spawnWatch;
 
     public bool IsActive { get; private set; }
 
@@ -97,6 +101,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             yield break;
 
         IsActive = true;
+        spawnWatch = new LocalPlayerSpawnWatch(playerSpawnWaitSeconds);
         roomState.OwnershipRequested += HandleOwnershipRequested;
         roomState.NextHostAnnounced += HandleNextHostAnnounced;
 
@@ -139,12 +144,12 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             if (networkManager.StartHost())
             {
                 BecomeRoomHost(room, false);
-                Debug.Log($"[Session] 部屋のホストとして開始しました: {room.roomName}（{room.address}:{room.port}）");
+                Debug.Log(GameText.Format("log.session.room_host_started", room.roomName, room.address, room.port));
                 EnvironmentNetwork.ReportSuccess();
                 yield break;
             }
 
-            EnvironmentNetwork.LogError($"部屋を開始できませんでした: {room.roomName}（{room.address}:{room.port}）");
+            EnvironmentNetwork.LogError(GameText.Format("net.room_start_failed", room.roomName, room.address, room.port));
             yield return ShutdownAndWait();
             ReturnToLobby();
             yield break;
@@ -154,12 +159,12 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         if (networkManager.IsConnectedClient)
         {
             WatchHost(room);
-            Debug.Log($"[Session] 部屋に入室しました: {room.roomName}（{room.address}:{room.port}）");
+            Debug.Log(GameText.Format("log.session.room_joined", room.roomName, room.address, room.port));
             EnvironmentNetwork.ReportSuccess();
             yield break;
         }
 
-        EnvironmentNetwork.LogError($"部屋に入れませんでした: {(IsRejectedAsFull() ? "満員です" : "接続できませんでした")}");
+        EnvironmentNetwork.LogError(GameText.Format("net.room_join_failed", RejectionMessage(GameText.Get("title.room.connect_failed"))));
         ReturnToLobby();
     }
 
@@ -169,7 +174,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     /// </summary>
     IEnumerator RunRematch(RoomInfo settings, string previousRoomId)
     {
-        Debug.Log("[Session] リトライ後の部屋を探しています");
+        Debug.Log(GameText.Get("log.session.rematch_searching"));
         bool wasRoomOwner = rematchTicket != null && rematchTicket.WasRoomOwner;
         float deadline = Time.realtimeSinceStartup + rematchWaitSeconds;
         while (Time.realtimeSinceStartup < deadline)
@@ -184,12 +189,12 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
                     RoomConnectionContext.SetClient(target);
                     WatchHost(target);
                     wantsOwnership = wasRoomOwner;
-                    Debug.Log($"[Session] リトライ後の部屋に入室しました: {target.roomName}（{target.address}:{target.port}）");
+                    Debug.Log(GameText.Format("log.session.rematch_joined", target.roomName, target.address, target.port));
                     EnvironmentNetwork.ReportSuccess();
                     yield break;
                 }
 
-                if (IsRejectedAsFull())
+                if (IsRejectedAsFull() || PlayerSessionService.WasRejectedByVersion(networkManager))
                     break;
             }
             else
@@ -199,7 +204,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
                 if (networkManager.StartHost())
                 {
                     BecomeRoomHost(created, !wasRoomOwner);
-                    Debug.Log($"[Session] リトライ後の部屋を作り直しました: {created.roomName}（{created.address}:{created.port}）");
+                    Debug.Log(GameText.Format("log.session.rematch_recreated", created.roomName, created.address, created.port));
                     EnvironmentNetwork.ReportSuccess();
                     yield break;
                 }
@@ -210,7 +215,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             yield return new WaitForSecondsRealtime(hostRecoveryInterval);
         }
 
-        EnvironmentNetwork.LogError($"リトライ後の部屋に入れませんでした: {(IsRejectedAsFull() ? "満員です" : "部屋を用意できませんでした")}");
+        EnvironmentNetwork.LogError(GameText.Format("net.rematch_join_failed", RejectionMessage(GameText.Get("net.room_unavailable"))));
         ReturnToLobby();
     }
 
@@ -228,21 +233,27 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             yield return TryJoin();
             if (networkManager.IsConnectedClient)
             {
-                Debug.Log($"[Session] クライアントとして参加しました（{address}:{port}）");
+                Debug.Log(GameText.Format("log.session.client_joined", address, port));
                 EnvironmentNetwork.ReportSuccess();
                 yield break;
             }
 
             if (IsRejectedAsFull())
             {
-                EnvironmentNetwork.LogError($"参加を拒否されました: 満員です（最大 {sessionService.MaxPlayers} 人）");
+                EnvironmentNetwork.LogError(GameText.Format("net.rejected_full", sessionService.MaxPlayers));
+                yield break;
+            }
+
+            if (PlayerSessionService.WasRejectedByVersion(networkManager))
+            {
+                EnvironmentNetwork.LogError(GameText.Format("net.rejected", GameVersion.MismatchMessage));
                 yield break;
             }
 
             if (networkManager.StartHost())
             {
                 AllowHostStart();
-                Debug.Log($"[Session] ホストとして開始しました（{address}:{port}）");
+                Debug.Log(GameText.Format("log.session.host_started", address, port));
                 EnvironmentNetwork.ReportSuccess();
                 yield break;
             }
@@ -250,7 +261,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             yield return ShutdownAndWait();
         }
 
-        EnvironmentNetwork.LogError($"Local セッションを開始できませんでした（{address}:{port}）");
+        EnvironmentNetwork.LogError(GameText.Format("net.local_session_failed", address, port));
     }
 
     /// <summary>接続失敗時も DisconnectReason は自動で埋まるため、サーバーが返した満員理由だけを拒否とみなす。</summary>
@@ -258,6 +269,15 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     {
         string reason = networkManager.DisconnectReason;
         return !string.IsNullOrEmpty(reason) && reason.Contains(PlayerSessionService.SessionFullReason);
+    }
+
+    /// <summary>入れなかった理由。満員・バージョン違いでなければ fallback を返す</summary>
+    string RejectionMessage(string fallback)
+    {
+        if (IsRejectedAsFull())
+            return GameText.Get("title.room.full");
+
+        return PlayerSessionService.WasRejectedByVersion(networkManager) ? GameVersion.MismatchMessage : fallback;
     }
 
     void AllowHostStart()
@@ -281,7 +301,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         }
 
         ownerTimer = new RematchOwnerTimer(rematchTicket, closedOwnerGraceSeconds, Time.realtimeSinceStartup);
-        Debug.Log("[Session] 元の部屋主の戻りを待っています（それまで部屋主はいません）");
+        Debug.Log(GameText.Get("log.session.waiting_owner"));
     }
 
     void StopHosting()
@@ -321,7 +341,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         hostingPollTimer = 0f;
         if (TryFindEarlierRematchRoom(out RoomInfo earlier))
         {
-            Debug.Log($"[Session] 先に作り直された部屋があるため移ります: {earlier.roomName}");
+            Debug.Log(GameText.Format("log.session.move_to_earlier", earlier.roomName));
             StartCoroutine(MoveToEarlierRematchRoom());
             return;
         }
@@ -366,7 +386,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         ownerTimer = null;
         roomState.SetOwnerPending(false);
         AllowHostStart();
-        Debug.Log("[Session] 元の部屋主が戻らなかったため、部屋主になりました");
+        Debug.Log(GameText.Get("log.session.became_owner"));
     }
 
     /// <summary>部屋主待ちの間に元の部屋主が入ってきたら、その画面へホストを渡す。</summary>
@@ -388,7 +408,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     /// <summary>次のホストを全員へ知らせてから抜け、知らされた画面がホストを立て直したらクライアントとして入り直す。</summary>
     IEnumerator HandOverHost(ulong nextHostClientId)
     {
-        Debug.Log("[Session] 元の部屋主が戻ったため、ホストを渡します");
+        Debug.Log(GameText.Get("log.session.owner_returned"));
         roomState.AnnounceNextHost(nextHostClientId);
         yield return new WaitForSecondsRealtime(handOverDelaySeconds);
 
@@ -406,16 +426,23 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         {
             RecordRoomMembers();
             TryRequestOwnership();
+            if (IsLocalPlayerOverdue())
+            {
+                isWatchingHost = false;
+                EnvironmentNetwork.LogError(GameText.Get("net.no_local_player"));
+                ReturnToLobby();
+            }
             return;
         }
 
+        spawnWatch.Reset();
         if (networkManager.ShutdownInProgress)
             return;
 
         if (PlayerSessionService.WasKicked(networkManager))
         {
             isWatchingHost = false;
-            EnvironmentNetwork.LogError("部屋主にキックされたため、ロビーへ戻ります");
+            EnvironmentNetwork.LogError(GameText.Get("net.kicked"));
             ReturnToLobby();
             return;
         }
@@ -436,6 +463,19 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
         StartCoroutine(RecoverFromHostLeft(isSuccessor, ownerPending));
     }
 
+    /// <summary>ゲーム開始前に、繋がっているのに自分のプレイヤー（カメラ）が出てこないまま待ちすぎたか。</summary>
+    bool IsLocalPlayerOverdue()
+    {
+        if (startGate.HasStarted)
+        {
+            spawnWatch.Reset();
+            return false;
+        }
+
+        bool hasLocalPlayer = networkManager.SpawnManager != null && networkManager.SpawnManager.GetLocalPlayerObject() != null;
+        return spawnWatch.IsOverdue(hasLocalPlayer, Time.realtimeSinceStartup);
+    }
+
     /// <summary>元の部屋主として入った部屋が部屋主待ちなら、一度だけ部屋主に戻りたいと申し出る。</summary>
     void TryRequestOwnership()
     {
@@ -447,7 +487,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             return;
 
         roomState.RequestOwnership(joinedRoom.rematchOf, string.Empty);
-        Debug.Log("[Session] 元の部屋主として、部屋主に戻りたいと申し出ました");
+        Debug.Log(GameText.Get("log.session.request_ownership"));
     }
 
     /// <summary>切断後はプレイヤーが消えて誰が残っていたか分からなくなるため、接続中に記録しておく。</summary>
@@ -466,7 +506,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
     /// <summary>後継（知らされた次のホスト、いなければホストの次に入ったプレイヤー）が同じ部屋でホストを立て直し、他のプレイヤーはそこへ入り直す。</summary>
     IEnumerator RecoverFromHostLeft(bool isSuccessor, bool ownerPending)
     {
-        Debug.Log($"[Session] ホストが部屋から抜けました。{(isSuccessor ? "自分が新しいホストになります" : "新しいホストへ入り直します")}");
+        Debug.Log(GameText.Get(isSuccessor ? "log.session.host_left_successor" : "log.session.host_left_rejoin"));
 
         float deadline = Time.realtimeSinceStartup + hostRecoverySeconds;
         while (Time.realtimeSinceStartup < deadline)
@@ -476,7 +516,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
                 if (networkManager.StartHost())
                 {
                     BecomeRoomHost(joinedRoom, ownerPending);
-                    Debug.Log($"[Session] 部屋のホストを引き継ぎました: {joinedRoom.roomName}");
+                    Debug.Log(GameText.Format("log.session.host_taken_over", joinedRoom.roomName));
                     yield break;
                 }
 
@@ -488,7 +528,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
                 if (networkManager.IsConnectedClient)
                 {
                     WatchHost(joinedRoom);
-                    Debug.Log($"[Session] 新しいホストの部屋へ入り直しました: {joinedRoom.roomName}");
+                    Debug.Log(GameText.Format("log.session.rejoined_new_host", joinedRoom.roomName));
                     yield break;
                 }
             }
@@ -496,7 +536,7 @@ public class LocalSessionBootstrap : MonoBehaviour, IMatchSession, IRoomSession
             yield return new WaitForSecondsRealtime(hostRecoveryInterval);
         }
 
-        EnvironmentNetwork.LogError($"ホストを引き継げませんでした: {joinedRoom.roomName}");
+        EnvironmentNetwork.LogError(GameText.Format("net.host_takeover_failed", joinedRoom.roomName));
         ReturnToLobby();
     }
 

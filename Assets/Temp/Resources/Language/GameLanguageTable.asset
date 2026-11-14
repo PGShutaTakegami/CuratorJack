@@ -1,0 +1,599 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffa302fe71f764f4f8464c345ab9ca1c, type: 3}
+  m_Name: GameLanguageTable
+  m_EditorClassIdentifier: Assembly-CSharp::LanguageTable
+  entries:
+  - key: game.status.line
+    japanese: "Player{0}  \u30B3\u30A4\u30F3 {1}  \u898B\u9001\u308A\u6A29 {2}  \u843D\u672D
+      {3}{4}"
+    english: Player{0}  Coins {1}  Passes {2}  Wins {3}{4}
+    chineseSimplified: "Player{0}  \u91D1\u5E01 {1}  \u5F03\u6743\u5238 {2}  \u62CD\u5F97
+      {3}{4}"
+    chineseTraditional: "Player{0}  \u91D1\u5E63 {1}  \u68C4\u6B0A\u5238 {2}  \u62CD\u5F97
+      {3}{4}"
+  - key: game.status.spectating_suffix
+    japanese: "  \uFF08\u89B3\u6226\u4E2D\uFF09"
+    english: '  (Spectating)'
+    chineseSimplified: "  \uFF08\u89C2\u6218\u4E2D\uFF09"
+    chineseTraditional: "  \uFF08\u89C0\u6230\u4E2D\uFF09"
+  - key: game.you
+    japanese: "\u3042\u306A\u305F"
+    english: You
+    chineseSimplified: "\u4F60"
+    chineseTraditional: "\u4F60"
+  - key: game.player
+    japanese: Player{0}
+    english: Player{0}
+    chineseSimplified: Player{0}
+    chineseTraditional: Player{0}
+  - key: game.rarity.low
+    japanese: "\u4F4E"
+    english: Low
+    chineseSimplified: "\u4F4E"
+    chineseTraditional: "\u4F4E"
+  - key: game.rarity.middle
+    japanese: "\u4E2D"
+    english: Mid
+    chineseSimplified: "\u4E2D"
+    chineseTraditional: "\u4E2D"
+  - key: game.rarity.high
+    japanese: "\u9AD8"
+    english: High
+    chineseSimplified: "\u9AD8"
+    chineseTraditional: "\u9AD8"
+  - key: game.prompt.spectating
+    japanese: "\u30AA\u30FC\u30AF\u30B7\u30E7\u30F3\u3092\u89B3\u6226\u4E2D"
+    english: Spectating the auction
+    chineseSimplified: "\u6B63\u5728\u89C2\u6218\u62CD\u5356"
+    chineseTraditional: "\u6B63\u5728\u89C0\u6230\u62CD\u8CE3"
+  - key: game.prompt.choose_goods
+    japanese: "\u624B\u672D\u3092\u5E83\u3052\u3066\u3001\u51FA\u54C1\u3059\u308B\u30B0\u30C3\u30BA\u30AB\u30FC\u30C9\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044"
+    english: Spread your hand and choose a goods card to list
+    chineseSimplified: "\u5C55\u5F00\u624B\u724C\uFF0C\u9009\u62E9\u8981\u4E0A\u62CD\u7684\u5546\u54C1\u5361"
+    chineseTraditional: "\u5C55\u958B\u624B\u724C\uFF0C\u9078\u64C7\u8981\u4E0A\u62CD\u7684\u5546\u54C1\u5361"
+  - key: game.prompt.attach_buff
+    japanese: "{0}\uFF08\u6700\u4F4E {1}\uFF09\u3092\u51FA\u54C1\u3057\u307E\u3059\u3002\u30D0\u30D5\u30C7\u30D0\u30D5\u30AB\u30FC\u30C9\u3092\u4F7F\u3046\u306A\u3089\u30AF\u30EA\u30C3\u30AF\u3001\u6C7A\u307E\u3063\u305F\u3089\u78BA\u5B9A"
+    english: Listing {0} (min {1}). Click to attach a buff/debuff, then confirm
+    chineseSimplified: "\u4E0A\u62CD {0}\uFF08\u5E95\u4EF7 {1}\uFF09\u3002\u8981\u9644\u52A0\u589E\u76CA/\u51CF\u76CA\u5361\u5C31\u70B9\u51FB\uFF0C\u51B3\u5B9A\u540E\u6309\u786E\u8BA4"
+    chineseTraditional: "\u4E0A\u62CD {0}\uFF08\u5E95\u50F9 {1}\uFF09\u3002\u8981\u9644\u52A0\u589E\u76CA/\u6E1B\u76CA\u5361\u5C31\u9EDE\u9078\uFF0C\u6C7A\u5B9A\u5F8C\u6309\u78BA\u8A8D"
+  - key: game.prompt.choose_raise
+    japanese: "{0}\uFF08\u6700\u4F4E {1}\uFF09\u3092\u51FA\u54C1\u3057\u307E\u3059\u3002\u5897\u984D\u3059\u308B\u304B\u9078\u3093\u3067\u78BA\u5B9A"
+    english: Listing {0} (min {1}). Choose whether to raise, then confirm
+    chineseSimplified: "\u4E0A\u62CD {0}\uFF08\u5E95\u4EF7 {1}\uFF09\u3002\u9009\u62E9\u662F\u5426\u52A0\u4EF7\u540E\u6309\u786E\u8BA4"
+    chineseTraditional: "\u4E0A\u62CD {0}\uFF08\u5E95\u50F9 {1}\uFF09\u3002\u9078\u64C7\u662F\u5426\u52A0\u50F9\u5F8C\u6309\u78BA\u8A8D"
+  - key: game.prompt.highest
+    japanese: "\u6700\u9AD8\u984D\u3067\u3059\u3002\u3055\u3089\u306B\u91D1\u984D\u3092\u4E0A\u3052\u3066\u5165\u672D\u3059\u308B\u3053\u3068\u3082\u3067\u304D\u307E\u3059\uFF08\u6700\u9AD8\u984D\u306E\u3042\u3044\u3060\u306F\u964D\u308A\u3089\u308C\u307E\u305B\u3093\uFF09"
+    english: You are the highest bidder. You can raise your bid further (you can't
+      pass while you hold the highest bid)
+    chineseSimplified: "\u4F60\u662F\u6700\u9AD8\u51FA\u4EF7\u8005\u3002\u4E5F\u53EF\u4EE5\u7EE7\u7EED\u52A0\u4EF7\u51FA\u4EF7\uFF08\u4F5C\u4E3A\u6700\u9AD8\u51FA\u4EF7\u8005\u65F6\u4E0D\u80FD\u653E\u5F03\uFF09"
+    chineseTraditional: "\u4F60\u662F\u6700\u9AD8\u51FA\u50F9\u8005\u3002\u4E5F\u53EF\u4EE5\u7E7C\u7E8C\u52A0\u50F9\u51FA\u50F9\uFF08\u4F5C\u70BA\u6700\u9AD8\u51FA\u50F9\u8005\u6642\u4E0D\u80FD\u653E\u68C4\uFF09"
+  - key: game.prompt.must_pass
+    japanese: "\u30B3\u30A4\u30F3\u304C\u8DB3\u308A\u306A\u3044\u305F\u3081\u964D\u308A\u308B\u3057\u304B\u3042\u308A\u307E\u305B\u3093\uFF08\u898B\u9001\u308A\u6A29\u3092\u4F7F\u3044\u307E\u3059\uFF09"
+    english: "Not enough coins \u2014 you must pass (uses a pass right)"
+    chineseSimplified: "\u91D1\u5E01\u4E0D\u8DB3\uFF0C\u53EA\u80FD\u653E\u5F03\uFF08\u5C06\u4F7F\u7528\u5F03\u6743\u5238\uFF09"
+    chineseTraditional: "\u91D1\u5E63\u4E0D\u8DB3\uFF0C\u53EA\u80FD\u653E\u68C4\uFF08\u5C07\u4F7F\u7528\u68C4\u6B0A\u5238\uFF09"
+  - key: game.prompt.bid_or_pass
+    japanese: "W/S \u304B \u2191/\u2193\uFF08\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9\u30FC\u306F\u5341\u5B57\u30AD\u30FC\uFF09\u3067\u91D1\u984D\u3092\u6307\u5B9A\u3057\u3066\u5165\u672D\u3059\u308B\u304B\u3001\u964D\u308A\u308B\u304B\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044\uFF08\u964D\u308A\u308B\u3068\u898B\u9001\u308A\u6A29\u3092\u4F7F\u3044\u307E\u3059\uFF09"
+    english: "Set an amount with W/S or \u2191/\u2193 (D-pad on a controller) and
+      bid, or pass (passing uses a pass)"
+    chineseSimplified: "\u7528 W/S \u6216 \u2191/\u2193\uFF08\u624B\u67C4\u7528\u5341\u5B57\u952E\uFF09\u8BBE\u5B9A\u91D1\u989D\u51FA\u4EF7\uFF0C\u6216\u9009\u62E9\u653E\u5F03\uFF08\u653E\u5F03\u4F1A\u4F7F\u7528\u5F03\u6743\u5238\uFF09"
+    chineseTraditional: "\u7528 W/S \u6216 \u2191/\u2193\uFF08\u624B\u67C4\u7528\u5341\u5B57\u9375\uFF09\u8A2D\u5B9A\u91D1\u984D\u51FA\u50F9\uFF0C\u6216\u9078\u64C7\u653E\u68C4\uFF08\u653E\u68C4\u6703\u4F7F\u7528\u68C4\u6B0A\u5238\uFF09"
+  - key: game.auction.summary
+    japanese: "\u6700\u4F4E {0} / \u6700\u9AD8\u984D {1} / \u81EA\u5206 {2} / \u6240\u6301
+      {3}"
+    english: Min {0} / High {1} / You {2} / Coins {3}
+    chineseSimplified: "\u5E95\u4EF7 {0} / \u6700\u9AD8\u4EF7 {1} / \u4F60 {2} /
+      \u6301\u6709 {3}"
+    chineseTraditional: "\u5E95\u50F9 {0} / \u6700\u9AD8\u50F9 {1} / \u4F60 {2} /
+      \u6301\u6709 {3}"
+  - key: game.auction.pass
+    japanese: "\u964D\u308A\u308B"
+    english: Pass
+    chineseSimplified: "\u653E\u5F03"
+    chineseTraditional: "\u653E\u68C4"
+  - key: game.auction.no_bids
+    japanese: "\u5165\u672D\u306A\u3057"
+    english: No bids
+    chineseSimplified: "\u65E0\u4EBA\u51FA\u4EF7"
+    chineseTraditional: "\u7121\u4EBA\u51FA\u50F9"
+  - key: game.auction.highest_of
+    japanese: "\u6700\u9AD8\u984D {0}\uFF08{1}\uFF09"
+    english: High {0} ({1})
+    chineseSimplified: "\u6700\u9AD8\u4EF7 {0}\uFF08{1}\uFF09"
+    chineseTraditional: "\u6700\u9AD8\u50F9 {0}\uFF08{1}\uFF09"
+  - key: game.auction.in_progress
+    japanese: "\u30AA\u30FC\u30AF\u30B7\u30E7\u30F3\u4E2D\uFF1A{0}\uFF08\u6700\u4F4E
+      {1}\uFF09\u3000{2}\u3000\u6B8B\u308A {3} \u4EBA"
+    english: 'Auction: {0} (min {1})  {2}  {3} left'
+    chineseSimplified: "\u62CD\u5356\u4E2D\uFF1A{0}\uFF08\u5E95\u4EF7 {1}\uFF09\u3000{2}\u3000\u5269\u4F59
+      {3} \u4EBA"
+    chineseTraditional: "\u62CD\u8CE3\u4E2D\uFF1A{0}\uFF08\u5E95\u50F9 {1}\uFF09\u3000{2}\u3000\u5269\u9918
+      {3} \u4EBA"
+  - key: game.turn.header
+    japanese: "\u30E9\u30A6\u30F3\u30C9 {0}\u3000{1} \u306E\u30BF\u30FC\u30F3"
+    english: "Round {0} \u2014 turn of {1}"
+    chineseSimplified: "\u7B2C {0} \u8F6E\u3000{1} \u7684\u56DE\u5408"
+    chineseTraditional: "\u7B2C {0} \u8F2A\u3000{1} \u7684\u56DE\u5408"
+  - key: game.turn.seller_turn
+    japanese: "\u51FA\u54C1\u8005\u306E\u756A\u3067\u3059"
+    english: Seller's turn
+    chineseSimplified: "\u8F6E\u5230\u5356\u5BB6\u4E86"
+    chineseTraditional: "\u8F2A\u5230\u8CE3\u5BB6\u4E86"
+  - key: game.turn.round_end
+    japanese: "\u30E9\u30A6\u30F3\u30C9 {0} \u7D42\u4E86"
+    english: Round {0} ended
+    chineseSimplified: "\u7B2C {0} \u8F6E\u7ED3\u675F"
+    chineseTraditional: "\u7B2C {0} \u8F2A\u7D50\u675F"
+  - key: game.turn.draw_phase
+    japanese: "\u30C9\u30ED\u30FC\u30D5\u30A7\u30FC\u30BA\uFF08\u751F\u304D\u3066\u3044\u308B\u5168\u54E1\u304C
+      1 \u679A\u305A\u3064\u5F15\u304D\u307E\u3059\uFF09"
+    english: Draw phase (each living player draws one)
+    chineseSimplified: "\u62BD\u724C\u9636\u6BB5\uFF08\u6240\u6709\u5B58\u6D3B\u73A9\u5BB6\u5404\u62BD
+      1 \u5F20\uFF09"
+    chineseTraditional: "\u62BD\u724C\u968E\u6BB5\uFF08\u6240\u6709\u5B58\u6D3B\u73A9\u5BB6\u5404\u62BD
+      1 \u5F35\uFF09"
+  - key: game.turn.choosing_goods
+    japanese: "{0} \u304C\u51FA\u54C1\u3059\u308B\u5546\u54C1\u3092\u9078\u3093\u3067\u3044\u307E\u3059"
+    english: '{0} is choosing a listing'
+    chineseSimplified: "{0} \u6B63\u5728\u9009\u62E9\u8981\u4E0A\u62CD\u7684\u5546\u54C1"
+    chineseTraditional: "{0} \u6B63\u5728\u9078\u64C7\u8981\u4E0A\u62CD\u7684\u5546\u54C1"
+  - key: game.turn.seller_no_goods
+    japanese: "{0} \u306F\u51FA\u54C1\u3067\u304D\u308B\u30B0\u30C3\u30BA\u304C\u306A\u3044\u305F\u3081\u898B\u9001\u308A\u6A29\u3092\u4F7F\u3044\u307E\u3057\u305F"
+    english: '{0} had no goods to list and used a pass right'
+    chineseSimplified: "{0} \u6CA1\u6709\u53EF\u4EE5\u4E0A\u62CD\u7684\u5546\u54C1\uFF0C\u4F7F\u7528\u4E86\u5F03\u6743\u5238"
+    chineseTraditional: "{0} \u6C92\u6709\u53EF\u4EE5\u4E0A\u62CD\u7684\u5546\u54C1\uFF0C\u4F7F\u7528\u4E86\u68C4\u6B0A\u5238"
+  - key: game.turn.no_buyer
+    japanese: "\u843D\u672D\u8005\u304C\u3044\u307E\u305B\u3093\u3067\u3057\u305F\uFF08{0}
+      \u306F\u6D88\u8CBB\uFF09"
+    english: No winner ({0} is discarded)
+    chineseSimplified: "\u65E0\u4EBA\u62CD\u5F97\uFF08{0} \u5DF2\u6D88\u8017\uFF09"
+    chineseTraditional: "\u7121\u4EBA\u62CD\u5F97\uFF08{0} \u5DF2\u6D88\u8017\uFF09"
+  - key: game.turn.purchased
+    japanese: "{0} \u304C {1} \u3092 {2} \u30B3\u30A4\u30F3\u3067\u8CFC\u5165\u3057\u307E\u3057\u305F"
+    english: '{0} bought {1} for {2} coins'
+    chineseSimplified: "{0} \u4EE5 {2} \u91D1\u5E01\u8D2D\u5F97\u4E86 {1}"
+    chineseTraditional: "{0} \u4EE5 {2} \u91D1\u5E63\u8CFC\u5F97\u4E86 {1}"
+  - key: game.turn.dropped_out
+    japanese: "{0} \u304C\u8131\u843D\u3057\u307E\u3057\u305F"
+    english: '{0} dropped out'
+    chineseSimplified: "{0} \u88AB\u6DD8\u6C70\u4E86"
+    chineseTraditional: "{0} \u88AB\u6DD8\u6C70\u4E86"
+  - key: game.result.no_winner
+    japanese: "\u52DD\u8005\u306A\u3057"
+    english: No winner
+    chineseSimplified: "\u65E0\u80DC\u8005"
+    chineseTraditional: "\u7121\u52DD\u8005"
+  - key: game.result.winner
+    japanese: "\u52DD\u8005 {0}"
+    english: Winner {0}
+    chineseSimplified: "\u80DC\u8005 {0}"
+    chineseTraditional: "\u52DD\u8005 {0}"
+  - key: game.result.ended
+    japanese: "\u30B2\u30FC\u30E0\u7D42\u4E86\u3000{0}"
+    english: "Game over \u2014 {0}"
+    chineseSimplified: "\u6E38\u620F\u7ED3\u675F\u3000{0}"
+    chineseTraditional: "\u904A\u6232\u7D50\u675F\u3000{0}"
+  - key: game.result.alive
+    japanese: "\u751F\u5B58"
+    english: Alive
+    chineseSimplified: "\u5B58\u6D3B"
+    chineseTraditional: "\u5B58\u6D3B"
+  - key: game.result.dropout_order
+    japanese: "{0}\u756A\u76EE\u306B\u8131\u843D"
+    english: Dropped out #{0}
+    chineseSimplified: "\u7B2C {0} \u4E2A\u88AB\u6DD8\u6C70"
+    chineseTraditional: "\u7B2C {0} \u500B\u88AB\u6DD8\u6C70"
+  - key: game.result.rank_line
+    japanese: "{0}\u4F4D\u3000{1}\u3000{2}\u3000\uFF08\u30B3\u30A4\u30F3 {3}\u3000\u843D\u672D
+      {4}\uFF09"
+    english: '#{0}  {1}  {2}  (Coins {3}  Wins {4})'
+    chineseSimplified: "\u7B2C {0} \u540D\u3000{1}\u3000{2}\u3000\uFF08\u91D1\u5E01
+      {3}\u3000\u62CD\u5F97 {4}\uFF09"
+    chineseTraditional: "\u7B2C {0} \u540D\u3000{1}\u3000{2}\u3000\uFF08\u91D1\u5E63
+      {3}\u3000\u62CD\u5F97 {4}\uFF09"
+  - key: game.ui.confirm
+    japanese: "\u78BA\u5B9A"
+    english: Confirm
+    chineseSimplified: "\u786E\u8BA4"
+    chineseTraditional: "\u78BA\u8A8D"
+  - key: game.ui.bid
+    japanese: "\u5165\u672D"
+    english: Bid
+    chineseSimplified: "\u51FA\u4EF7"
+    chineseTraditional: "\u51FA\u50F9"
+  - key: game.ui.pass
+    japanese: "\u964D\u308A\u308B"
+    english: Pass
+    chineseSimplified: "\u653E\u5F03"
+    chineseTraditional: "\u653E\u68C4"
+  - key: game.turn.cpu_takeover
+    japanese: "{0} \u306E\u63A5\u7D9A\u304C\u5207\u308C\u305F\u305F\u3081\u3001CPU
+      \u304C\u4EE3\u308F\u308A\u306B\u64CD\u4F5C\u3057\u307E\u3059"
+    english: '{0} disconnected, so a CPU will play for them'
+    chineseSimplified: "{0} \u7684\u8FDE\u63A5\u5DF2\u65AD\u5F00\uFF0C\u5C06\u7531\u7535\u8111\u4EE3\u4E3A\u64CD\u4F5C"
+    chineseTraditional: "{0} \u7684\u9023\u7DDA\u5DF2\u65B7\u958B\uFF0C\u5C07\u7531\u96FB\u8166\u4EE3\u70BA\u64CD\u4F5C"
+  - key: game.turn.pressure_blocked
+    japanese: "{0} \u306F\u5727\u529B\u3067\u51FA\u54C1\u30AB\u30FC\u30C9\u3092\u5F15\u3051\u307E\u305B\u3093\u3067\u3057\u305F"
+    english: '{0} couldn''t draw a goods card due to Pressure'
+    chineseSimplified: "{0} \u53D7\u5230\u65BD\u538B\uFF0C\u65E0\u6CD5\u62BD\u53D6\u5546\u54C1\u5361"
+    chineseTraditional: "{0} \u53D7\u5230\u65BD\u58D3\uFF0C\u7121\u6CD5\u62BD\u53D6\u5546\u54C1\u5361"
+  - key: game.turn.extra_header
+    japanese: "\u30E9\u30A6\u30F3\u30C9 {0}\u3000{1} \u306E\u8FFD\u52A0\u30BF\u30FC\u30F3\uFF082\u5EA6\u76EE\uFF09"
+    english: "Round {0} \u2014 extra turn for {1} (Second Turn)"
+    chineseSimplified: "\u7B2C {0} \u8F6E\u3000{1} \u7684\u8FFD\u52A0\u56DE\u5408\uFF08\u518D\u6765\u4E00\u6B21\uFF09"
+    chineseTraditional: "\u7B2C {0} \u8F2A\u3000{1} \u7684\u8FFD\u52A0\u56DE\u5408\uFF08\u518D\u4F86\u4E00\u6B21\uFF09"
+  - key: game.turn.extra_no_goods
+    japanese: "{0} \u306F\u51FA\u54C1\u3067\u304D\u308B\u30B0\u30C3\u30BA\u304C\u306A\u3044\u305F\u3081\u3001\u8FFD\u52A0\u30BF\u30FC\u30F3\u306F\u3042\u308A\u307E\u305B\u3093"
+    english: '{0} has no goods to list, so there is no extra turn'
+    chineseSimplified: "{0} \u6CA1\u6709\u53EF\u4EE5\u4E0A\u62CD\u7684\u5546\u54C1\uFF0C\u56E0\u6B64\u6CA1\u6709\u8FFD\u52A0\u56DE\u5408"
+    chineseTraditional: "{0} \u6C92\u6709\u53EF\u4EE5\u4E0A\u62CD\u7684\u5546\u54C1\uFF0C\u56E0\u6B64\u6C92\u6709\u8FFD\u52A0\u56DE\u5408"
+  - key: game.turn.paralyzed
+    japanese: "{0} \u306F\u30DE\u30D2\u3057\u3066\u3044\u3066\u51FA\u54C1\u3067\u304D\u307E\u305B\u3093\uFF08\u30BF\u30FC\u30F3\u3092\u98DB\u3070\u3057\u307E\u3059\uFF09"
+    english: '{0} is paralyzed and can''t list (turn skipped)'
+    chineseSimplified: "{0} \u5904\u4E8E\u9EBB\u75F9\u72B6\u6001\uFF0C\u65E0\u6CD5\u4E0A\u62CD\uFF08\u8DF3\u8FC7\u56DE\u5408\uFF09"
+    chineseTraditional: "{0} \u8655\u65BC\u9EBB\u75FA\u72C0\u614B\uFF0C\u7121\u6CD5\u4E0A\u62CD\uFF08\u8DF3\u904E\u56DE\u5408\uFF09"
+  - key: game.turn.note_interfered
+    japanese: "\uFF08\u6A2A\u3084\u308A\uFF1A\u52B9\u679C\u30AB\u30FC\u30C9\u3092\u4ED8\u3051\u3089\u308C\u307E\u305B\u3093\uFF09"
+    english: ' (Interference: can''t attach effect cards)'
+    chineseSimplified: "\uFF08\u63D2\u624B\uFF1A\u65E0\u6CD5\u9644\u52A0\u6548\u679C\u5361\uFF09"
+    chineseTraditional: "\uFF08\u63D2\u624B\uFF1A\u7121\u6CD5\u9644\u52A0\u6548\u679C\u5361\uFF09"
+  - key: game.turn.note_fire_sale
+    japanese: "\uFF08\u6295\u3052\u58F2\u308A\uFF1A\u6700\u4F4E\u51FA\u54C1\u984D
+      -{0}\uFF09"
+    english: ' (Fire Sale: minimum price -{0})'
+    chineseSimplified: "\uFF08\u7529\u5356\uFF1A\u5E95\u4EF7 -{0}\uFF09"
+    chineseTraditional: "\uFF08\u7529\u8CE3\uFF1A\u5E95\u50F9 -{0}\uFF09"
+  - key: game.turn.proceeds_lost
+    japanese: "\uFF08\u6700\u5F8C\u306E 1v1 \u306E\u305F\u3081\u3001\u4EE3\u91D1\u306F\u51FA\u54C1\u8005\u306B\u5165\u308A\u307E\u305B\u3093\uFF09"
+    english: ' (Final 1v1: the seller receives no payment)'
+    chineseSimplified: "\uFF08\u6700\u540E\u7684 1v1\uFF0C\u8D27\u6B3E\u4E0D\u5F52\u5356\u5BB6\uFF09"
+    chineseTraditional: "\uFF08\u6700\u5F8C\u7684 1v1\uFF0C\u8CA8\u6B3E\u4E0D\u6B78\u8CE3\u5BB6\uFF09"
+  - key: game.turn.drained
+    japanese: "\u6700\u4F4E\u51FA\u54C1\u984D\u3088\u308A {0} \u591A\u304F\u843D\u672D\u3057\u305F\u305F\u3081\u3001{1}
+      \u306E\u30B3\u30A4\u30F3\u3092 {2} \u524A\u308A\u307E\u3057\u305F"
+    english: Won {0} above the minimum price, draining {2} coins from {1}
+    chineseSimplified: "\u6BD4\u5E95\u4EF7\u591A\u51FA\u4EF7 {0} \u62CD\u5F97\uFF0C\u524A\u51CF\u4E86
+      {1} \u7684 {2} \u91D1\u5E01"
+    chineseTraditional: "\u6BD4\u5E95\u50F9\u591A\u51FA\u50F9 {0} \u62CD\u5F97\uFF0C\u524A\u6E1B\u4E86
+      {1} \u7684 {2} \u91D1\u5E63"
+  - key: game.turn.penalty_lost
+    japanese: "\u898B\u9001\u308A\u6A29\u3092 {0} \u679A\u5931\u3044\u307E\u3057\u305F"
+    english: Lost {0} pass(es)
+    chineseSimplified: "\u5931\u53BB\u4E86 {0} \u5F20\u5F03\u6743\u5238"
+    chineseTraditional: "\u5931\u53BB\u4E86 {0} \u5F35\u68C4\u6B0A\u5238"
+  - key: game.turn.penalty_dropout
+    japanese: "\u898B\u9001\u308A\u6A29\u304C\u8DB3\u308A\u305A\u8131\u843D\u3057\u307E\u3057\u305F"
+    english: "Not enough passes \u2014 eliminated"
+    chineseSimplified: "\u5F03\u6743\u5238\u4E0D\u8DB3\uFF0C\u88AB\u6DD8\u6C70\u4E86"
+    chineseTraditional: "\u68C4\u6B0A\u5238\u4E0D\u8DB3\uFF0C\u88AB\u6DD8\u6C70\u4E86"
+  - key: game.turn.shortfall
+    japanese: "{0} \u306F {1} \u30B3\u30A4\u30F3\u3092\u6255\u3048\u305A\u8CFC\u5165\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F\u3002{2}\uFF08{3}
+      \u306F\u6D88\u8CBB\uFF09"
+    english: '{0} couldn''t pay {1} coins and failed to buy. {2} ({3} is discarded)'
+    chineseSimplified: "{0} \u4ED8\u4E0D\u8D77 {1} \u91D1\u5E01\uFF0C\u8D2D\u4E70\u5931\u8D25\u3002{2}\uFF08{3}
+      \u5DF2\u6D88\u8017\uFF09"
+    chineseTraditional: "{0} \u4ED8\u4E0D\u8D77 {1} \u91D1\u5E63\uFF0C\u8CFC\u8CB7\u5931\u6557\u3002{2}\uFF08{3}
+      \u5DF2\u6D88\u8017\uFF09"
+  - key: effect.title.unsold_effects
+    japanese: "\u843D\u672D\u8005\u306A\u3057\uFF1A{0} \u306B\u767A\u52D5\u3059\u308B\u52B9\u679C\u30AB\u30FC\u30C9"
+    english: 'No winner: effect cards that take effect on {0}'
+    chineseSimplified: "\u65E0\u4EBA\u62CD\u5F97\uFF1A\u5BF9 {0} \u751F\u6548\u7684\u6548\u679C\u5361"
+    chineseTraditional: "\u7121\u4EBA\u62CD\u5F97\uFF1A\u5C0D {0} \u751F\u6548\u7684\u6548\u679C\u5361"
+  - key: effect.title.won_effects
+    japanese: "{0} \u304C\u843D\u672D\u3057\u305F\u5546\u54C1\u306B\u4ED8\u3044\u3066\u3044\u305F\u52B9\u679C\u30AB\u30FC\u30C9"
+    english: Effect cards attached to the item {0} won
+    chineseSimplified: "{0} \u62CD\u5F97\u7684\u5546\u54C1\u4E0A\u9644\u52A0\u7684\u6548\u679C\u5361"
+    chineseTraditional: "{0} \u62CD\u5F97\u7684\u5546\u54C1\u4E0A\u9644\u52A0\u7684\u6548\u679C\u5361"
+  - key: effect.title.unsold_special
+    japanese: "\u843D\u672D\u8005\u306A\u3057\uFF1A{0} \u306B\u767A\u52D5\u3059\u308B\u30B9\u30DA\u30B7\u30E3\u30EB\u30AB\u30FC\u30C9"
+    english: 'No winner: special card that takes effect on {0}'
+    chineseSimplified: "\u65E0\u4EBA\u62CD\u5F97\uFF1A\u5BF9 {0} \u751F\u6548\u7684\u7279\u6B8A\u5361"
+    chineseTraditional: "\u7121\u4EBA\u62CD\u5F97\uFF1A\u5C0D {0} \u751F\u6548\u7684\u7279\u6B8A\u5361"
+  - key: effect.title.won_special
+    japanese: "{0} \u304C\u843D\u672D\u3057\u305F\u5546\u54C1\u306E\u30B9\u30DA\u30B7\u30E3\u30EB\u30AB\u30FC\u30C9"
+    english: Special card of the item {0} won
+    chineseSimplified: "{0} \u62CD\u5F97\u7684\u5546\u54C1\u7684\u7279\u6B8A\u5361"
+    chineseTraditional: "{0} \u62CD\u5F97\u7684\u5546\u54C1\u7684\u7279\u6B8A\u5361"
+  - key: effect.title.transform
+    japanese: "{0}\uFF08{1} \u2192 {2}\uFF09"
+    english: "{0} ({1} \u2192 {2})"
+    chineseSimplified: "{0}\uFF08{1} \u2192 {2}\uFF09"
+    chineseTraditional: "{0}\uFF08{1} \u2192 {2}\uFF09"
+  - key: effect.indulgence_nullified
+    japanese: "\u514D\u7F6A\u7B26\uFF1A{0} \u304C\u53D7\u3051\u305F\u52B9\u679C\u306F\u3059\u3079\u3066\u7121\u52B9\u306B\u306A\u308A\u307E\u3057\u305F"
+    english: 'Indulgence: all effects on {0} were nullified'
+    chineseSimplified: "\u8D4E\u7F6A\u5238\uFF1A{0} \u53D7\u5230\u7684\u6548\u679C\u5168\u90E8\u65E0\u6548\u4E86"
+    chineseTraditional: "\u8D16\u7F6A\u5238\uFF1A{0} \u53D7\u5230\u7684\u6548\u679C\u5168\u90E8\u7121\u6548\u4E86"
+  - key: effect.random_chosen
+    japanese: "{0}\uFF1A{1} \u304C\u767A\u52D5\u3057\u307E\u3059"
+    english: '{0}: {1} takes effect'
+    chineseSimplified: "{0}\uFF1A{1} \u53D1\u52A8"
+    chineseTraditional: "{0}\uFF1A{1} \u767C\u52D5"
+  - key: effect.word_of_mouth
+    japanese: "{0}\uFF1A{1} \u304C\u52B9\u679C\u30AB\u30FC\u30C9\u3092 1 \u679A\u5F15\u304D\u307E\u3059"
+    english: '{0}: {1} draws 1 effect card'
+    chineseSimplified: "{0}\uFF1A{1} \u62BD 1 \u5F20\u6548\u679C\u5361"
+    chineseTraditional: "{0}\uFF1A{1} \u62BD 1 \u5F35\u6548\u679C\u5361"
+  - key: effect.connections
+    japanese: "{0}\uFF1A{1} \u304C\u51FA\u54C1\u30AB\u30FC\u30C9\u3092 1 \u679A\u5F15\u304D\u307E\u3059"
+    english: '{0}: {1} draws 1 goods card'
+    chineseSimplified: "{0}\uFF1A{1} \u62BD 1 \u5F20\u5546\u54C1\u5361"
+    chineseTraditional: "{0}\uFF1A{1} \u62BD 1 \u5F35\u5546\u54C1\u5361"
+  - key: effect.indulgence
+    japanese: "{0}\uFF1A{1} \u304C\u6B21\u306B\u53D7\u3051\u308B\u52B9\u679C\u306F
+      1 \u56DE\u7121\u52B9\u306B\u306A\u308A\u307E\u3059"
+    english: '{0}: the next effect on {1} will be nullified once'
+    chineseSimplified: "{0}\uFF1A{1} \u4E0B\u6B21\u53D7\u5230\u7684\u6548\u679C\u5C06\u65E0\u6548
+      1 \u6B21"
+    chineseTraditional: "{0}\uFF1A{1} \u4E0B\u6B21\u53D7\u5230\u7684\u6548\u679C\u5C07\u7121\u6548
+      1 \u6B21"
+  - key: effect.reversal
+    japanese: "{0}\uFF1A\u51FA\u54C1\u30BF\u30FC\u30F3\u306E\u56DE\u308B\u5411\u304D\u304C\u9006\u306B\u306A\u308A\u307E\u3059"
+    english: '{0}: the turn order is reversed'
+    chineseSimplified: "{0}\uFF1A\u4E0A\u62CD\u56DE\u5408\u7684\u987A\u5E8F\u53CD\u8F6C"
+    chineseTraditional: "{0}\uFF1A\u4E0A\u62CD\u56DE\u5408\u7684\u9806\u5E8F\u53CD\u8F49"
+  - key: effect.fire_sale
+    japanese: "{0}\uFF1A{1} \u306E\u6B21\u306E\u51FA\u54C1\u306F\u6700\u4F4E\u51FA\u54C1\u984D\u304C
+      {2} \u4E0B\u304C\u308A\u307E\u3059"
+    english: '{0}: {1}''s next listing has its minimum price lowered by {2}'
+    chineseSimplified: "{0}\uFF1A{1} \u4E0B\u6B21\u4E0A\u62CD\u7684\u5E95\u4EF7\u964D\u4F4E
+      {2}"
+    chineseTraditional: "{0}\uFF1A{1} \u4E0B\u6B21\u4E0A\u62CD\u7684\u5E95\u50F9\u964D\u4F4E
+      {2}"
+  - key: effect.pressure
+    japanese: "{0}\uFF1A{1} \u306F\u51FA\u54C1\u30AB\u30FC\u30C9\u306E\u30C9\u30ED\u30FC\u304C
+      1 \u56DE\u3067\u304D\u307E\u305B\u3093"
+    english: '{0}: {1} skips 1 goods card draw'
+    chineseSimplified: "{0}\uFF1A{1} \u6709 1 \u6B21\u65E0\u6CD5\u62BD\u53D6\u5546\u54C1\u5361"
+    chineseTraditional: "{0}\uFF1A{1} \u6709 1 \u6B21\u7121\u6CD5\u62BD\u53D6\u5546\u54C1\u5361"
+  - key: effect.second_turn
+    japanese: "{0}\uFF1A{1} \u306F\u3053\u306E\u30BF\u30FC\u30F3\u306E\u5F8C\u306B\u3082\u3046\u4E00\u5EA6\u51FA\u54C1\u3057\u307E\u3059"
+    english: '{0}: {1} lists again after this turn'
+    chineseSimplified: "{0}\uFF1A{1} \u5728\u672C\u56DE\u5408\u7ED3\u675F\u540E\u518D\u4E0A\u62CD\u4E00\u6B21"
+    chineseTraditional: "{0}\uFF1A{1} \u5728\u672C\u56DE\u5408\u7D50\u675F\u5F8C\u518D\u4E0A\u62CD\u4E00\u6B21"
+  - key: effect.interference
+    japanese: "{0}\uFF1A{1} \u306F\u6B21\u306E\u51FA\u54C1\u3067\u52B9\u679C\u30AB\u30FC\u30C9\u3092\u4ED8\u3051\u3089\u308C\u307E\u305B\u3093"
+    english: '{0}: {1} can''t attach effect cards on their next listing'
+    chineseSimplified: "{0}\uFF1A{1} \u4E0B\u6B21\u4E0A\u62CD\u65F6\u65E0\u6CD5\u9644\u52A0\u6548\u679C\u5361"
+    chineseTraditional: "{0}\uFF1A{1} \u4E0B\u6B21\u4E0A\u62CD\u6642\u7121\u6CD5\u9644\u52A0\u6548\u679C\u5361"
+  - key: effect.golden_boon
+    japanese: "{0}\uFF1A{1} \u306E\u30B3\u30A4\u30F3\u304C {2} \u679A\u5897\u3048\u307E\u3057\u305F"
+    english: '{0}: {1} gained {2} coins'
+    chineseSimplified: "{0}\uFF1A{1} \u7684\u91D1\u5E01\u589E\u52A0\u4E86 {2} \u679A"
+    chineseTraditional: "{0}\uFF1A{1} \u7684\u91D1\u5E63\u589E\u52A0\u4E86 {2} \u679A"
+  - key: effect.grace_token
+    japanese: "{0}\uFF1A{1} \u306E\u898B\u9001\u308A\u6A29\u304C {2} \u679A\u5897\u3048\u307E\u3057\u305F"
+    english: '{0}: {1} gained {2} pass(es)'
+    chineseSimplified: "{0}\uFF1A{1} \u7684\u5F03\u6743\u5238\u589E\u52A0\u4E86 {2}
+      \u5F20"
+    chineseTraditional: "{0}\uFF1A{1} \u7684\u68C4\u6B0A\u5238\u589E\u52A0\u4E86
+      {2} \u5F35"
+  - key: effect.markdown_self
+    japanese: "{0}\uFF1A\u51FA\u54C1\u8005\u304C\u53D7\u3051\u53D6\u3063\u305F\u305F\u3081\u52B9\u679C\u306F\u3042\u308A\u307E\u305B\u3093"
+    english: '{0}: no effect because the seller received it'
+    chineseSimplified: "{0}\uFF1A\u7531\u5356\u5BB6\u63A5\u6536\uFF0C\u56E0\u6B64\u6CA1\u6709\u6548\u679C"
+    chineseTraditional: "{0}\uFF1A\u7531\u8CE3\u5BB6\u63A5\u6536\uFF0C\u56E0\u6B64\u6C92\u6709\u6548\u679C"
+  - key: effect.markdown_paid
+    japanese: "{0}\uFF1A{1} \u304C {2} \u306B {3} \u30B3\u30A4\u30F3\u3092\u8FFD\u52A0\u3067\u6255\u3044\u307E\u3057\u305F"
+    english: '{0}: {1} paid {2} an extra {3} coins'
+    chineseSimplified: "{0}\uFF1A{1} \u989D\u5916\u5411 {2} \u652F\u4ED8\u4E86 {3}
+      \u91D1\u5E01"
+    chineseTraditional: "{0}\uFF1A{1} \u984D\u5916\u5411 {2} \u652F\u4ED8\u4E86 {3}
+      \u91D1\u5E63"
+  - key: effect.markdown_paid_final
+    japanese: "{0}\uFF1A{1} \u304C {2} \u30B3\u30A4\u30F3\u3092\u8FFD\u52A0\u3067\u6255\u3044\u307E\u3057\u305F\uFF08\u6700\u5F8C\u306E
+      1v1 \u306E\u305F\u3081\u51FA\u54C1\u8005\u306B\u306F\u5165\u308A\u307E\u305B\u3093\uFF09"
+    english: '{0}: {1} paid an extra {2} coins (final 1v1: the seller receives nothing)'
+    chineseSimplified: "{0}\uFF1A{1} \u989D\u5916\u652F\u4ED8\u4E86 {2} \u91D1\u5E01\uFF08\u6700\u540E\u7684
+      1v1\uFF0C\u4E0D\u5F52\u5356\u5BB6\uFF09"
+    chineseTraditional: "{0}\uFF1A{1} \u984D\u5916\u652F\u4ED8\u4E86 {2} \u91D1\u5E63\uFF08\u6700\u5F8C\u7684
+      1v1\uFF0C\u4E0D\u6B78\u8CE3\u5BB6\uFF09"
+  - key: effect.no_targets
+    japanese: "{0}\uFF1A\u5BFE\u8C61\u306E\u30D7\u30EC\u30A4\u30E4\u30FC\u304C\u3044\u307E\u305B\u3093"
+    english: '{0}: no players to target'
+    chineseSimplified: "{0}\uFF1A\u6CA1\u6709\u53EF\u4F5C\u7528\u7684\u73A9\u5BB6"
+    chineseTraditional: "{0}\uFF1A\u6C92\u6709\u53EF\u4F5C\u7528\u7684\u73A9\u5BB6"
+  - key: effect.blocked_by_indulgence
+    japanese: "{0}\uFF1A{1} \u306F\u514D\u7F6A\u7B26\u3067\u7121\u52B9\u306B\u3057\u307E\u3057\u305F"
+    english: '{0}: {1} nullified it with an Indulgence'
+    chineseSimplified: "{0}\uFF1A{1} \u7528\u8D4E\u7F6A\u5238\u4F7F\u5176\u65E0\u6548\u4E86"
+    chineseTraditional: "{0}\uFF1A{1} \u7528\u8D16\u7F6A\u5238\u4F7F\u5176\u7121\u6548\u4E86"
+  - key: effect.name_separator
+    japanese: "\u30FB"
+    english: ', '
+    chineseSimplified: "\u3001"
+    chineseTraditional: "\u3001"
+  - key: effect.remaining
+    japanese: "\uFF08\u6B8B\u308A {0} \u56DE\uFF09"
+    english: ' ({0} left)'
+    chineseSimplified: "\uFF08\u5269\u4F59 {0} \u6B21\uFF09"
+    chineseTraditional: "\uFF08\u5269\u9918 {0} \u6B21\uFF09"
+  - key: effect.label.interference_all
+    japanese: "\u5168\u6A2A\u3084\u308A"
+    english: Interference All
+    chineseSimplified: "\u5168\u4F53\u63D2\u624B"
+    chineseTraditional: "\u5168\u9AD4\u63D2\u624B"
+  - key: effect.label.pressure_all
+    japanese: "\u5168\u5727\u529B"
+    english: Pressure All
+    chineseSimplified: "\u5168\u4F53\u65BD\u538B"
+    chineseTraditional: "\u5168\u9AD4\u65BD\u58D3"
+  - key: game.status.self
+    japanese: "{0}  \u30B3\u30A4\u30F3 {1}  \u843D\u672D {2}"
+    english: '{0}  Coins {1}  Won {2}'
+    chineseSimplified: "{0}  \u91D1\u5E01 {1}  \u62CD\u5F97 {2}"
+    chineseTraditional: "{0}  \u91D1\u5E63 {1}  \u62CD\u5F97 {2}"
+  - key: game.prompt.interfered_confirm
+    japanese: "{0}\uFF08\u6700\u4F4E {1}\uFF09\u3092\u51FA\u54C1\u3057\u307E\u3059\u3002\u6A2A\u3084\u308A\u3067\u30D0\u30D5\u30C7\u30D0\u30D5\u30AB\u30FC\u30C9\u306F\u4ED8\u3051\u3089\u308C\u307E\u305B\u3093\u3002\u78BA\u5B9A\u3057\u3066\u304F\u3060\u3055\u3044"
+    english: Listing {0} (min {1}). Interference prevents attaching buff/debuff cards.
+      Please confirm
+    chineseSimplified: "\u4E0A\u62CD {0}\uFF08\u5E95\u4EF7 {1}\uFF09\u3002\u53D7\u5230\u63D2\u624B\uFF0C\u65E0\u6CD5\u9644\u52A0\u589E\u76CA/\u51CF\u76CA\u5361\u3002\u8BF7\u786E\u8BA4"
+    chineseTraditional: "\u4E0A\u62CD {0}\uFF08\u5E95\u50F9 {1}\uFF09\u3002\u53D7\u5230\u63D2\u624B\uFF0C\u7121\u6CD5\u9644\u52A0\u589E\u76CA/\u6E1B\u76CA\u5361\u3002\u8ACB\u78BA\u8A8D"
+  - key: game.prompt.final_battle
+    japanese: "FINAL BATTLE\uFF1A\u6700\u4F4E\u984D\u3088\u308A\u591A\u304F\u5165\u672D\u3057\u3066\u843D\u672D\u3057\u305F\u5206\u3060\u3051\u3001\u76F8\u624B\u306E\u30B3\u30A4\u30F3\u3092\u524A\u308C\u307E\u3059\u3002\u91D1\u984D\u3092\u6307\u5B9A\u3057\u3066\u5165\u672D\u3059\u308B\u304B\u3001\u964D\u308A\u308B\u304B\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044"
+    english: 'FINAL BATTLE: winning above the minimum price drains your opponent''s
+      coins by the difference. Set an amount and bid, or pass'
+    chineseSimplified: "FINAL BATTLE\uFF1A\u6BD4\u5E95\u4EF7\u591A\u51FA\u4EF7\u62CD\u5F97\u7684\u90E8\u5206\uFF0C\u53EF\u4EE5\u524A\u51CF\u5BF9\u624B\u7684\u91D1\u5E01\u3002\u8BF7\u8BBE\u5B9A\u91D1\u989D\u51FA\u4EF7\uFF0C\u6216\u9009\u62E9\u653E\u5F03"
+    chineseTraditional: "FINAL BATTLE\uFF1A\u6BD4\u5E95\u50F9\u591A\u51FA\u50F9\u62CD\u5F97\u7684\u90E8\u5206\uFF0C\u53EF\u4EE5\u524A\u6E1B\u5C0D\u624B\u7684\u91D1\u5E63\u3002\u8ACB\u8A2D\u5B9A\u91D1\u984D\u51FA\u50F9\uFF0C\u6216\u9078\u64C7\u653E\u68C4"
+  - key: game.prompt.pick_shield
+    japanese: "\u30B7\u30FC\u30EB\u30C9\u3092\u4ED8\u3051\u308B\u4EBA\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044\uFF08\u53F3\u30AF\u30EA\u30C3\u30AF\u3067\u3084\u3081\u308B\uFF09"
+    english: Choose who gets the shield (right-click to cancel)
+    chineseSimplified: "\u8BF7\u9009\u62E9\u8981\u8D34\u62A4\u76FE\u7684\u4EBA\uFF08\u53F3\u952E\u53D6\u6D88\uFF09"
+    chineseTraditional: "\u8ACB\u9078\u64C7\u8981\u8CBC\u8B77\u76FE\u7684\u4EBA\uFF08\u53F3\u9375\u53D6\u6D88\uFF09"
+  - key: game.prompt.pick_paralyze
+    japanese: "\u30DE\u30D2\u3055\u305B\u308B\u76F8\u624B\u3092\u9078\u3093\u3067\u304F\u3060\u3055\u3044\uFF08\u53F3\u30AF\u30EA\u30C3\u30AF\u3067\u3084\u3081\u308B\uFF09"
+    english: Choose who to paralyze (right-click to cancel)
+    chineseSimplified: "\u8BF7\u9009\u62E9\u8981\u9EBB\u75F9\u7684\u5BF9\u624B\uFF08\u53F3\u952E\u53D6\u6D88\uFF09"
+    chineseTraditional: "\u8ACB\u9078\u64C7\u8981\u9EBB\u75FA\u7684\u5C0D\u624B\uFF08\u53F3\u9375\u53D6\u6D88\uFF09"
+  - key: game.auction.drain_suffix
+    japanese: " / \u76F8\u624B\u304B\u3089\u524A\u308B {0}"
+    english: ' / Drain {0}'
+    chineseSimplified: " / \u524A\u51CF\u5BF9\u624B {0}"
+    chineseTraditional: " / \u524A\u6E1B\u5C0D\u624B {0}"
+  - key: game.headline.turn
+    japanese: "{0} \u306E\u30BF\u30FC\u30F3"
+    english: '{0}''s turn'
+    chineseSimplified: "{0} \u7684\u56DE\u5408"
+    chineseTraditional: "{0} \u7684\u56DE\u5408"
+  - key: game.headline.auction
+    japanese: "{0} \u306E\u30AA\u30FC\u30AF\u30B7\u30E7\u30F3\u30D0\u30C8\u30EB\u4E2D"
+    english: 'Auction battle: {0}'
+    chineseSimplified: "{0} \u6B63\u5728\u8FDB\u884C\u62CD\u5356\u5BF9\u51B3"
+    chineseTraditional: "{0} \u6B63\u5728\u9032\u884C\u62CD\u8CE3\u5C0D\u6C7A"
+  - key: game.status_effect.item
+    japanese: "{0}\uFF08{1}\uFF09"
+    english: '{0} ({1})'
+    chineseSimplified: "{0}\uFF08{1}\uFF09"
+    chineseTraditional: "{0}\uFF08{1}\uFF09"
+  - key: game.status_effect.shield
+    japanese: "\u30B7\u30FC\u30EB\u30C9"
+    english: Shield
+    chineseSimplified: "\u62A4\u76FE"
+    chineseTraditional: "\u8B77\u76FE"
+  - key: game.status_effect.paralysis
+    japanese: "\u30DE\u30D2"
+    english: Paralysis
+    chineseSimplified: "\u9EBB\u75F9"
+    chineseTraditional: "\u9EBB\u75FA"
+  - key: item.magnifier.none
+    japanese: "{0}\uFF1A{1} \u306E\u51FA\u54C1\u306B\u52B9\u679C\u30AB\u30FC\u30C9\u306F\u4ED8\u3044\u3066\u3044\u307E\u305B\u3093"
+    english: '{0}: {1}''s listing has no effect cards attached'
+    chineseSimplified: "{0}\uFF1A{1} \u7684\u62CD\u54C1\u4E0A\u6CA1\u6709\u9644\u52A0\u6548\u679C\u5361"
+    chineseTraditional: "{0}\uFF1A{1} \u7684\u62CD\u54C1\u4E0A\u6C92\u6709\u9644\u52A0\u6548\u679C\u5361"
+  - key: item.magnifier.attached
+    japanese: "{0}\uFF1A{1} \u306E\u51FA\u54C1\u306B\u4ED8\u3044\u3066\u3044\u308B\u52B9\u679C\u30AB\u30FC\u30C9"
+    english: '{0}: effect cards attached to {1}''s listing'
+    chineseSimplified: "{0}\uFF1A{1} \u7684\u62CD\u54C1\u4E0A\u9644\u52A0\u7684\u6548\u679C\u5361"
+    chineseTraditional: "{0}\uFF1A{1} \u7684\u62CD\u54C1\u4E0A\u9644\u52A0\u7684\u6548\u679C\u5361"
+  - key: item.target.self
+    japanese: "\u81EA\u5206"
+    english: Yourself
+    chineseSimplified: "\u81EA\u5DF1"
+    chineseTraditional: "\u81EA\u5DF1"
+  - key: catalog.goods_stats
+    japanese: "\u958B\u59CB\u4FA1\u683C {0}\n\u30EC\u30A2\u30EA\u30C6\u30A3 {1}"
+    english: 'Starting price {0}
+
+      Rarity {1}'
+    chineseSimplified: "\u8D77\u62CD\u4EF7 {0}\n\u7A00\u6709\u5EA6 {1}"
+    chineseTraditional: "\u8D77\u62CD\u50F9 {0}\n\u7A00\u6709\u5EA6 {1}"
+  - key: game.ui.start
+    japanese: "\u30B9\u30BF\u30FC\u30C8"
+    english: Start
+    chineseSimplified: "\u5F00\u59CB"
+    chineseTraditional: "\u958B\u59CB"
+  - key: game.ui.reset
+    japanese: "\u3084\u308A\u76F4\u3057"
+    english: Reset
+    chineseSimplified: "\u91CD\u7F6E"
+    chineseTraditional: "\u91CD\u7F6E"
+  - key: game.ui.retry
+    japanese: "\u30EA\u30C8\u30E9\u30A4"
+    english: Retry
+    chineseSimplified: "\u91CD\u8BD5"
+    chineseTraditional: "\u91CD\u8A66"
+  - key: game.ui.title
+    japanese: "\u30BF\u30A4\u30C8\u30EB"
+    english: Title
+    chineseSimplified: "\u6807\u9898"
+    chineseTraditional: "\u6A19\u984C"
+  - key: catalog.tab.goods
+    japanese: "\u5546\u54C1"
+    english: Goods
+    chineseSimplified: "\u5546\u54C1"
+    chineseTraditional: "\u5546\u54C1"
+  - key: catalog.tab.effect
+    japanese: "\u30A8\u30D5\u30A7\u30AF\u30C8"
+    english: Effects
+    chineseSimplified: "\u6548\u679C"
+    chineseTraditional: "\u6548\u679C"
+  - key: catalog.tab.special
+    japanese: "\u30B9\u30DA\u30B7\u30E3\u30EB"
+    english: Special
+    chineseSimplified: "\u7279\u6B8A"
+    chineseTraditional: "\u7279\u6B8A"
+  - key: catalog.tab.item
+    japanese: "\u30A2\u30A4\u30C6\u30E0"
+    english: Items
+    chineseSimplified: "\u9053\u5177"
+    chineseTraditional: "\u9053\u5177"
+  - key: game.pause.resume
+    japanese: "\u518D\u958B"
+    english: Resume
+    chineseSimplified: "\u7EE7\u7EED"
+    chineseTraditional: "\u7E7C\u7E8C"
+  - key: game.pause.retire
+    japanese: "\u30EA\u30BF\u30A4\u30A2"
+    english: Retire
+    chineseSimplified: "\u8BA4\u8F93"
+    chineseTraditional: "\u8A8D\u8F38"
+  - key: game.pause.settings
+    japanese: "\u8A2D\u5B9A"
+    english: Settings
+    chineseSimplified: "\u8BBE\u7F6E"
+    chineseTraditional: "\u8A2D\u5B9A"
+  - key: game.pause.room_settings
+    japanese: "\u30EB\u30FC\u30E0\u8A2D\u5B9A"
+    english: Room Settings
+    chineseSimplified: "\u623F\u95F4\u8BBE\u7F6E"
+    chineseTraditional: "\u623F\u9593\u8A2D\u5B9A"
+  - key: game.pause.spectate
+    japanese: "\u5F15\u304D\u7D9A\u304D\u89B3\u6226"
+    english: Keep Watching
+    chineseSimplified: "\u7EE7\u7EED\u89C2\u6218"
+    chineseTraditional: "\u7E7C\u7E8C\u89C0\u6230"
+  - key: game.pause.restart
+    japanese: "\u6700\u521D\u304B\u3089"
+    english: Restart
+    chineseSimplified: "\u4ECE\u5934\u5F00\u59CB"
+    chineseTraditional: "\u5F9E\u982D\u958B\u59CB"
+  - key: game.pause.to_title
+    japanese: "\u30BF\u30A4\u30C8\u30EB\u3078"
+    english: Back to Title
+    chineseSimplified: "\u8FD4\u56DE\u6807\u9898"
+    chineseTraditional: "\u8FD4\u56DE\u6A19\u984C"
+  - key: game.pause.retire_confirm
+    japanese: "\u964D\u53C2\u3057\u307E\u3059\u304B\uFF1F"
+    english: Surrender?
+    chineseSimplified: "\u8981\u8BA4\u8F93\u5417\uFF1F"
+    chineseTraditional: "\u8981\u8A8D\u8F38\u55CE\uFF1F"
+  - key: game.pause.yes
+    japanese: "\u306F\u3044"
+    english: Yes
+    chineseSimplified: "\u662F"
+    chineseTraditional: "\u662F"
+  - key: game.pause.no
+    japanese: "\u3044\u3044\u3048"
+    english: No
+    chineseSimplified: "\u5426"
+    chineseTraditional: "\u5426"

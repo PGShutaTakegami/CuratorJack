@@ -1,0 +1,29 @@
+{
+  "_comment": "解除済みの実績のアイコン（金のトロフィー、背景透過）",
+  "kind": "image",
+  "size": [256, 256],
+  "background": "transparent",
+  "palette": { "gold": "#DEB86A", "gold_hi": "#F8E3A6", "gold_lo": "#9C7432", "dark": "#26180E" },
+  "layers": [
+    { "shape": "arc", "center": [62, 92], "radius": 30, "width": 12, "start": 90, "end": 270, "fill": "$gold_lo",
+      "stroke": { "color": "$dark", "width": 3, "align": "outside" } },
+    { "shape": "arc", "center": [194, 92], "radius": 30, "width": 12, "start": -90, "end": 90, "fill": "$gold_lo",
+      "stroke": { "color": "$dark", "width": 3, "align": "outside" } },
+    { "shape": "rect", "rect": [64, 44, 128, 20],
+      "union": [
+        { "shape": "polygon", "points": [[64, 60], [192, 60], [184, 112], [160, 144], [128, 156], [96, 144], [72, 112]] }
+      ],
+      "fill": { "linear": { "from": [64, 44], "to": [192, 156] }, "stops": [[0, "$gold_hi"], [0.5, "$gold"], [1, "$gold_lo"]] },
+      "stroke": { "color": "$dark", "width": 5, "align": "inside" },
+      "shadow": { "color": "#00000090", "offset": [3, 5], "blur": 5 } },
+    { "shape": "rect", "rect": [116, 154, 24, 34], "fill": { "linear": { "from": [116, 154], "to": [140, 154] }, "stops": [[0, "$gold_hi"], [1, "$gold_lo"]] },
+      "stroke": { "color": "$dark", "width": 4, "align": "inside" } },
+    { "shape": "rect", "rect": [84, 186, 88, 20], "radius": 4, "fill": { "linear": { "from": [84, 186], "to": [172, 206] }, "stops": [[0, "$gold_hi"], [1, "$gold_lo"]] },
+      "stroke": { "color": "$dark", "width": 4, "align": "inside" } },
+    { "shape": "rect", "rect": [70, 204, 116, 22], "radius": 4, "fill": { "linear": { "from": [70, 204], "to": [186, 226] }, "stops": [[0, "$gold"], [1, "$gold_lo"]] },
+      "stroke": { "color": "$dark", "width": 4, "align": "inside" },
+      "shadow": { "color": "#00000080", "offset": [3, 4], "blur": 4 } },
+    { "shape": "star", "center": [128, 100], "points": 5, "outer": 26, "inner": 11, "fill": "$gold_hi", "stroke": { "color": "$gold_lo", "width": 3, "align": "inside" } },
+    { "shape": "star", "center": [92, 72], "points": 4, "outer": 12, "inner": 3, "fill": "#FFFFFFE0", "glow": { "color": "#FFFFFFA0", "blur": 4 } }
+  ]
+}

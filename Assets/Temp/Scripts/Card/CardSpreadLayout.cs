@@ -9,7 +9,6 @@ using UnityEngine;
 public readonly struct CardSpreadLayout
 {
     readonly Vector2 bottomRowCenter;
-    readonly Vector2 cardSize;
     readonly float stepX;
     readonly float stepY;
     readonly int columns;
@@ -22,7 +21,6 @@ public readonly struct CardSpreadLayout
         int columns, int rowsPerPage, int count, int page, float pageWidth)
     {
         this.bottomRowCenter = bottomRowCenter;
-        this.cardSize = cardSize;
         this.columns = Mathf.Max(1, columns);
         this.rowsPerPage = Mathf.Max(1, rowsPerPage);
         this.count = count;
@@ -68,17 +66,6 @@ public readonly struct CardSpreadLayout
         int onPage = Mathf.Min(PerPage, count - cardPage * PerPage);
         int rows = RowsFor(onPage);
         return index % PerPage / PerRowFor(onPage, rows) < rows - 1;
-    }
-
-    /// <summary>表示中のページの一番上の列の右上</summary>
-    public Vector2 TopRight()
-    {
-        int onPage = Mathf.Max(1, Mathf.Min(PerPage, count - page * PerPage));
-        int rows = RowsFor(onPage);
-        int inTopRow = Mathf.Min(PerRowFor(onPage, rows), onPage);
-        float x = (inTopRow - 1) * 0.5f * stepX;
-        float y = (rows - 1) * stepY;
-        return bottomRowCenter + new Vector2(x, y) + cardSize * 0.5f;
     }
 
     /// <summary>count 枚を並べたときの列の数（rowsPerPage まで）</summary>

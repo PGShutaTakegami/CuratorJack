@@ -1,0 +1,12 @@
+{
+  "_comment": "制限時間の残り 5 秒からのカウント（時計の秒針のような硬く短いカッ）",
+  "kind": "se",
+  "layers": [
+    { "osc": "sine", "freq": 1600, "duration": 0.06, "env": { "a": 0.0005, "d": 0.055, "s": 0, "r": 0.01 } },
+    { "osc": "sine", "freq": 3200, "duration": 0.03, "env": { "a": 0.0003, "d": 0.025, "s": 0, "r": 0.005 }, "gain_db": -10 },
+    { "osc": "noise", "duration": 0.01, "env": { "a": 0.0002, "d": 0.008, "s": 0, "r": 0.003 },
+      "filter": { "type": "highpass", "cutoff": 3000 }, "gain_db": -12 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.06, "decay": 0.15 }],
+  "master": { "peak_db": -4 }
+}

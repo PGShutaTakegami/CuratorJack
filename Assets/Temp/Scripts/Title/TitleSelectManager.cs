@@ -76,6 +76,8 @@ public class TitleSelectManager : MonoBehaviour
 
     [SerializeField] private CanvasGroupFader titleUiFader;
 
+    [SerializeField] private TitleProfileView profileView;
+
     TitleSelect currentSelect = TitleSelect.SinglePlay;
 
     float[] optionHeights;
@@ -90,8 +92,6 @@ public class TitleSelectManager : MonoBehaviour
     bool isLoadingHumanMonitor;
     bool isSceneTransitioning;
 
-    const float StickThreshold = 0.5f;
-    float previousStickX;
     readonly List<RaycastResult> pointerHits = new List<RaycastResult>();
 
     MonitorScreenFader monitorFader;
@@ -116,6 +116,11 @@ public class TitleSelectManager : MonoBehaviour
     /// </summary>
     public bool IsTitleSelectStopped => isSceneTransitioning || isLoadingHumanMonitor || IsHumanMonitorSceneLoaded();
 
+    /// <summary>
+    /// プロフィール（アイコン・名前）の編集中は選択の入力だけ受け付けない（移動中の項目は止めない）
+    /// </summary>
+    bool IsEditingProfile => profileView != null && profileView.IsEditing;
+
     void OnEnable()
     {
         SceneTransitionEvents.ReturnToTitleRequested += BeginReturnFromMonitor;
@@ -130,14 +135,14 @@ public class TitleSelectManager : MonoBehaviour
     {
         if (splineContainer == null)
         {
-            Debug.LogError($"{nameof(TitleSelectManager)}: SplineContainer が未設定です。", this);
+            Debug.LogError(GameText.Format("log.field_missing", nameof(TitleSelectManager), "SplineContainer"), this);
             enabled = false;
             return;
         }
 
         if (selectOptions == null || selectOptions.Length == 0)
         {
-            Debug.LogError($"{nameof(TitleSelectManager)}: selectOptions が空です。", this);
+            Debug.LogError(GameText.Format("log.field_empty", nameof(TitleSelectManager), "selectOptions"), this);
             enabled = false;
             return;
         }
@@ -163,9 +168,7 @@ public class TitleSelectManager : MonoBehaviour
 
         if (IsTitleSelectStopped)
         {
-            // 表示中はスティック閾値だけ同期し、入力・移動は止める
-            var gamepad = Gamepad.current;
-            previousStickX = gamepad != null ? gamepad.leftStick.ReadValue().x : 0f;
+            // 表示中は入力・移動を止める
             if (isMoving)
             {
                 isMoving = false;
@@ -175,7 +178,8 @@ public class TitleSelectManager : MonoBehaviour
             return;
         }
 
-        HandleInput();
+        if (!IsEditingProfile)
+            HandleInput();
         if (isMoving)
             TickMove(Time.deltaTime);
     }
@@ -201,27 +205,17 @@ public class TitleSelectManager : MonoBehaviour
 
     void HandleInput()
     {
-        float stickX = 0f;
-        var gamepad = Gamepad.current;
-        if (gamepad != null)
-            stickX = gamepad.leftStick.ReadValue().x;
-
         if (isMoving || isLoadingHumanMonitor)
-        {
-            previousStickX = stickX;
             return;
-        }
 
         if (ReadConfirmInput())
         {
-            previousStickX = stickX;
             BeginMonitorTransition();
             return;
         }
 
         // 右入力（D / →）: Quit 方向  左入力（A / ←）: Book 方向
-        int input = ReadNavigateInput(stickX);
-        previousStickX = stickX;
+        int input = ReadNavigateInput();
 
         if (input > 0)
             BeginMove(-1, +1);
@@ -230,9 +224,9 @@ public class TitleSelectManager : MonoBehaviour
     }
 
     /// <summary>
-    /// キーボード・Xbox パッドから左右入力を取得する。右=+1 / 左=-1 / なし=0
+    /// キーボード・Xbox パッドの十字キーから左右入力を取得する（左スティックは疑似カーソルに使う）。右=+1 / 左=-1 / なし=0
     /// </summary>
-    int ReadNavigateInput(float stickX)
+    static int ReadNavigateInput()
     {
         var keyboard = Keyboard.current;
         if (keyboard != null)
@@ -243,20 +237,9 @@ public class TitleSelectManager : MonoBehaviour
                 return -1;
         }
 
-        var gamepad = Gamepad.current;
-        if (gamepad == null)
-            return 0;
-
-        // Xbox: 十字キー左右
-        if (gamepad.dpad.right.wasPressedThisFrame)
+        if (ControllerInput.RightPressed)
             return +1;
-        if (gamepad.dpad.left.wasPressedThisFrame)
-            return -1;
-
-        // Xbox: 左スティック左右（閾値をまたいだ瞬間のみ）
-        if (previousStickX < StickThreshold && stickX >= StickThreshold)
-            return +1;
-        if (previousStickX > -StickThreshold && stickX <= -StickThreshold)
+        if (ControllerInput.LeftPressed)
             return -1;
 
         return 0;
@@ -278,8 +261,8 @@ public class TitleSelectManager : MonoBehaviour
         if (mouse != null && mouse.leftButton.wasPressedThisFrame && !IsPointerOverButton(mouse))
             return true;
 
-        var gamepad = Gamepad.current;
-        if (gamepad != null && gamepad.buttonSouth.wasPressedThisFrame)
+        // 疑似カーソルが出ている間の A は、上の左クリックとして届く
+        if (ControllerInput.SubmitPressed)
             return true;
 
         return false;
@@ -314,6 +297,7 @@ public class TitleSelectManager : MonoBehaviour
         if (IsHumanMonitorSceneLoaded())
             return;
 
+        UISoundPlayer.PlayClick();
         isSceneTransitioning = true;
         FadeOutTitleUi(() => ZoomToMonitor(() =>
         {
@@ -404,7 +388,7 @@ public class TitleSelectManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(humanMonitorSceneName))
         {
-            Debug.LogError($"{nameof(TitleSelectManager)}: HumanMonitor シーン名が空です。", this);
+            Debug.LogError(GameText.Format("log.field_empty", nameof(TitleSelectManager), "HumanMonitor"), this);
             return;
         }
 
@@ -418,7 +402,7 @@ public class TitleSelectManager : MonoBehaviour
         if (operation == null)
         {
             isLoadingHumanMonitor = false;
-            Debug.LogError($"{nameof(TitleSelectManager)}: シーン '{humanMonitorSceneName}' のロードに失敗しました。Build Settings を確認してください。", this);
+            Debug.LogError(GameText.Format("log.scene_load_failed", nameof(TitleSelectManager), humanMonitorSceneName), this);
             return;
         }
 

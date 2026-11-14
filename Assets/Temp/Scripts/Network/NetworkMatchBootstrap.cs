@@ -91,7 +91,7 @@ public class NetworkMatchBootstrap : MonoBehaviour, IPlayerActionChannel
         phaseClock.Connect(localPlayer, players, IsCpu);
         turnFlow.Activate(agents, this, seed);
         startGate.NotifyStarted();
-        Debug.Log($"[Session] {agents.Count} 人でターンの進行を始めました（シード {seed}）");
+        Debug.Log(GameText.Format("log.session.match_started", agents.Count, seed));
     }
 
     /// <summary>
@@ -127,7 +127,7 @@ public class NetworkMatchBootstrap : MonoBehaviour, IPlayerActionChannel
     CpuPlayerAgent TakeOverByCpu(NetworkSessionPlayer player)
     {
         var cpu = player.gameObject.AddComponent<CpuPlayerAgent>();
-        cpu.Initialize(player.PlayerNumber, game, turnFlow.Commands);
+        cpu.Initialize(player.PlayerNumber, game, turnFlow.Commands, () => turnFlow.IsPresentingBid);
         cpuPlayers[player.PlayerNumber] = player;
         return cpu;
     }
@@ -157,6 +157,6 @@ public class NetworkMatchBootstrap : MonoBehaviour, IPlayerActionChannel
 
         turnFlow.ReplaceAgent(TakeOverByCpu(player));
         player.AnnounceCpuTakeover();
-        Debug.Log($"[Session] Player{playerNumber} が切断したため、CPU に切り替えました");
+        Debug.Log(GameText.Format("log.session.cpu_takeover", playerNumber));
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 /// <summary>
 /// チュートリアルで配るカードを決めておく。自分と CPU で別の並びを使い、カードの種類ごとに先頭から順に配る。
-/// 並びを使い切った種類は、山札から引かせる。
+/// 並びを使い切った種類は、山札から引かせる。Active でないカードは並びから飛ばし、Active でないスペシャルカードは付けない。
 /// </summary>
 public class TutorialDeck : MonoBehaviour, IScriptedDraw
 {
@@ -37,13 +37,13 @@ public class TutorialDeck : MonoBehaviour, IScriptedDraw
         int found = 0;
         foreach (ScriptedCard entry in script)
         {
-            if (entry.kind != kind)
+            if (entry.kind != kind || !Activatable.IsActive(entry.card))
                 continue;
 
             if (found == index)
             {
                 dealt[(player, kind)] = index + 1;
-                card = new HandCard(kind, entry.card, entry.special);
+                card = new HandCard(kind, entry.card, Activatable.IsActive(entry.special) ? entry.special : null);
                 return true;
             }
             found++;

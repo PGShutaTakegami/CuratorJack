@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// ルーム設定の画面。人数・待ち時間・VC と、プレイヤー枠（名前・ミュート・キック・CPU で埋める）を表示する。
+/// ルーム設定の画面。人数・待ち時間・VC と、プレイヤー枠（名前・アイコン・ミュート・キック・CPU で埋める）を表示する。
 /// ゲーム開始前はすべて変えられ、ゲーム中はミュートとキックだけ変えられる。キックは部屋主にだけ表示し、自分の枠にはミュートもキックも出さない。
 /// 部屋の状態と操作（VC の ON/OFF を含む）は、今のプレイ形式の IRoomControl に任せる。VC の ON/OFF を変えられるのはマルチプレイの部屋主だけ。
 /// ミュートは VoiceChatSession に任せ、自分の画面だけで相手の声を聞こえなくする。部屋の VC が ON のとき、CPU 以外のほかの人の枠にだけ出す。
@@ -35,6 +35,8 @@ public class RoomSettingsPanel : MonoBehaviour
 
     [SerializeField] private PlayerNameDirectory names;
 
+    [SerializeField] private PlayerIconDirectory icons;
+
     [SerializeField] private VoiceChatSession voiceChat;
 
     readonly List<int> slotPlayers = new List<int>();
@@ -62,6 +64,7 @@ public class RoomSettingsPanel : MonoBehaviour
         startGate.Changed += Refresh;
         game.PlayerDied += HandlePlayerDied;
         voiceChat.Changed += Refresh;
+        icons.Changed += Refresh;
         view.SetActive(false);
     }
 
@@ -70,6 +73,7 @@ public class RoomSettingsPanel : MonoBehaviour
         startGate.Changed -= Refresh;
         game.PlayerDied -= HandlePlayerDied;
         voiceChat.Changed -= Refresh;
+        icons.Changed -= Refresh;
         SetRoom(null);
     }
 
@@ -151,7 +155,8 @@ public class RoomSettingsPanel : MonoBehaviour
         bool isOthers = !member.IsLocal;
         bool canMute = isOthers && !member.IsCpu && room.IsVoiceChatOn;
         bool canKick = !startGate.HasStarted || game.IsAlive(player);
-        slots[slotIndex].ShowMember(names.NameOf(player), canMute, voiceChat.IsMuted(player), isOthers && roomOwner.IsOwner, canKick);
+        icons.TryGetSprite(player, out Sprite icon);
+        slots[slotIndex].ShowMember(names.NameOf(player), icon, canMute, voiceChat.IsMuted(player), isOthers && roomOwner.IsOwner, canKick);
     }
 
     void ShowEmpty(int slotIndex, bool canFill)

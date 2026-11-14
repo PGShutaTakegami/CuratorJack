@@ -1,0 +1,11 @@
+{
+  "unity_project": "../..",
+  "outputs": {
+    "se": "Assets/Temp/Audio/SE",
+    "bgm": "Assets/Temp/Audio/BGM",
+    "image": "Assets/Temp/Sprites/Generated"
+  },
+  "preview_dir": "out/preview",
+  "ogg_quality": { "se": 0.8, "bgm": 0.7 },
+  "mp3_bitrate": 192
+}

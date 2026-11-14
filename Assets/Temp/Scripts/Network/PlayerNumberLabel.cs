@@ -4,6 +4,7 @@ using UnityEngine;
 /// <summary>
 /// プレイヤーの頭上に名前（未入力ならプレイヤー番号）を表示し、常にカメラへ向ける。
 /// モデルのルートは拡大されているため、ラベルは親を持たない独立オブジェクトとして生成する。
+/// 名前が長いときは、画面の左右からはみ出ない幅に収まるまで文字を小さくする。
 /// </summary>
 [RequireComponent(typeof(NetworkSessionPlayer))]
 public class PlayerNumberLabel : MonoBehaviour
@@ -13,6 +14,14 @@ public class PlayerNumberLabel : MonoBehaviour
     [SerializeField] private Vector3 offset = new Vector3(0f, 0.9f, 0f);
 
     [SerializeField] private float fontSize = 6f;
+
+    [Tooltip("名前が長いときに小さくできる下限の文字サイズ")]
+    [SerializeField] private float minFontSize = 2f;
+
+    [SerializeField] private float maxWidth = 4f;
+
+    [Tooltip("画面の左右端から空ける余白（画面幅に対する割合）")]
+    [SerializeField, Range(0f, 0.2f)] private float screenMargin = 0.02f;
 
     [SerializeField] private Color color = new Color(1f, 0.85f, 0.35f, 1f);
 
@@ -48,8 +57,29 @@ public class PlayerNumberLabel : MonoBehaviour
         label.transform.position = anchor.position + offset;
 
         Camera cam = Camera.main != null ? Camera.main : (Camera.allCamerasCount > 0 ? Camera.allCameras[0] : null);
-        if (cam != null)
-            label.transform.rotation = cam.transform.rotation;
+        if (cam == null)
+            return;
+
+        label.transform.rotation = cam.transform.rotation;
+        FitWidthToScreen(cam);
+    }
+
+    /// <summary>ラベルの中心から近い方の画面端までに収まる幅にし、文字はその幅に入るよう自動で縮める</summary>
+    void FitWidthToScreen(Camera cam)
+    {
+        Vector3 viewport = cam.WorldToViewportPoint(label.transform.position);
+        if (viewport.z <= 0f)
+            return;
+
+        float visibleWidth = cam.orthographic
+            ? 2f * cam.orthographicSize * cam.aspect
+            : 2f * viewport.z * Mathf.Tan(cam.fieldOfView * 0.5f * Mathf.Deg2Rad) * cam.aspect;
+        float halfRoom = Mathf.Min(viewport.x, 1f - viewport.x) - screenMargin;
+        float width = Mathf.Clamp(halfRoom * 2f * visibleWidth, 0.5f, maxWidth);
+
+        Vector2 size = label.rectTransform.sizeDelta;
+        if (Mathf.Abs(size.x - width) > 0.02f)
+            label.rectTransform.sizeDelta = new Vector2(width, size.y);
     }
 
     void ApplyNumber(int playerNumber)
@@ -80,11 +110,14 @@ public class PlayerNumberLabel : MonoBehaviour
         if (font != null)
             text.font = font;
         text.fontSize = fontSize;
+        text.enableAutoSizing = true;
+        text.fontSizeMax = fontSize;
+        text.fontSizeMin = minFontSize;
         text.color = color;
         text.alignment = TextAlignmentOptions.Center;
         text.fontStyle = FontStyles.Bold;
         text.textWrappingMode = TextWrappingModes.NoWrap;
-        text.rectTransform.sizeDelta = new Vector2(4f, 2f);
+        text.rectTransform.sizeDelta = new Vector2(maxWidth, 2f);
         return text;
     }
 }

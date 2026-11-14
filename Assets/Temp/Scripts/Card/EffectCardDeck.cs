@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// バフデバフ（効果）カードの山札。引くたびにランダムなカードデータを返す。
+/// バフデバフ（効果）カードの山札。引くたびにランダムなカードデータを返す。Active でないカードは引かず、一覧にも出さない。
 /// </summary>
 public class EffectCardDeck : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class EffectCardDeck : MonoBehaviour
     System.Random random = new System.Random();
 
     /// <summary>引く候補になる効果カード（一覧表示用）</summary>
-    public IReadOnlyList<CardData> Effects => effects;
+    public IReadOnlyList<CardData> Effects => Activatable.ActiveOnly(effects);
 
     /// <summary>引くカードの乱数をシードからやり直す（全員の画面で同じカードにするため）</summary>
     public void Reseed(int seed)
@@ -25,12 +25,18 @@ public class EffectCardDeck : MonoBehaviour
 
     public CardData Draw()
     {
-        return effects.Count == 0 ? null : effects[random.Next(effects.Count)];
+        return Pick(Effects);
     }
 
-    /// <summary>デバフカードだけから引く（登録がなければ通常の候補から引く）</summary>
+    /// <summary>デバフカードだけから引く（引けるデバフがなければ通常の候補から引く）</summary>
     public CardData DrawDebuff()
     {
-        return debuffs.Count == 0 ? Draw() : debuffs[random.Next(debuffs.Count)];
+        List<CardData> pool = Activatable.ActiveOnly(debuffs);
+        return pool.Count == 0 ? Draw() : Pick(pool);
+    }
+
+    CardData Pick(IReadOnlyList<CardData> pool)
+    {
+        return pool.Count == 0 ? null : pool[random.Next(pool.Count)];
     }
 }

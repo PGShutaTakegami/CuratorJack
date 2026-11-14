@@ -14,5 +14,11 @@ public enum PlayerStatus
     ExtraTurn,
 
     /// <summary>投げ売り：次の出品で最低出品額から下げる額</summary>
-    FireSaleDiscount
+    FireSaleDiscount,
+
+    /// <summary>シールド（電気プラグ）：見送り権の代わりに使える枚数</summary>
+    Shield,
+
+    /// <summary>マヒ（リモコン）：出品ターンを飛ばされる回数</summary>
+    Paralysis
 }

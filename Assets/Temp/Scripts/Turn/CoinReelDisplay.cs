@@ -52,6 +52,8 @@ public class CoinReelDisplay : MonoBehaviour
     public IEnumerator CountTo(int target)
     {
         int from = value;
+        if (target != from)
+            SoundEffectPlayer.Play(SoundId.Coins);
         int steps = Mathf.Clamp(Mathf.Abs(target - from), 1, Mathf.Max(1, maxCountSteps));
         float interval = countSeconds / steps;
         for (int i = 1; i <= steps; i++)

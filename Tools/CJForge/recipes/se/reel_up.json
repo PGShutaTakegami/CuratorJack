@@ -1,0 +1,12 @@
+{
+  "_comment": "金額を上げるときのリールの音（カチッ 1 回。下げるときより少し高い）",
+  "kind": "se",
+  "layers": [
+    { "osc": "triangle", "freq": 1500, "duration": 0.015, "env": { "a": 0.0005, "d": 0.012, "s": 0, "r": 0.004 },
+      "filter": { "type": "highpass", "cutoff": 500 } },
+    { "osc": "noise", "duration": 0.008, "env": { "a": 0.0003, "d": 0.007, "s": 0, "r": 0.003 },
+      "filter": { "type": "bandpass", "cutoff": 3500, "q": 2.0 }, "gain_db": -8 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.04, "decay": 0.15 }],
+  "master": { "peak_db": -6, "loudness_db": -30 }
+}

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 /// <summary>
-/// プレイヤー 1 人分のゲーム状態（コイン・見送り権・生死・手札・落札した商品・かかっているバフデバフ・持続効果）。
+/// プレイヤー 1 人分のゲーム状態（コイン・見送り権・生死・手札・落札した商品・かかっているバフデバフ・持続効果・アイテム）。
 /// 書き換えは GameManager を通して行い、変更の通知も GameManager が出す。
 /// </summary>
 public sealed class PlayerState
@@ -33,9 +33,26 @@ public sealed class PlayerState
 
     public IReadOnlyList<HandCard> ActiveBuffs => activeBuffs;
 
+    /// <summary>持っているアイテムのマス</summary>
+    public ItemInventory Items { get; } = new ItemInventory();
+
     public bool HasGoods => hand.Exists(card => card.IsGoods);
 
-    internal void AddToHand(HandCard card) => hand.Add(card);
+    /// <summary>グッズはグッズの右端（エフェクトカードより左）に、エフェクトカードは手札の右端に加える</summary>
+    internal void AddToHand(HandCard card)
+    {
+        if (!card.IsGoods)
+        {
+            hand.Add(card);
+            return;
+        }
+
+        int firstEffect = hand.FindIndex(held => !held.IsGoods);
+        hand.Insert(firstEffect < 0 ? hand.Count : firstEffect, card);
+    }
+
+    /// <summary>手札の index の位置にカードを戻す（範囲外なら端に収める）</summary>
+    internal void InsertToHand(HandCard card, int index) => hand.Insert(System.Math.Clamp(index, 0, hand.Count), card);
 
     internal bool RemoveFromHand(HandCard card) => hand.Remove(card);
 

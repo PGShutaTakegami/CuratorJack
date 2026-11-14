@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// ルーム設定のプレイヤー枠 1 つ。
@@ -13,6 +14,9 @@ public class RoomSlotView : MonoBehaviour
     [SerializeField] private GameObject memberRoot;
 
     [SerializeField] private TMP_Text nameLabel;
+
+    [Tooltip("参加者のアイコン。アイコンのない人は空欄にする")]
+    [SerializeField] private Image icon;
 
     [SerializeField] private MenuButton muteButton;
 
@@ -34,19 +38,40 @@ public class RoomSlotView : MonoBehaviour
 
     public event Action FillClicked;
 
+    readonly PressThrottle muteThrottle = new PressThrottle();
+    readonly PressThrottle kickThrottle = new PressThrottle();
+    readonly PressThrottle fillThrottle = new PressThrottle();
+
     void Awake()
     {
-        muteButton.Button.onClick.AddListener(() => MuteClicked?.Invoke());
-        kickButton.Button.onClick.AddListener(() => KickClicked?.Invoke());
-        fillButton.Button.onClick.AddListener(() => FillClicked?.Invoke());
+        muteButton.Button.onClick.AddListener(() =>
+        {
+            if (muteThrottle.TryAccept())
+                MuteClicked?.Invoke();
+        });
+        kickButton.Button.onClick.AddListener(() =>
+        {
+            if (kickThrottle.TryAccept())
+                KickClicked?.Invoke();
+        });
+        fillButton.Button.onClick.AddListener(() =>
+        {
+            if (fillThrottle.TryAccept())
+                FillClicked?.Invoke();
+        });
     }
 
-    public void ShowMember(string playerName, bool showMute, bool isMuted, bool showKick, bool canKick)
+    public void ShowMember(string playerName, Sprite iconSprite, bool showMute, bool isMuted, bool showKick, bool canKick)
     {
         SetRoot(memberRoot);
         nameLabel.text = playerName;
+        if (icon != null)
+        {
+            icon.sprite = iconSprite;
+            icon.enabled = iconSprite != null;
+        }
         muteButton.gameObject.SetActive(showMute);
-        muteLabel.text = isMuted ? "解除" : "ミュート";
+        muteLabel.text = GameText.Get(isMuted ? "room.slot.unmute" : "room.slot.mute");
         kickButton.gameObject.SetActive(showKick);
         kickButton.SetAvailable(canKick);
     }

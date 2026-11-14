@@ -1,0 +1,11 @@
+{
+  "_comment": "手札のカードをクリック（軽く紙をたたくトッ）",
+  "kind": "se",
+  "layers": [
+    { "osc": "noise", "duration": 0.02, "env": { "a": 0.0005, "d": 0.018, "s": 0, "r": 0.005 },
+      "filter": { "type": "bandpass", "cutoff": 2200, "q": 1.0 } },
+    { "osc": "sine", "freq": [900, 600], "duration": 0.025, "env": { "a": 0.0005, "d": 0.022, "s": 0, "r": 0.006 }, "gain_db": -8 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.05, "decay": 0.2 }],
+  "master": { "peak_db": -5 }
+}

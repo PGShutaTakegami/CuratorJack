@@ -1566,6 +1566,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7373951597878243694}
+    - targetCorrespondingSourceObject: {fileID: 4992835708484433367, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6707383421120853977}
   m_SourcePrefab: {fileID: 100100000, guid: 1286bcea37b3dee4fb38c0c50e3db61b, type: 3}
 --- !u!1 &7984306069283608379 stripped
 GameObject:
@@ -1650,7 +1653,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerNumberLabel
   headAnchor: {fileID: 8927231750670987032}
-  offset: {x: 0, y: 0.9, z: 0}
+  offset: {x: 0, y: 0.45, z: 0}
   fontSize: 6
   color: {r: 1, g: 0.85, b: 0.35, a: 1}
   font: {fileID: 11400000, guid: a8c59cf6b6b40344c938927f7fe2879d, type: 2}
@@ -1714,6 +1717,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88304ff9e0c97d74492f2b49ee651370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerVoiceIdentity
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!114 &6707383421120853977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7984306069283608379}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb96b0285eda64340be9c79f7e0804e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerIcon
   ShowTopMostFoldoutHeaderGroup: 1
 --- !u!4 &8927231750670987032 stripped
 Transform:

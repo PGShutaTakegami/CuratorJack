@@ -55,7 +55,7 @@ public class MatchSimulationRunner : MonoBehaviour
 
     IEnumerator Run()
     {
-        Debug.Log($"[Test] シミュレーション開始：{players} 人 × {matches} 試合（x{speed}）");
+        Debug.Log(GameText.Format("log.test.sim_start", players, matches, speed));
         for (int i = 1; i <= matches && !cancelRequested; i++)
         {
             yield return LoadGameScene();
@@ -86,7 +86,7 @@ public class MatchSimulationRunner : MonoBehaviour
         TestSceneRefs refs = TestSceneRefs.Find();
         if (!refs.IsSinglePlay)
         {
-            Debug.LogError("[Test] SinglePlay の GameScene を用意できなかったため、シミュレーションを中止します");
+            Debug.LogError(GameText.Get("log.test.sim_no_scene"));
             cancelRequested = true;
             yield break;
         }
@@ -145,8 +145,8 @@ public class MatchSimulationRunner : MonoBehaviour
             yield break;
 
         statistics.Add(record);
-        string result = record.TimedOut ? "打ち切り" : $"勝者 Player{record.Winner}";
-        Debug.Log($"[Test] 試合 {index}/{matches}：{result}　ラウンド {record.Rounds}　ターン {record.Turns}　実時間 {record.RealSeconds:0.0} 秒");
+        string result = record.TimedOut ? GameText.Get("log.test.sim_timed_out") : GameText.Format("log.test.sim_winner", record.Winner);
+        Debug.Log(GameText.Format("log.test.sim_match", index, matches, result, record.Rounds, record.Turns, record.RealSeconds));
     }
 
     void Report()
@@ -161,7 +161,7 @@ public class MatchSimulationRunner : MonoBehaviour
         string stamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
         File.WriteAllText(Path.Combine(folder, $"simulation_{stamp}.csv"), statistics.ToCsv());
         File.WriteAllText(Path.Combine(folder, $"simulation_{stamp}.txt"), summary);
-        Debug.Log($"[Test] 結果を保存しました：{folder}");
+        Debug.Log(GameText.Format("log.test.sim_saved", folder));
     }
 
     static string ReportFolder()

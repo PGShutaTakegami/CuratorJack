@@ -7,6 +7,7 @@ using UnityEngine;
 /// 表示するのは自分が対象者のときだけ（出品では自分が出品者のとき、オークションでは自分が降りていない参加者のとき）。
 /// オークション中は画面右下に置き、演出（他の人の入札のアップ）の間はフェードで隠し、数え始めたらフェードで出す。
 /// 出品中は手札や確定ボタンに重ならない画面右上（ポーズボタンの下）に置き、フェードせずに出し入れする。時間制限が無制限なら表示しない。
+/// 残り秒数が tickFromSeconds 以下になったら、1 減るごとに音を鳴らす。
 /// </summary>
 public class PhaseTimerView : MonoBehaviour
 {
@@ -40,6 +41,9 @@ public class PhaseTimerView : MonoBehaviour
     [SerializeField] private Placement auctionPlacement = new Placement { anchor = new Vector2(1f, 0f), position = new Vector2(-60f, 70f) };
 
     [SerializeField] private Placement listingPlacement = new Placement { anchor = new Vector2(1f, 1f), position = new Vector2(-60f, -150f) };
+
+    [Tooltip("残り秒数がこの秒数以下になったら、1 減るごとに音を鳴らす")]
+    [SerializeField] private int tickFromSeconds = 5;
 
     int shownSeconds = -1;
     bool fades;
@@ -97,5 +101,7 @@ public class PhaseTimerView : MonoBehaviour
 
         shownSeconds = seconds;
         label.text = seconds.ToString();
+        if (seconds > 0 && seconds <= tickFromSeconds)
+            SoundEffectPlayer.Play(SoundId.CountdownTick);
     }
 }

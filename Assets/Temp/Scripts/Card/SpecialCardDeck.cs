@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 最高レアリティのグッズカードに付けるスペシャルカードの山札。引くたびにランダムなカードデータを返す。
+/// 最高レアリティのグッズカードに付けるスペシャルカードの山札。引くたびにランダムなカードデータを返す。Active でないカードは引かず、一覧にも出さない。
 /// </summary>
 public class SpecialCardDeck : MonoBehaviour
 {
@@ -12,7 +12,7 @@ public class SpecialCardDeck : MonoBehaviour
     System.Random random = new System.Random();
 
     /// <summary>付く可能性のあるスペシャルカード（一覧表示用）</summary>
-    public IReadOnlyList<CardData> Specials => specials;
+    public IReadOnlyList<CardData> Specials => Activatable.ActiveOnly(specials);
 
     /// <summary>引くカードの乱数をシードからやり直す（全員の画面で同じカードにするため）</summary>
     public void Reseed(int seed)
@@ -22,6 +22,7 @@ public class SpecialCardDeck : MonoBehaviour
 
     public CardData Draw()
     {
-        return specials.Count == 0 ? null : specials[random.Next(specials.Count)];
+        IReadOnlyList<CardData> pool = Specials;
+        return pool.Count == 0 ? null : pool[random.Next(pool.Count)];
     }
 }

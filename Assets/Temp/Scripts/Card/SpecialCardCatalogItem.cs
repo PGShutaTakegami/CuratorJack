@@ -1,25 +1,16 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// カード一覧の 1 枚。カーソルが乗っている間だけカードを薄暗くして名前と説明を出す（見るだけで操作はできない）。
+/// カード一覧の 1 枚。カードの上の帯に名前、下半分に能力（説明）を常に出す（見るだけで操作はできない）。
 /// オークション中のスペシャルカードなら、カードの外側を光らせて明滅させる。
 /// </summary>
-public class SpecialCardCatalogItem : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class SpecialCardCatalogItem : MonoBehaviour
 {
     [SerializeField] private Image cardImage;
 
-    [Tooltip("カーソルが乗っている間だけ出す部分（暗幕と各テキストの親）")]
-    [SerializeField] private GameObject detail;
-
-    [Tooltip("カードと同じ形で暗くする画像")]
-    [SerializeField] private Image dim;
-
-    [SerializeField] private TMP_Text nameLabel;
-
-    [SerializeField] private TMP_Text descriptionLabel;
+    [Tooltip("カードの上に重ねる、カード名と能力")]
+    [SerializeField] private CardFaceLabels labels;
 
     [Tooltip("オークション中のときだけ出す、カードの外側の光")]
     [SerializeField] private Image glow;
@@ -32,15 +23,12 @@ public class SpecialCardCatalogItem : MonoBehaviour, IPointerEnterHandler, IPoin
 
     public CardData Data { get; private set; }
 
-    /// <summary>カードを表示する。description はカーソルを乗せたときの説明（商品なら価格やレアリティも入れる）</summary>
+    /// <summary>カードを表示する。description は下半分に出す能力（商品なら価格やレアリティも入れる）</summary>
     public void Bind(CardData data, string description)
     {
         Data = data;
         cardImage.sprite = data.Parameter.CardSprite;
-        dim.sprite = cardImage.sprite;
-        nameLabel.text = data.Parameter.CardName;
-        descriptionLabel.text = description;
-        detail.SetActive(false);
+        labels.Show(data.Parameter.CardName, description);
     }
 
     public void SetHighlighted(bool highlighted) => glow.gameObject.SetActive(highlighted);
@@ -55,10 +43,4 @@ public class SpecialCardCatalogItem : MonoBehaviour, IPointerEnterHandler, IPoin
         color.a = Mathf.Lerp(glowMinAlpha, 1f, wave);
         glow.color = color;
     }
-
-    public void OnPointerEnter(PointerEventData eventData) => detail.SetActive(true);
-
-    public void OnPointerExit(PointerEventData eventData) => detail.SetActive(false);
-
-    void OnDisable() => detail.SetActive(false);
 }

@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using EnvironmentSwitcher;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 /// <summary>
-/// MultiPlay 画面の部屋選択。人数を選んでメッセージを入力して部屋を作るか、一覧の部屋をダブルクリックして GameScene へ移動する。
-/// 一覧には選択中の人数の部屋だけを表示する。
+/// MultiPlay 画面の部屋選択。作成フォームで設定を決めて部屋を作るか、一覧の部屋をダブルクリックして GameScene へ移動する。
+/// 一覧は画面を開いたときと更新ボタンを押したときだけ取得し（通信の節約）、検索条件での絞り込みは取得済みの一覧に対して行う。
+/// 上の人数の選択は検索の人数条件と連動する。
 /// </summary>
 public class RoomLobbyController : MonoBehaviour
 {
@@ -13,25 +15,38 @@ public class RoomLobbyController : MonoBehaviour
 
     [SerializeField] private Button makeRoomButton;
 
+    [SerializeField] private Button searchButton;
+
+    [SerializeField] private Button reloadButton;
+
     [SerializeField] private RoomListView roomListView;
 
-    [SerializeField] private RoomMessagePrompt messagePrompt;
+    [SerializeField] private RoomSearchPanel searchPanel;
+
+    [SerializeField] private RoomCreatePanel createPanel;
+
+    [SerializeField] private RoomPasswordPrompt passwordPrompt;
 
     [Tooltip("部屋に入ったときに読み込むシーン")]
     [SerializeField] private string gameSceneName = "GameScene";
 
-    [Tooltip("部屋一覧を更新する間隔（秒）")]
-    [SerializeField] private float refreshInterval = 0.5f;
+    [Tooltip("更新ボタンを続けて押せるようになるまでの秒数")]
+    [FormerlySerializedAs("refreshInterval")]
+    [SerializeField] private float reloadCooldown = 0.5f;
 
-    [Tooltip("OnlineNet で部屋一覧を更新する間隔（秒）。Lobby サービスの回数制限を超えないよう長めにする")]
-    [SerializeField] private float onlineRefreshInterval = 3f;
+    [Tooltip("OnlineNet で更新ボタンを続けて押せるようになるまでの秒数。Lobby サービスの回数制限を超えないよう長めにする")]
+    [FormerlySerializedAs("onlineRefreshInterval")]
+    [SerializeField] private float onlineReloadCooldown = 3f;
 
     IRoomCatalog catalog;
     IReadOnlyList<RoomInfo> fetchedRooms = new List<RoomInfo>();
-    float activeRefreshInterval;
-    float refreshTimer;
+    RoomSearchFilter filter = RoomSearchFilter.None;
+    float activeReloadCooldown;
+    float nextReloadTime;
     bool isEnteringRoom;
     bool isFetching;
+
+    bool IsBusy => isEnteringRoom || searchPanel.IsOpen || createPanel.IsOpen || passwordPrompt.IsOpen;
 
     void Awake()
     {
@@ -39,14 +54,14 @@ public class RoomLobbyController : MonoBehaviour
         {
             case EnvironmentNetworkMode.Local:
                 catalog = new LocalRoomCatalog();
-                activeRefreshInterval = refreshInterval;
+                activeReloadCooldown = reloadCooldown;
                 break;
             case EnvironmentNetworkMode.OnlineNet:
                 catalog = new OnlineRoomCatalog();
-                activeRefreshInterval = onlineRefreshInterval;
+                activeReloadCooldown = onlineReloadCooldown;
                 break;
             default:
-                Debug.LogWarning($"[Room] 部屋一覧は Local / OnlineNet 環境のみ対応です（現在: {EnvironmentRuntime.Current}）");
+                Debug.LogWarning(GameText.Format("log.room.unsupported_env", EnvironmentRuntime.Current));
                 enabled = false;
                 break;
         }
@@ -54,68 +69,112 @@ public class RoomLobbyController : MonoBehaviour
 
     void OnEnable()
     {
-        makeRoomButton.onClick.AddListener(MakeRoom);
+        makeRoomButton.onClick.AddListener(OpenCreatePanel);
+        searchButton.onClick.AddListener(OpenSearchPanel);
+        reloadButton.onClick.AddListener(Reload);
         capacitySelector.CapacityChanged += HandleCapacityChanged;
         roomListView.RoomDoubleClicked += JoinRoom;
     }
 
     void OnDisable()
     {
-        makeRoomButton.onClick.RemoveListener(MakeRoom);
+        makeRoomButton.onClick.RemoveListener(OpenCreatePanel);
+        searchButton.onClick.RemoveListener(OpenSearchPanel);
+        reloadButton.onClick.RemoveListener(Reload);
         capacitySelector.CapacityChanged -= HandleCapacityChanged;
         roomListView.RoomDoubleClicked -= JoinRoom;
     }
 
     void Start()
     {
+        filter = filter.WithCapacity(capacitySelector.SelectedCapacity);
         RefreshList();
     }
 
     void Update()
     {
-        refreshTimer += Time.unscaledDeltaTime;
-        if (refreshTimer < activeRefreshInterval)
+        reloadButton.interactable = CanReload;
+    }
+
+    bool CanReload => !isFetching && Time.unscaledTime >= nextReloadTime;
+
+    void Reload()
+    {
+        if (IsBusy || !CanReload)
             return;
 
-        refreshTimer = 0f;
         RefreshList();
     }
 
-    void MakeRoom()
+    void OpenSearchPanel()
     {
-        if (isEnteringRoom || messagePrompt.IsOpen)
+        if (IsBusy)
             return;
 
-        int capacity = capacitySelector.SelectedCapacity;
-        if (capacity <= 0)
-        {
-            Debug.LogWarning("[Room] 先に人数を選択してください");
-            return;
-        }
-
-        messagePrompt.Open(message => CreateRoom(capacity, message));
+        searchPanel.Open(filter, ApplyFilter);
     }
 
-    void CreateRoom(int capacity, string message)
+    void ApplyFilter(RoomSearchFilter applied)
     {
-        RoomInfo room = catalog.CreateRoom(capacity, $"{capacity}人部屋 #{Random.Range(1000, 10000)}", message);
+        filter = applied;
+        if (capacitySelector.SelectedCapacity != applied.Capacity)
+            capacitySelector.Select(applied.Capacity);
+
+        ShowRooms();
+    }
+
+    void OpenCreatePanel()
+    {
+        if (IsBusy)
+            return;
+
+        createPanel.Open(capacitySelector.SelectedCapacity, CreateRoom);
+    }
+
+    void CreateRoom(RoomCreationRequest request)
+    {
+        string roomName = request.RoomName.Length > 0
+            ? request.RoomName
+            : GameText.Format("room.default_name", request.Capacity, Random.Range(1000, 10000));
+        RoomInfo room = catalog.CreateRoom(request.Capacity, roomName, request.Message, request.Password);
         RoomConnectionContext.SetHost(room);
-        EnterRoom($"[Room] 部屋を作成します: {room.roomName}（定員 {capacity} 人）");
+        EnterRoom(GameText.Format(room.hasPassword ? "log.room.creating_password" : "log.room.creating", room.roomName, room.capacity));
     }
 
     void JoinRoom(RoomInfo room)
     {
-        if (isEnteringRoom || messagePrompt.IsOpen)
+        if (IsBusy)
             return;
 
         if (room.IsFull)
         {
-            Debug.LogWarning("[Room] 入室できませんでした: 満員です");
+            Debug.LogWarning(GameText.Get("log.room.full"));
             return;
         }
 
+        if (room.hasPassword)
+        {
+            passwordPrompt.Open(room.roomName, password => TryJoinWithPassword(room, password));
+            return;
+        }
+
+        EnterAsClient(room);
+    }
+
+    bool TryJoinWithPassword(RoomInfo room, string password)
+    {
+        if (isEnteringRoom || !catalog.AcceptsPassword(room, password))
+            return false;
+
+        room.password = password;
+        EnterAsClient(room);
+        return true;
+    }
+
+    void EnterAsClient(RoomInfo room)
+    {
         RoomConnectionContext.SetClient(room);
-        EnterRoom($"[Room] 部屋に入ります: {room.roomName}");
+        EnterRoom(GameText.Format("log.room.entering", room.roomName));
     }
 
     void EnterRoom(string message)
@@ -125,9 +184,10 @@ public class RoomLobbyController : MonoBehaviour
         SceneFader.LoadScene(gameSceneName);
     }
 
-    /// <summary>人数を切り替えただけでは取得し直さず、前回取得した一覧を絞り込み直す（OnlineNet の回数制限対策）。</summary>
+    /// <summary>人数を切り替えただけでは取得し直さず、前回取得した一覧を絞り込み直す（通信の節約）。</summary>
     void HandleCapacityChanged(int capacity)
     {
+        filter = filter.WithCapacity(capacity);
         ShowRooms();
     }
 
@@ -137,13 +197,14 @@ public class RoomLobbyController : MonoBehaviour
             return;
 
         isFetching = true;
+        nextReloadTime = Time.unscaledTime + activeReloadCooldown;
         try
         {
             fetchedRooms = await catalog.FetchRoomsAsync();
         }
         catch (System.Exception exception)
         {
-            Debug.LogWarning($"[Room] 部屋一覧を取得できませんでした: {exception.Message}");
+            Debug.LogWarning(GameText.Format("log.room.list_failed", exception.Message));
             return;
         }
         finally
@@ -157,14 +218,6 @@ public class RoomLobbyController : MonoBehaviour
 
     void ShowRooms()
     {
-        int capacity = capacitySelector.SelectedCapacity;
-        var visibleRooms = new List<RoomInfo>();
-        foreach (RoomInfo room in fetchedRooms)
-        {
-            if (room.capacity == capacity)
-                visibleRooms.Add(room);
-        }
-
-        roomListView.Show(visibleRooms);
+        roomListView.Show(filter.Apply(fetchedRooms));
     }
 }

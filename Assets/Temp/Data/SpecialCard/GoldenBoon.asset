@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: GoldenBoon
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u9EC4\u91D1\u5F8B"
-    englishName: 
+    englishName: Golden Boon
     cardSprite: {fileID: 21300000, guid: ac302d94c55816246bfb3ed922b8ebc5, type: 3}
     discription: "\u30B3\u30A4\u30F3\u309220\u679A\u5897\u52A0"
     initialPrice: 0
+    englishDescription: Gain 20 coins
+    chineseSimplifiedName: "\u9EC4\u91D1\u5F8B"
+    chineseSimplifiedDescription: "\u91D1\u5E01\u589E\u52A0 20 \u679A"
+    chineseTraditionalName: "\u9EC3\u91D1\u5F8B"
+    chineseTraditionalDescription: "\u91D1\u5E63\u589E\u52A0 20 \u679A"
   rarity: 0
   effect: 12

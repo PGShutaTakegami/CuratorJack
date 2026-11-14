@@ -7,7 +7,15 @@ using UnityEngine;
 /// 出品：ランダムなグッズを選び、ときどきバフデバフを付ける（付けたら一定の確率で増額する）。
 /// オークション：払えるなら一定の確率で参加し、参加しないなら降りる。参加したら自分なりの上限額までは間をおいて入札し、
 /// 上回られて上限を超えるなら降りる（見送り権がなければ必ず参加し、所持コインまで入札する）。
+/// 出品者のコインを削れるオークション（最後の 1v1 で 2 人とも見送り権がない）では、自分のほうがコインに余裕があれば、出品者のコインを削り切れる額まで入札する。
 /// 入札額は自分と同じく、0 からレアリティの刻みで変えて選べる額（刻みの倍数）だけを使う。
+/// 入札は、入札を映す演出が終わってから考え始め、送る直前にも演出中でないことを確かめる（演出は最後の入札者しか映さないため、
+/// 演出中に入札が重なると間の人が飛ばされ、同じ人が続けて吊り上げたように見える）。
+/// アイテム（オークション中、出品者でも入札者でも使う）：
+/// ・電気プラグ：降りる直前に自分に使い、降りて削られる見送り権をシールドで守る。
+/// ・リモコン：一定の確率で、自分以外の生きている人のうち一番コインが多い人に使う。
+/// ・虫眼鏡：参加するときに一定の確率で使う。
+/// アイテムも入札と同じく、演出が終わってから使う。
 /// 操作は窓口（IPlayerCommands）へ送る（ネットワークでは切断した人の代わりにホストで動き、操作は全員へ配られる）。
 /// </summary>
 public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
@@ -28,25 +36,41 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
     [Tooltip("オークションの上限額を、最低出品額の何倍にするか（最小・最大）")]
     [SerializeField] private Vector2 valuationRate = new Vector2(1.2f, 2f);
 
+    [Tooltip("オークションに参加するときに、虫眼鏡を持っていれば使う確率")]
+    [Range(0f, 1f)]
+    [SerializeField] private float magnifierChance = 0.35f;
+
+    [Tooltip("オークションごとに、リモコンを持っていれば使う確率")]
+    [Range(0f, 1f)]
+    [SerializeField] private float remoteChance = 0.4f;
+
     GameManager game;
     IPlayerCommands commands;
+    System.Func<bool> isPresentingBid;
     Coroutine running;
+    Coroutine itemRunning;
 
     public int PlayerNumber { get; private set; }
 
-    public void Initialize(int playerNumber, GameManager gameManager, IPlayerCommands playerCommands)
+    /// <param name="presentingBid">入札を映す演出の最中か（演出中は入札しない）</param>
+    public void Initialize(int playerNumber, GameManager gameManager, IPlayerCommands playerCommands, System.Func<bool> presentingBid)
     {
         PlayerNumber = playerNumber;
         game = gameManager;
         commands = playerCommands;
+        isPresentingBid = presentingBid ?? (() => false);
     }
 
     public void BeginListing(ListingSession session) => Run(Listing(session));
 
     public void BeginAuction(AuctionModel auction)
     {
-        if (auction.Participants.Contains(PlayerNumber))
+        bool participates = auction.Participants.Contains(PlayerNumber);
+        if (participates)
             Run(Auction(auction));
+        else
+            EndPhase();
+        itemRunning = StartCoroutine(UseItems(participates));
     }
 
     public void EndPhase()
@@ -54,6 +78,9 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
         if (running != null)
             StopCoroutine(running);
         running = null;
+        if (itemRunning != null)
+            StopCoroutine(itemRunning);
+        itemRunning = null;
     }
 
     void Run(IEnumerator routine)
@@ -102,25 +129,99 @@ public class CpuPlayerAgent : MonoBehaviour, IPlayerAgent
         if (!joins)
         {
             yield return Think();
-            commands.Fold(PlayerNumber);
+            Fold();
             yield break;
         }
 
         while (auction.IsActive(PlayerNumber))
         {
+            yield return new WaitWhile(isPresentingBid);
             yield return Think();
             if (!auction.IsActive(PlayerNumber))
                 yield break;
+            if (isPresentingBid())
+                continue;
 
             bool isLeading = auction.HighestBid > 0 && auction.BidOf(PlayerNumber) == auction.HighestBid;
             if (isLeading)
                 continue;
 
-            int next = auction.Listing.RoundUpToStep(Mathf.Max(auction.LowestSelectable(PlayerNumber), auction.HighestBid + 1));
+            int next = DrainBid(auction, auction.Listing.RoundUpToStep(Mathf.Max(auction.LowestSelectable(PlayerNumber), auction.HighestBid + 1)), coins);
             if (next <= valuation && auction.CanBid(PlayerNumber, next))
                 commands.Bid(PlayerNumber, next);
             else
-                commands.Fold(PlayerNumber);
+                Fold();
         }
+    }
+
+    /// <summary>降りる。電気プラグを持っていれば先に自分に使い、降りて削られる見送り権をシールドで守る</summary>
+    void Fold()
+    {
+        if (TryFindItem(ItemKind.PowerPlug, out int plug))
+            commands.UseItem(PlayerNumber, plug, PlayerNumber);
+        commands.Fold(PlayerNumber);
+    }
+
+    /// <summary>オークション中に虫眼鏡とリモコンを使う（電気プラグは降りるときに使う）</summary>
+    IEnumerator UseItems(bool participates)
+    {
+        yield return Think();
+        if (participates && Random.value < magnifierChance && TryFindItem(ItemKind.Magnifier, out int magnifier))
+            yield return UseItem(magnifier, PlayerRegistry.NoPlayer);
+
+        yield return Think();
+        if (Random.value < remoteChance && TryFindItem(ItemKind.RemoteControl, out int remote) && TryFindRichestRival(out int rival))
+            yield return UseItem(remote, rival);
+    }
+
+    IEnumerator UseItem(int slot, int target)
+    {
+        yield return new WaitWhile(isPresentingBid);
+        commands.UseItem(PlayerNumber, slot, target);
+        yield return null;
+        yield return new WaitWhile(isPresentingBid);
+    }
+
+    bool TryFindItem(ItemKind kind, out int slot)
+    {
+        slot = -1;
+        if (!game.TryGet(PlayerNumber, out PlayerState me))
+            return false;
+
+        for (int i = 0; i < me.Items.Slots.Count; i++)
+        {
+            if (me.Items.Slots[i] != null && me.Items.Slots[i].Kind == kind)
+            {
+                slot = i;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /// <summary>自分以外の生きている人のうち、一番コインが多い人</summary>
+    bool TryFindRichestRival(out int rival)
+    {
+        PlayerState richest = game.AlivePlayers
+            .Where(player => player.PlayerNumber != PlayerNumber)
+            .OrderByDescending(player => player.Coins)
+            .FirstOrDefault();
+        rival = richest != null ? richest.PlayerNumber : PlayerRegistry.NoPlayer;
+        return richest != null;
+    }
+
+    /// <summary>
+    /// 出品者のコインを削れるオークションでは、払った後も出品者より多くコインが残るとき、出品者のコインを削り切れる額まで（払える範囲で）上げる。
+    /// 削った分と多く払った分は同じ額なので、残りのコインの差は変わらず、先に尽きるのは出品者になる。
+    /// </summary>
+    int DrainBid(AuctionModel auction, int next, int coins)
+    {
+        int sellerCoins = auction.CoinsOf(auction.Listing.Seller);
+        if (!auction.DrainsSeller || coins - auction.Listing.MinPrice <= sellerCoins)
+            return next;
+
+        int drainAll = auction.Listing.RoundUpToStep(auction.Listing.MinPrice + sellerCoins);
+        int affordable = coins / auction.Listing.BidStep * auction.Listing.BidStep;
+        return Mathf.Max(next, Mathf.Min(drainAll, affordable));
     }
 }

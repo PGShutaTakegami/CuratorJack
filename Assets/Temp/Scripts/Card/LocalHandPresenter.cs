@@ -22,9 +22,6 @@ public class LocalHandPresenter : MonoBehaviour
 
     public bool IsAnimating => view.IsMoving;
 
-    /// <summary>手札を広げたときの列の右上（ワールド座標）</summary>
-    public Vector3 SpreadTopRight => view.SpreadTopRight();
-
     public bool IsSpread => view.IsSpread;
 
     /// <summary>広げている手札を重ねた状態に戻す</summary>
@@ -68,7 +65,8 @@ public class LocalHandPresenter : MonoBehaviour
         if (!IsLocal(player))
             return;
 
-        Image image = view.AddCard();
+        SoundEffectPlayer.Play(SoundId.CardDraw);
+        Image image = view.InsertCard(ShownBefore(player, card));
         if (image.TryGetComponent(out CardManager manager))
         {
             manager.SetKind(card.Kind);
@@ -77,6 +75,20 @@ public class LocalHandPresenter : MonoBehaviour
             manager.SetSpecial(card.Special);
         }
         shown[card] = image;
+    }
+
+    /// <summary>手札でそのカードより左にあり、画面に映しているカードの枚数（画面の並びでの位置）</summary>
+    int ShownBefore(PlayerState player, HandCard card)
+    {
+        int count = 0;
+        foreach (HandCard held in player.Hand)
+        {
+            if (held == card)
+                break;
+            if (shown.ContainsKey(held))
+                count++;
+        }
+        return count;
     }
 
     void HandleRemoved(PlayerState player, HandCard card)

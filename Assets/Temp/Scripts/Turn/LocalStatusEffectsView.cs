@@ -4,8 +4,9 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// 自分にかかっている持続効果（圧力・横やり・免罪符・2度目・投げ売り）を縦に並べて表示する。
-/// 残りが 0 になった（発動し終わった）効果は表示から消す。表示はその効果を持つ効果カードの画像と名前を使う。
+/// 自分にかかっている持続効果（圧力・横やり・免罪符・2度目・投げ売り・シールド・マヒ）を縦に並べて表示する。
+/// 残りが 0 になった（発動し終わった）効果は表示から消す。
+/// 表示はその効果を持つ効果カード（シールド・マヒはその効果を生むアイテム）の画像と名前を使う。
 /// </summary>
 public class LocalStatusEffectsView : MonoBehaviour
 {
@@ -16,6 +17,9 @@ public class LocalStatusEffectsView : MonoBehaviour
     [Tooltip("効果カードの画像と名前を探す山札")]
     [SerializeField] private EffectCardDeck effectDeck;
 
+    [Tooltip("シールド・マヒの画像と名前を探すアイテムの一覧")]
+    [SerializeField] private ItemCatalog itemCatalog;
+
     [Tooltip("並べる表示の見本（実行時は非表示）")]
     [SerializeField] private StatusEffectBadge badgeTemplate;
 
@@ -24,6 +28,8 @@ public class LocalStatusEffectsView : MonoBehaviour
 
     static readonly PlayerStatus[] Order =
     {
+        PlayerStatus.Shield,
+        PlayerStatus.Paralysis,
         PlayerStatus.Indulgence,
         PlayerStatus.ExtraTurn,
         PlayerStatus.FireSaleDiscount,
@@ -64,8 +70,8 @@ public class LocalStatusEffectsView : MonoBehaviour
             }
 
             StatusEffectBadge badge = BadgeOf(status);
-            CardData card = CardOf(status);
-            badge.Bind(card != null ? card.Parameter.CardSprite : null, card != null ? card.Parameter.CardName : status.ToString(), ValueText(status, value));
+            Describe(status, out Sprite sprite, out string displayName);
+            badge.Bind(sprite, displayName, ValueText(status, value));
             badge.transform.SetSiblingIndex(index++);
             badge.gameObject.SetActive(true);
         }
@@ -82,11 +88,33 @@ public class LocalStatusEffectsView : MonoBehaviour
         return badge;
     }
 
-    CardData CardOf(PlayerStatus status)
+    void Describe(PlayerStatus status, out Sprite sprite, out string displayName)
     {
+        if (TryItemOf(status, out ItemKind kind))
+        {
+            ItemDefinition item = itemCatalog != null ? itemCatalog.Items.FirstOrDefault(entry => entry != null && entry.Kind == kind) : null;
+            sprite = item != null ? item.Icon : null;
+            displayName = item != null ? GameText.Format("game.status_effect.item", item.DisplayName, StatusName(status)) : StatusName(status);
+            return;
+        }
+
         CardEffect effect = EffectOf(status);
-        return effectDeck.Effects.FirstOrDefault(card => card != null && card.Effect == effect);
+        CardData card = effectDeck.Effects.FirstOrDefault(entry => entry != null && entry.Effect == effect);
+        sprite = card != null ? card.Parameter.CardSprite : null;
+        displayName = card != null ? card.Parameter.CardName : status.ToString();
     }
+
+    static bool TryItemOf(PlayerStatus status, out ItemKind kind)
+    {
+        switch (status)
+        {
+            case PlayerStatus.Shield: kind = ItemKind.PowerPlug; return true;
+            case PlayerStatus.Paralysis: kind = ItemKind.RemoteControl; return true;
+            default: kind = default; return false;
+        }
+    }
+
+    static string StatusName(PlayerStatus status) => GameText.Get(status == PlayerStatus.Shield ? "game.status_effect.shield" : "game.status_effect.paralysis");
 
     static CardEffect EffectOf(PlayerStatus status)
     {

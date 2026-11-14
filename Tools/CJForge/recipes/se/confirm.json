@@ -1,0 +1,14 @@
+{
+  "_comment": "確定のクリック音（重めのカチッ＋小さな金属のきらめき）",
+  "kind": "se",
+  "layers": [
+    { "osc": "sine", "freq": [1200, 500], "duration": 0.05, "env": { "a": 0.0005, "d": 0.045, "s": 0, "r": 0.01 } },
+    { "osc": "noise", "duration": 0.015, "env": { "a": 0.0003, "d": 0.012, "s": 0, "r": 0.004 },
+      "filter": { "type": "bandpass", "cutoff": 3000, "q": 1.2 }, "gain_db": -5 },
+    { "osc": "sine", "freq": [220, 120], "duration": 0.06, "env": { "a": 0.001, "d": 0.05, "s": 0, "r": 0.02 }, "gain_db": -4 },
+    { "osc": "sine", "start": 0.015, "freq": 2093, "duration": 0.25, "fm": { "ratio": 3.5, "index": 1.2, "decay": 0.08 },
+      "env": { "a": 0.002, "d": 0.25, "s": 0, "r": 0.15 }, "gain_db": -12 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.1, "decay": 0.4 }],
+  "master": { "peak_db": -2 }
+}

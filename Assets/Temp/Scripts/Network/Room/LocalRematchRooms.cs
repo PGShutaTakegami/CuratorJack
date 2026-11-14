@@ -12,7 +12,7 @@ public static class LocalRematchRooms
         RoomInfo earliest = null;
         foreach (RoomInfo room in directory.FetchRooms())
         {
-            if (room.rematchOf != previousRoomId)
+            if (room.rematchOf != previousRoomId || !GameVersion.IsCompatible(room.version))
                 continue;
 
             if (earliest == null || IsEarlier(room, earliest))

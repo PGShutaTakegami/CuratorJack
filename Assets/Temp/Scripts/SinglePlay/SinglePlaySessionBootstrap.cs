@@ -91,7 +91,7 @@ public class SinglePlaySessionBootstrap : MonoBehaviour, IMatchSession, IRoomCon
         startGate.AllowLocalStart(startGate.NotifyStarted);
         AllowSelectSeller();
         ActivateTurnFlow();
-        Debug.Log($"[SinglePlay] 自分 + コンピューター {totalPlayers - 1} 人で開始しました");
+        Debug.Log(GameText.Format("log.single_play.started", totalPlayers - 1));
     }
 
     public void FinishMatch()
@@ -243,7 +243,7 @@ public class SinglePlaySessionBootstrap : MonoBehaviour, IMatchSession, IRoomCon
                 var cpu = player.GetComponent<CpuPlayerAgent>();
                 if (cpu == null)
                     cpu = player.gameObject.AddComponent<CpuPlayerAgent>();
-                cpu.Initialize(player.PlayerNumber, game, turnFlow.Commands);
+                cpu.Initialize(player.PlayerNumber, game, turnFlow.Commands, () => turnFlow.IsPresentingBid);
                 agents.Add(cpu);
             }
             else

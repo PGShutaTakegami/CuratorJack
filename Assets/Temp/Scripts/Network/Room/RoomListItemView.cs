@@ -15,6 +15,9 @@ public class RoomListItemView : MonoBehaviour, IPointerClickHandler, IPointerEnt
 
     [SerializeField] private TMP_Text messageText;
 
+    [Tooltip("パスワード付きの部屋だけ表示する鍵マーク")]
+    [SerializeField] private GameObject lockMark;
+
     [Tooltip("クリック判定とカーソル時の強調表示に使う背景")]
     [SerializeField] private Image hitArea;
 
@@ -40,6 +43,8 @@ public class RoomListItemView : MonoBehaviour, IPointerClickHandler, IPointerEnt
         nameText.text = room.roomName;
         personText.text = $"{room.playerCount}/{room.capacity}";
         messageText.text = string.IsNullOrEmpty(room.message) ? EmptyMessage : room.message;
+        if (lockMark != null)
+            lockMark.SetActive(room.hasPassword);
     }
 
     public void OnPointerClick(PointerEventData eventData)

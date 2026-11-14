@@ -17,8 +17,8 @@ public class GoodsCardDeck : MonoBehaviour
 
     System.Random random = new System.Random();
 
-    /// <summary>ドローで来る可能性のあるグッズカード（一覧表示用）</summary>
-    public System.Collections.Generic.IReadOnlyList<CardData> Goods => goods;
+    /// <summary>ドローで来る可能性のあるグッズカード（一覧表示用）。Active でないカードは来ない</summary>
+    public System.Collections.Generic.IReadOnlyList<CardData> Goods => Activatable.ActiveOnly(goods);
 
     /// <summary>引くカードの乱数をシードからやり直す（全員の画面で同じカードにするため）</summary>
     public void Reseed(int seed)
@@ -42,6 +42,6 @@ public class GoodsCardDeck : MonoBehaviour
 
     public CardData Draw(GoodsDrawRule rule)
     {
-        return rule.Pick(goods);
+        return rule.Pick(Goods);
     }
 }

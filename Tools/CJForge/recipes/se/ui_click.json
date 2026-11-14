@@ -1,0 +1,11 @@
+{
+  "_comment": "UI ボタンのクリック（低めで控えめなコッ）",
+  "kind": "se",
+  "layers": [
+    { "osc": "sine", "freq": [700, 420], "duration": 0.05, "env": { "a": 0.001, "d": 0.045, "s": 0, "r": 0.01 } },
+    { "osc": "noise", "duration": 0.012, "env": { "a": 0.0003, "d": 0.01, "s": 0, "r": 0.004 },
+      "filter": { "type": "lowpass", "cutoff": 1500 }, "gain_db": -14 }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.05, "decay": 0.2 }],
+  "master": { "peak_db": -6, "loudness_db": -30 }
+}

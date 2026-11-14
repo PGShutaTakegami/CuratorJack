@@ -1,0 +1,320 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ffa302fe71f764f4f8464c345ab9ca1c, type: 3}
+  m_Name: TitleLanguageTable
+  m_EditorClassIdentifier: Assembly-CSharp::LanguageTable
+  entries:
+  - key: title.menu.single_play
+    japanese: "\u30B7\u30F3\u30B0\u30EB\u30D7\u30EC\u30A4"
+    english: Single Play
+    chineseSimplified: "\u5355\u4EBA\u6E38\u620F"
+    chineseTraditional: "\u55AE\u4EBA\u904A\u6232"
+  - key: title.menu.multi_play
+    japanese: "\u30DE\u30EB\u30C1\u30D7\u30EC\u30A4"
+    english: Multi Play
+    chineseSimplified: "\u591A\u4EBA\u6E38\u620F"
+    chineseTraditional: "\u591A\u4EBA\u904A\u6232"
+  - key: title.menu.option
+    japanese: "\u30AA\u30D7\u30B7\u30E7\u30F3"
+    english: Options
+    chineseSimplified: "\u9009\u9879"
+    chineseTraditional: "\u9078\u9805"
+  - key: title.menu.credit
+    japanese: "\u30AF\u30EC\u30B8\u30C3\u30C8"
+    english: Credits
+    chineseSimplified: "\u5236\u4F5C\u4EBA\u5458"
+    chineseTraditional: "\u88FD\u4F5C\u4EBA\u54E1"
+  - key: title.menu.trophy
+    japanese: "\u30C8\u30ED\u30D5\u30A3\u30FC"
+    english: Trophies
+    chineseSimplified: "\u5956\u676F"
+    chineseTraditional: "\u734E\u76C3"
+  - key: title.menu.quit
+    japanese: "\u7D42\u4E86"
+    english: Quit
+    chineseSimplified: "\u9000\u51FA"
+    chineseTraditional: "\u9000\u51FA"
+  - key: title.ready.not_ready
+    japanese: "\u6E96\u5099\u4E2D{0}/{1}"
+    english: Readying {0}/{1}
+    chineseSimplified: "\u51C6\u5907\u4E2D{0}/{1}"
+    chineseTraditional: "\u6E96\u5099\u4E2D{0}/{1}"
+  - key: title.ready.ready
+    japanese: "\u6E96\u5099\u5B8C\u4E86{0}/{1}"
+    english: Ready {0}/{1}
+    chineseSimplified: "\u5DF2\u51C6\u5907{0}/{1}"
+    chineseTraditional: "\u5DF2\u6E96\u5099{0}/{1}"
+  - key: title.lobby.start
+    japanese: "\u30B2\u30FC\u30E0\u958B\u59CB"
+    english: Start Game
+    chineseSimplified: "\u5F00\u59CB\u6E38\u620F"
+    chineseTraditional: "\u958B\u59CB\u904A\u6232"
+  - key: title.room.create
+    japanese: "\u90E8\u5C4B\u3092\u4F5C\u308B"
+    english: Create Room
+    chineseSimplified: "\u521B\u5EFA\u623F\u95F4"
+    chineseTraditional: "\u5EFA\u7ACB\u623F\u9593"
+  - key: title.room.join
+    japanese: "\u53C2\u52A0\u3059\u308B"
+    english: Join
+    chineseSimplified: "\u52A0\u5165"
+    chineseTraditional: "\u52A0\u5165"
+  - key: title.room.full
+    japanese: "\u6E80\u54E1\u3067\u3059"
+    english: Room is full
+    chineseSimplified: "\u623F\u95F4\u5DF2\u6EE1"
+    chineseTraditional: "\u623F\u9593\u5DF2\u6EFF"
+  - key: title.room.connect_failed
+    japanese: "\u63A5\u7D9A\u3067\u304D\u307E\u305B\u3093\u3067\u3057\u305F"
+    english: Could not connect
+    chineseSimplified: "\u65E0\u6CD5\u8FDE\u63A5"
+    chineseTraditional: "\u7121\u6CD5\u9023\u7DDA"
+  - key: title.players.with_cpu
+    japanese: "\u81EA\u5206 + \u30B3\u30F3\u30D4\u30E5\u30FC\u30BF\u30FC {0}\u4EBA\u3067\u958B\u59CB\u3057\u307E\u3057\u305F"
+    english: Started with you + {0} CPU player(s)
+    chineseSimplified: "\u5DF2\u7531\u4F60 + {0} \u540D\u7535\u8111\u73A9\u5BB6\u5F00\u59CB"
+    chineseTraditional: "\u5DF2\u7531\u4F60 + {0} \u540D\u96FB\u8166\u73A9\u5BB6\u958B\u59CB"
+  - key: title.menu.tutorial
+    japanese: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB"
+    english: Tutorial
+    chineseSimplified: "\u6559\u7A0B"
+    chineseTraditional: "\u6559\u7A0B"
+  - key: title.under_construction
+    japanese: "\u5236\u4F5C\u4E2D"
+    english: Under Construction
+    chineseSimplified: "\u5236\u4F5C\u4E2D"
+    chineseTraditional: "\u88FD\u4F5C\u4E2D"
+  - key: room.slot.mute
+    japanese: "\u30DF\u30E5\u30FC\u30C8"
+    english: Mute
+    chineseSimplified: "\u9759\u97F3"
+    chineseTraditional: "\u975C\u97F3"
+  - key: room.slot.unmute
+    japanese: "\u89E3\u9664"
+    english: Unmute
+    chineseSimplified: "\u53D6\u6D88\u9759\u97F3"
+    chineseTraditional: "\u53D6\u6D88\u975C\u97F3"
+  - key: room.password.wrong
+    japanese: "\u30D1\u30B9\u30EF\u30FC\u30C9\u304C\u9055\u3044\u307E\u3059"
+    english: Incorrect password
+    chineseSimplified: "\u5BC6\u7801\u9519\u8BEF"
+    chineseTraditional: "\u5BC6\u78BC\u932F\u8AA4"
+  - key: room.default_name
+    japanese: "{0}\u4EBA\u90E8\u5C4B #{1}"
+    english: '{0}-player room #{1}'
+    chineseSimplified: "{0}\u4EBA\u623F\u95F4 #{1}"
+    chineseTraditional: "{0}\u4EBA\u623F\u9593 #{1}"
+  - key: room.settings.capacity
+    japanese: "\u30EB\u30FC\u30E0\u4EBA\u6570"
+    english: Room Size
+    chineseSimplified: "\u623F\u95F4\u4EBA\u6570"
+    chineseTraditional: "\u623F\u9593\u4EBA\u6578"
+  - key: room.settings.wait_time
+    japanese: "\u5F85\u3061\u6642\u9593"
+    english: Wait Time
+    chineseSimplified: "\u7B49\u5F85\u65F6\u95F4"
+    chineseTraditional: "\u7B49\u5F85\u6642\u9593"
+  - key: room.slot.kick
+    japanese: "\u30AD\u30C3\u30AF"
+    english: Kick
+    chineseSimplified: "\u8E22\u51FA"
+    chineseTraditional: "\u8E22\u51FA"
+  - key: room.slot.empty
+    japanese: "\u7A7A\u304D"
+    english: Open
+    chineseSimplified: "\u7A7A\u4F4D"
+    chineseTraditional: "\u7A7A\u4F4D"
+  - key: room.slot.fill_cpu
+    japanese: "CPU\u3067\u57CB\u3081\u308B"
+    english: Fill with CPU
+    chineseSimplified: "\u7528 CPU \u586B\u8865"
+    chineseTraditional: "\u7528 CPU \u586B\u88DC"
+  - key: room.slot.closed
+    japanese: "\u4F7F\u7528\u4E0D\u53EF"
+    english: Closed
+    chineseSimplified: "\u4E0D\u53EF\u7528"
+    chineseTraditional: "\u4E0D\u53EF\u7528"
+  - key: title.common.close
+    japanese: "\u9589\u3058\u308B"
+    english: Close
+    chineseSimplified: "\u5173\u95ED"
+    chineseTraditional: "\u95DC\u9589"
+  - key: title.common.cancel
+    japanese: "\u30AD\u30E3\u30F3\u30BB\u30EB"
+    english: Cancel
+    chineseSimplified: "\u53D6\u6D88"
+    chineseTraditional: "\u53D6\u6D88"
+  - key: title.single.start
+    japanese: "\u958B\u59CB"
+    english: Start
+    chineseSimplified: "\u5F00\u59CB"
+    chineseTraditional: "\u958B\u59CB"
+  - key: title.multi.play2
+    japanese: "2\u4EBA\u30D7\u30EC\u30A4"
+    english: 2 Players
+    chineseSimplified: "2 \u4EBA\u6E38\u620F"
+    chineseTraditional: "2 \u4EBA\u904A\u6232"
+  - key: title.multi.play3
+    japanese: "3\u4EBA\u30D7\u30EC\u30A4"
+    english: 3 Players
+    chineseSimplified: "3 \u4EBA\u6E38\u620F"
+    chineseTraditional: "3 \u4EBA\u904A\u6232"
+  - key: title.multi.play4
+    japanese: "4\u4EBA\u30D7\u30EC\u30A4"
+    english: 4 Players
+    chineseSimplified: "4 \u4EBA\u6E38\u620F"
+    chineseTraditional: "4 \u4EBA\u904A\u6232"
+  - key: room.search.title
+    japanese: "\u30EB\u30FC\u30E0\u691C\u7D22"
+    english: Room Search
+    chineseSimplified: "\u641C\u7D22\u623F\u95F4"
+    chineseTraditional: "\u641C\u5C0B\u623F\u9593"
+  - key: room.field.name
+    japanese: "\u30EB\u30FC\u30E0\u540D"
+    english: Room Name
+    chineseSimplified: "\u623F\u95F4\u540D"
+    chineseTraditional: "\u623F\u9593\u540D"
+  - key: room.search.name_placeholder
+    japanese: "\u30EB\u30FC\u30E0\u540D\u306E\u4E00\u90E8\u3092\u5165\u529B..."
+    english: Enter part of a room name...
+    chineseSimplified: "\u8F93\u5165\u623F\u95F4\u540D\u7684\u4E00\u90E8\u5206..."
+    chineseTraditional: "\u8F38\u5165\u623F\u9593\u540D\u7684\u4E00\u90E8\u5206..."
+  - key: room.field.capacity
+    japanese: "\u4EBA\u6570"
+    english: Players
+    chineseSimplified: "\u4EBA\u6570"
+    chineseTraditional: "\u4EBA\u6578"
+  - key: room.option.any
+    japanese: "\u6307\u5B9A\u306A\u3057"
+    english: Any
+    chineseSimplified: "\u4E0D\u9650"
+    chineseTraditional: "\u4E0D\u9650"
+  - key: room.option.players2
+    japanese: "2\u4EBA"
+    english: 2 Players
+    chineseSimplified: "2 \u4EBA"
+    chineseTraditional: "2 \u4EBA"
+  - key: room.option.players3
+    japanese: "3\u4EBA"
+    english: 3 Players
+    chineseSimplified: "3 \u4EBA"
+    chineseTraditional: "3 \u4EBA"
+  - key: room.option.players4
+    japanese: "4\u4EBA"
+    english: 4 Players
+    chineseSimplified: "4 \u4EBA"
+    chineseTraditional: "4 \u4EBA"
+  - key: room.field.password
+    japanese: "\u30D1\u30B9\u30EF\u30FC\u30C9"
+    english: Password
+    chineseSimplified: "\u5BC6\u7801"
+    chineseTraditional: "\u5BC6\u78BC"
+  - key: room.option.yes
+    japanese: "\u3042\u308A"
+    english: Yes
+    chineseSimplified: "\u6709"
+    chineseTraditional: "\u6709"
+  - key: room.option.no
+    japanese: "\u306A\u3057"
+    english: No
+    chineseSimplified: "\u65E0"
+    chineseTraditional: "\u7121"
+  - key: room.search.clear
+    japanese: "\u6761\u4EF6\u30AF\u30EA\u30A2"
+    english: Clear Filters
+    chineseSimplified: "\u6E05\u9664\u6761\u4EF6"
+    chineseTraditional: "\u6E05\u9664\u689D\u4EF6"
+  - key: room.search.submit
+    japanese: "\u691C\u7D22"
+    english: Search
+    chineseSimplified: "\u641C\u7D22"
+    chineseTraditional: "\u641C\u5C0B"
+  - key: room.create.name_placeholder
+    japanese: "\u7A7A\u6B04\u306A\u3089\u81EA\u52D5\u3067\u6C7A\u307E\u308A\u307E\u3059"
+    english: Leave blank to name it automatically
+    chineseSimplified: "\u7559\u7A7A\u5219\u81EA\u52A8\u547D\u540D"
+    chineseTraditional: "\u7559\u7A7A\u5247\u81EA\u52D5\u547D\u540D"
+  - key: room.create.password_placeholder
+    japanese: "\u82F1\u6570\u5B5716\u6587\u5B57\u307E\u3067"
+    english: Up to 16 letters or digits
+    chineseSimplified: "\u6700\u591A 16 \u4E2A\u5B57\u6BCD\u6216\u6570\u5B57"
+    chineseTraditional: "\u6700\u591A 16 \u500B\u5B57\u6BCD\u6216\u6578\u5B57"
+  - key: room.field.message
+    japanese: "\u8AAC\u660E"
+    english: Description
+    chineseSimplified: "\u8BF4\u660E"
+    chineseTraditional: "\u8AAA\u660E"
+  - key: room.create.message_placeholder
+    japanese: "\u90E8\u5C4B\u306E\u8AAC\u660E\u3092\u5165\u529B..."
+    english: Enter a room description...
+    chineseSimplified: "\u8F93\u5165\u623F\u95F4\u8BF4\u660E..."
+    chineseTraditional: "\u8F38\u5165\u623F\u9593\u8AAA\u660E..."
+  - key: room.create.submit
+    japanese: "\u4F5C\u6210"
+    english: Create
+    chineseSimplified: "\u521B\u5EFA"
+    chineseTraditional: "\u5EFA\u7ACB"
+  - key: room.password.title
+    japanese: "\u30D1\u30B9\u30EF\u30FC\u30C9\u3092\u5165\u529B"
+    english: Enter Password
+    chineseSimplified: "\u8F93\u5165\u5BC6\u7801"
+    chineseTraditional: "\u8F38\u5165\u5BC6\u78BC"
+  - key: room.password.enter
+    japanese: "\u5165\u5BA4"
+    english: Enter
+    chineseSimplified: "\u8FDB\u5165"
+    chineseTraditional: "\u9032\u5165"
+  - key: title.quit.confirm
+    japanese: "\u30B2\u30FC\u30E0\u3092\u7D42\u4E86\u3059\u308B"
+    english: Quit Game
+    chineseSimplified: "\u9000\u51FA\u6E38\u620F"
+    chineseTraditional: "\u9000\u51FA\u904A\u6232"
+  - key: title.profile.name_placeholder
+    japanese: "\u540D\u524D\u3092\u5165\u529B..."
+    english: Enter your name...
+    chineseSimplified: "\u8F93\u5165\u540D\u5B57..."
+    chineseTraditional: "\u8F38\u5165\u540D\u5B57..."
+  - key: title.icon.title
+    japanese: "\u30A2\u30A4\u30B3\u30F3\u3092\u63CF\u304F"
+    english: Draw Icon
+    chineseSimplified: "\u7ED8\u5236\u5934\u50CF"
+    chineseTraditional: "\u7E6A\u88FD\u982D\u50CF"
+  - key: title.icon.brightness
+    japanese: "\u660E\u308B\u3055"
+    english: Brightness
+    chineseSimplified: "\u4EAE\u5EA6"
+    chineseTraditional: "\u4EAE\u5EA6"
+  - key: title.icon.eraser
+    japanese: "\u6D88\u3057\u30B4\u30E0"
+    english: Eraser
+    chineseSimplified: "\u6A61\u76AE\u64E6"
+    chineseTraditional: "\u6A61\u76AE\u64E6"
+  - key: title.icon.clear
+    japanese: "\u5168\u90E8\u6D88\u3059"
+    english: Clear All
+    chineseSimplified: "\u5168\u90E8\u6E05\u9664"
+    chineseTraditional: "\u5168\u90E8\u6E05\u9664"
+  - key: title.icon.undo
+    japanese: "1\u3064\u623B\u3059"
+    english: Undo
+    chineseSimplified: "\u64A4\u9500"
+    chineseTraditional: "\u64A4\u92B7"
+  - key: title.icon.redo
+    japanese: "1\u3064\u9032\u3080"
+    english: Redo
+    chineseSimplified: "\u91CD\u505A"
+    chineseTraditional: "\u91CD\u505A"
+  - key: title.icon.ok
+    japanese: "\u6C7A\u5B9A"
+    english: OK
+    chineseSimplified: "\u786E\u5B9A"
+    chineseTraditional: "\u78BA\u5B9A"

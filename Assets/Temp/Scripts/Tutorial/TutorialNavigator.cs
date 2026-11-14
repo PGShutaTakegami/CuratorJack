@@ -16,7 +16,8 @@ public enum TutorialNavLayout
 /// チュートリアルの案内の画面。暗幕・キャラクター・ふきだしを出し、指定した UI だけを暗幕より手前に出す。
 /// 手前に出した UI のうち表示されている最初の 1 つを矢印で指す。描く順は 暗幕 → 手前に出した UI → 矢印 → キャラクターとふきだし。
 /// 暗幕は透明にしていても入力を止め、チュートリアル中は案内している UI 以外を押せないようにする（Release で外す）。
-/// ふきだしのクリックで進む案内では、ふきだしを押せるようにしてクリックの合図を出す。
+/// クリックで進む案内では、ふきだしを押せるようにしてクリックの合図を出す。ふきだしの外（暗幕）を押しても進む（コントローラーの A でも進む）。
+/// 手前に出した UI は暗幕より手前にあるため、押してもその UI の操作になり案内は進まない。
 /// ポーズ画面を開いている間は、案内も入力の制限も止める。
 /// </summary>
 public class TutorialNavigator : MonoBehaviour
@@ -65,8 +66,9 @@ public class TutorialNavigator : MonoBehaviour
     string messageKey;
     bool blocksInput = true;
     bool suspended;
+    bool waitsClick;
 
-    /// <summary>ふきだしのクリックで進む案内で、ふきだしが押された</summary>
+    /// <summary>クリックで進む案内で、ふきだしか暗幕が押された</summary>
     public event Action BubbleClicked;
 
     int HighlightOrder => canvas.sortingOrder + 1;
@@ -78,6 +80,13 @@ public class TutorialNavigator : MonoBehaviour
         guideCanvas.overrideSorting = true;
         guideCanvas.sortingOrder = HighlightOrder + 2;
         bubbleButton.onClick.AddListener(() => BubbleClicked?.Invoke());
+        dim.gameObject.AddComponent<TutorialClickArea>().Clicked += HandleDimClicked;
+    }
+
+    void HandleDimClicked()
+    {
+        if (waitsClick && guide.gameObject.activeSelf && !suspended)
+            BubbleClicked?.Invoke();
     }
 
     void OnEnable()
@@ -93,6 +102,13 @@ public class TutorialNavigator : MonoBehaviour
     void OnDestroy()
     {
         spotlight.Clear();
+    }
+
+    /// <summary>ふきだしのクリックで進む案内は、コントローラーの A でも進める</summary>
+    void Update()
+    {
+        if (guide.gameObject.activeSelf && !suspended && ControllerInput.SubmitPressed)
+            UIButtonPresser.TryPress(bubbleButton);
     }
 
     /// <summary>案内を出す。dimmed なら highlights 以外を暗くし、waitsClick ならふきだしを押せるようにする</summary>
@@ -114,6 +130,7 @@ public class TutorialNavigator : MonoBehaviour
         guide.gameObject.SetActive(true);
 
         SetDimAlpha(dimmed ? dimAlpha : 0f);
+        this.waitsClick = waitsClick;
         bubbleButton.interactable = waitsClick;
         clickHint.SetActive(waitsClick);
 
@@ -129,6 +146,7 @@ public class TutorialNavigator : MonoBehaviour
     /// <summary>案内を消す。入力の制限は残す</summary>
     public void Hide()
     {
+        waitsClick = false;
         guide.gameObject.SetActive(false);
         SetDimAlpha(0f);
         spotlight.Clear();

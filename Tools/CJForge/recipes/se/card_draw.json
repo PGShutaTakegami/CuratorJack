@@ -1,0 +1,13 @@
+{
+  "_comment": "カードを引くときのサッ（短く速い紙のこすれ。帯域を上から下へ流してスライド感を出し、ザラつきはごく薄く添える）",
+  "kind": "se",
+  "layers": [
+    { "osc": "pink", "duration": 0.15, "env": { "a": 0.012, "d": 0.13, "s": 0, "r": 0.02 },
+      "filter": { "type": "bandpass", "cutoff": { "points": [[0, 5500], [0.06, 4200], [0.15, 2400]] }, "q": 0.6 }, "gain_db": 0 },
+    { "osc": "noise", "start": 0.015, "duration": 0.005, "env": { "a": 0.0003, "d": 0.0045, "s": 0, "r": 0.001 },
+      "filter": { "type": "bandpass", "cutoff": 2500, "q": 1.2 }, "gain_db": -24,
+      "repeat": { "count": 6, "interval": 0.0191, "gain_step_db": -0.6 } }
+  ],
+  "effects": [{ "type": "reverb", "mix": 0.04, "decay": 0.2 }],
+  "master": { "peak_db": -6, "loudness_db": -30 }
+}

@@ -76,7 +76,7 @@ public class LocalTestWindowLauncher : MonoBehaviour
         string path = LocalTestBuildPaths.ExecutablePath;
         if (!File.Exists(path))
         {
-            Debug.LogError("[LocalTest] テスト用ビルドがありません。メニュー Tools/CJ/Local テストビルドを作成 を実行してください。");
+            Debug.LogError(GameText.Get("log.local_test.no_build"));
             return;
         }
 
@@ -90,7 +90,7 @@ public class LocalTestWindowLauncher : MonoBehaviour
             launchedProcesses.Add(Process.Start(path, arguments));
         }
 
-        Debug.Log($"[LocalTest] 追加ウィンドウを {windowCount} 個起動しました");
+        Debug.Log(GameText.Format("log.local_test.launched", windowCount));
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]

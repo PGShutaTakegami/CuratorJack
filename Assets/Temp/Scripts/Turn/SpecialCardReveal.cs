@@ -5,6 +5,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 最高レアリティの商品が出品されたときに、付いているスペシャルカードを明かす画面の演出。
 /// 下地のグレーのカードを大きく表示し、ディゾルブでスペシャルカードへ変えてから、フェードで消す。
+/// カード名と能力は、ディゾルブに合わせてスペシャルカードの上に出す。
 /// </summary>
 public class SpecialCardReveal : MonoBehaviour
 {
@@ -14,6 +15,9 @@ public class SpecialCardReveal : MonoBehaviour
 
     [Tooltip("ディゾルブで現すスペシャルカード。下地のグレーのカードの上に重ねる")]
     [SerializeField] private Image specialImage;
+
+    [Tooltip("スペシャルカードの上に重ねる、カード名と能力")]
+    [SerializeField] private CardFaceLabels labels;
 
     [Tooltip("ディゾルブのシェーダー（CJ/UIDissolve）を使うマテリアル。実行時は複製して使う")]
     [SerializeField] private Material dissolveMaterial;
@@ -50,13 +54,21 @@ public class SpecialCardReveal : MonoBehaviour
     public IEnumerator Present(CardData special)
     {
         specialImage.sprite = special != null ? special.Parameter.CardSprite : null;
-        material.SetFloat(ProgressId, 0f);
+        labels.Show(special);
+        SetProgress(0f);
 
         yield return Tween(appearSeconds, t => group.alpha = t);
         yield return new WaitForSeconds(baseHoldSeconds);
-        yield return Tween(dissolveSeconds, t => material.SetFloat(ProgressId, t));
+        SoundEffectPlayer.Play(SoundId.CardDissolve);
+        yield return Tween(dissolveSeconds, SetProgress);
         yield return new WaitForSeconds(specialHoldSeconds);
         yield return Tween(fadeSeconds, t => group.alpha = 1f - t);
+    }
+
+    void SetProgress(float progress)
+    {
+        material.SetFloat(ProgressId, progress);
+        labels.Alpha = progress;
     }
 
     static IEnumerator Tween(float seconds, System.Action<float> apply)

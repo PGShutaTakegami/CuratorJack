@@ -22,6 +22,11 @@ public class RoomInfo
     public long createdUtcTicks;
     /// <summary>リトライで作り直した部屋なら、直前に遊んだ部屋の ID（それ以外は空）</summary>
     public string rematchOf;
+    public bool hasPassword;
+    /// <summary>部屋を作った人・入室で入力した人だけが持つ。OnlineNet の一覧からは読めない</summary>
+    public string password;
+    /// <summary>部屋を作った画面のゲームのバージョン（Local の一覧で使う。違うバージョンの部屋は出さない）</summary>
+    public string version;
 
     public bool IsFull => playerCount >= capacity;
 }
