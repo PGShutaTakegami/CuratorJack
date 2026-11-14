@@ -15,6 +15,6 @@ public static class StartSelectFromArguments
         if (Enum.TryParse(value, true, out TitleSelectManager.TitleSelect select))
             TitleSelectionContext.Set(select);
         else
-            Debug.LogWarning($"[LaunchArguments] 不明な画面指定です: {value}");
+            Debug.LogWarning(GameText.Format("log.launch.unknown_screen", value));
     }
 }

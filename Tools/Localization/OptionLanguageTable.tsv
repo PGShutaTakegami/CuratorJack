@@ -1,0 +1,29 @@
+key	ja	en	zh-Hans	zh-Hant
+option.title	オプション	Options	选项	選項
+option.row.master_volume	マスターボリューム	Master Volume	主音量	主音量
+option.row.voice_chat_volume	VCボリューム	VC Volume	语音音量	語音音量
+option.row.se_volume	SEボリューム	SE Volume	音效音量	音效音量
+option.row.bgm_volume	BGMボリューム	BGM Volume	背景音乐音量	背景音樂音量
+option.row.resolution	解像度	Resolution	分辨率	解析度
+option.row.graphics_quality	画質	Graphics Quality	画质	畫質
+option.row.window_mode	画面モード	Display Mode	显示模式	顯示模式
+option.row.vibration	コントローラー振動	Controller Vibration	手柄振动	手柄振動
+option.row.output_device	出力デバイス	Output Device	输出设备	輸出裝置
+option.row.microphone_device	マイクデバイス	Microphone	麦克风设备	麥克風裝置
+option.row.noise_suppression	ノイズキャンセリング	Noise Suppression	降噪	降噪
+option.row.talk_mode	VC 送信モード	VC Transmit Mode	语音发送模式	語音傳送模式
+option.row.push_to_talk_key	プッシュトゥトークキー	Push-to-Talk Key	按键说话键	按鍵說話鍵
+option.row.language	言語	Language	语言	語言
+option.back	戻る	Back	返回	返回
+option.quality.high	高	High	高	高
+option.quality.medium	中	Medium	中	中
+option.quality.low	低	Low	低	低
+option.window_mode.fullscreen	フルスクリーン	Fullscreen	全屏	全屏
+option.window_mode.windowed	ウィンドウ	Windowed	窗口	視窗
+option.on	ON	ON	开	開
+option.off	OFF	OFF	关	關
+option.talk_mode.push_to_talk	プッシュトゥトーク	Push to Talk	按键说话	按鍵說話
+option.talk_mode.open	常時	Always On	常开	常開
+option.talk_mode.off	OFF	Off	关闭	關閉
+option.default_device	既定のデバイス	Default Device	默认设备	預設裝置
+option.waiting	入力待ち	Press a key	请按键	請按鍵

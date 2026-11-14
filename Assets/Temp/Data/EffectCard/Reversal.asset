@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: Reversal
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u9006\u8EE2"
-    englishName: 
+    englishName: Reversal
     cardSprite: {fileID: 21300000, guid: 5ebd156a76e5c6047ad187a429ffa2bb, type: 3}
     discription: "\u51FA\u54C1\u30BF\u30FC\u30F3\u306E\u5468\u308A\u3092\u9006\u306B\u3059\u308B"
     initialPrice: 0
+    englishDescription: Reverses the order of listing turns
+    chineseSimplifiedName: "\u9006\u8F6C"
+    chineseSimplifiedDescription: "\u4F7F\u4E0A\u62CD\u56DE\u5408\u7684\u987A\u5E8F\u53CD\u8F6C"
+    chineseTraditionalName: "\u9006\u8F49"
+    chineseTraditionalDescription: "\u4F7F\u4E0A\u62CD\u56DE\u5408\u7684\u9806\u5E8F\u53CD\u8F49"
   rarity: 0
   effect: 4

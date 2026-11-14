@@ -1,0 +1,33 @@
+key	ja	en	zh-Hans	zh-Hant
+achievement.toast.header	実績解除	Achievement Unlocked	成就解锁	成就解鎖
+trophy.title	トロフィー	Trophies	奖杯	獎盃
+trophy.progress	{0} / {1} 解除（{2}%）	{0} / {1} unlocked ({2}%)	已解锁 {0} / {1}（{2}%）	已解鎖 {0} / {1}（{2}%）
+trophy.hidden_name	？？？	???	？？？	？？？
+trophy.hidden_description	隠し実績	Hidden achievement	隐藏成就	隱藏成就
+trophy.unlocked_at	{0:yyyy/MM/dd} 解除	Unlocked {0:yyyy/MM/dd}	{0:yyyy/MM/dd} 解锁	{0:yyyy/MM/dd} 解鎖
+trophy.locked	未解除	Locked	未解锁	未解鎖
+trophy.back	戻る	Back	返回	返回
+achievement.tutorial_clear.name	見習いキュレーター	Apprentice Curator	见习策展人	見習策展人
+achievement.tutorial_clear.description	チュートリアルをクリアする	Clear the tutorial.	完成教程。	完成教程。
+achievement.first_purchase.name	はじめての落札	First Acquisition	初次拍得	初次拍得
+achievement.first_purchase.description	オークションで初めて落札する	Win an auction for the first time.	首次在拍卖中拍得。	首次在拍賣中拍得。
+achievement.first_sale.name	商談成立	Deal Closed	成交	成交
+achievement.first_sale.description	自分の出品が初めて落札される	Have one of your listings sold.	自己的拍品首次被拍得。	自己的拍品首次被拍得。
+achievement.final_battle.name	最後の二人	The Final Two	最后的两人	最後的兩人
+achievement.final_battle.description	FINAL BATTLE に進む	Reach the FINAL BATTLE.	进入 FINAL BATTLE。	進入 FINAL BATTLE。
+achievement.first_win.name	名キュレーター	Master Curator	名策展人	名策展人
+achievement.first_win.description	ゲームに勝つ	Win a game.	赢得一场游戏。	贏得一場遊戲。
+achievement.online_win.name	頂点の鑑定士	Peerless Appraiser	顶尖鉴定师	頂尖鑑定師
+achievement.online_win.description	マルチプレイで勝つ	Win a multiplayer game.	在多人游戏中获胜。	在多人遊戲中獲勝。
+achievement.special_listing.name	目玉商品	Star Attraction	招牌商品	招牌商品
+achievement.special_listing.description	スペシャルカード付きのカードを出品する	List a card that has a special card.	上拍一张附有特殊卡的卡牌。	上拍一張附有特殊卡的卡牌。
+achievement.collector.name	コレクター	Collector	收藏家	收藏家
+achievement.collector.description	1回のゲームで5枚落札する	Win 5 auctions in a single game.	在一场游戏中拍得5张卡牌。	在一場遊戲中拍得5張卡牌。
+achievement.drain.name	削り取り	Bleed Them Dry	榨干对手	榨乾對手
+achievement.drain.description	FINAL BATTLE で相手のコインを削る	Drain your opponent's coins in the FINAL BATTLE.	在 FINAL BATTLE 中削减对手的金币。	在 FINAL BATTLE 中削減對手的金幣。
+achievement.last_stand.name	背水の陣	Last Stand	背水一战	背水一戰
+achievement.last_stand.description	見送り権0枚の状態で勝つ	Win with zero passes left.	在弃权券为0张的状态下获胜。	在棄權券為0張的狀態下獲勝。
+achievement.flawless.name	無傷の勝利	Flawless Victory	无伤胜利	無傷勝利
+achievement.flawless.description	見送り権を一度も使わずに勝つ	Win without using a single pass.	一次也不使用弃权券就获胜。	一次也不使用棄權券就獲勝。
+achievement.retire.name	戦略的撤退	Strategic Retreat	战略撤退	戰略撤退
+achievement.retire.description	ゲームをリタイアする	Retire from a game.	中途退出一场游戏。	中途退出一場遊戲。

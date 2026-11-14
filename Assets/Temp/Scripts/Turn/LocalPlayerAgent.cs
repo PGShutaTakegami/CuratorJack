@@ -103,7 +103,7 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         isOwnListing = model.Listing.Seller == PlayerNumber;
         if (!model.Participants.Contains(PlayerNumber))
         {
-            ui.SetPrompt("オークションを観戦中");
+            ui.SetPrompt(GameText.Get("game.prompt.spectating"));
             return;
         }
 
@@ -134,7 +134,8 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
     void Update()
     {
         if (game.TryGet(PlayerNumber, out PlayerState me))
-            ui.SetStatus($"{names.NameOf(PlayerNumber)}  コイン {me.Coins}  落札 {me.Collection.Count}{(me.IsAlive ? string.Empty : "  （観戦中）")}");
+            ui.SetStatus(GameText.Format("game.status.self", names.NameOf(PlayerNumber), me.Coins, me.Collection.Count)
+                + (me.IsAlive ? string.Empty : GameText.Get("game.status.spectating_suffix")));
 
         if (listing != null)
         {
@@ -159,7 +160,7 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         {
             ui.ShowAuction(false);
             ui.SetBidInteractable(false);
-            ui.SetPrompt("オークションを観戦中");
+            ui.SetPrompt(GameText.Get("game.prompt.spectating"));
             auction = null;
             return;
         }
@@ -250,8 +251,8 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
     }
 
     static string TargetPrompt(ItemDefinition item) => item.Kind == ItemKind.PowerPlug
-        ? "シールドを付ける人を選んでください（右クリックでやめる）"
-        : "マヒさせる相手を選んでください（右クリックでやめる）";
+        ? GameText.Get("game.prompt.pick_shield")
+        : GameText.Get("game.prompt.pick_paralyze");
 
     void HandleTargetPicked(int target)
     {
@@ -355,13 +356,13 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         ui.RevealConfirm(ConfirmRevealed);
         ui.ShowRaise(listing.CanRaise, listing.IsRaised);
         if (listing.Goods == null)
-            ui.SetPrompt("手札を広げて、出品するグッズカードを選んでください");
+            ui.SetPrompt(GameText.Get("game.prompt.choose_goods"));
         else if (!listing.CanAttachBuffs)
-            ui.SetPrompt($"{listing.Goods.DisplayName}（最低 {listing.MinPrice}）を出品します。横やりでバフデバフカードは付けられません。確定してください");
+            ui.SetPrompt(GameText.Format("game.prompt.interfered_confirm", listing.Goods.DisplayName, listing.MinPrice));
         else if (!listing.CanRaise)
-            ui.SetPrompt($"{listing.Goods.DisplayName}（最低 {listing.MinPrice}）を出品します。バフデバフカードを使うならクリック、決まったら確定");
+            ui.SetPrompt(GameText.Format("game.prompt.attach_buff", listing.Goods.DisplayName, listing.MinPrice));
         else
-            ui.SetPrompt($"{listing.Goods.DisplayName}（最低 {listing.MinPrice}）を出品します。増額するか選んで確定");
+            ui.SetPrompt(GameText.Format("game.prompt.choose_raise", listing.Goods.DisplayName, listing.MinPrice));
     }
 
     /// <summary>金額は 0〜所持コインの範囲で自由に指定させ、入札できる額かどうかはボタンの可否で示す。最高額の間は降りるを押せない</summary>
@@ -371,15 +372,15 @@ public class LocalPlayerAgent : MonoBehaviour, IPlayerAgent
         amount = Mathf.Clamp(amount, 0, highest);
         ui.SetBidInteractable(auction.CanBid(PlayerNumber, amount));
         ui.SetFoldInteractable(auction.CanFold(PlayerNumber));
-        string drain = auction.DrainsSeller ? $" / 相手から削る {auction.DrainOf(amount)}" : string.Empty;
-        ui.SetAuction(amount, $"最低 {auction.Listing.MinPrice} / 最高額 {auction.HighestBid} / 自分 {auction.BidOf(PlayerNumber)} / 所持 {auction.CoinsOf(PlayerNumber)}{drain}");
+        string drain = auction.DrainsSeller ? GameText.Format("game.auction.drain_suffix", auction.DrainOf(amount)) : string.Empty;
+        ui.SetAuction(amount, GameText.Format("game.auction.summary", auction.Listing.MinPrice, auction.HighestBid, auction.BidOf(PlayerNumber), auction.CoinsOf(PlayerNumber)) + drain);
         if (highest < auction.Listing.MinPrice)
-            ui.SetPrompt("コインが足りないため降りるしかありません（見送り権を使います）");
+            ui.SetPrompt(GameText.Get("game.prompt.must_pass"));
         else if (auction.IsLeading(PlayerNumber))
-            ui.SetPrompt("最高額です。さらに金額を上げて入札することもできます（最高額のあいだは降りられません）");
+            ui.SetPrompt(GameText.Get("game.prompt.highest"));
         else if (auction.DrainsSeller)
-            ui.SetPrompt("FINAL BATTLE：最低額より多く入札して落札した分だけ、相手のコインを削れます。金額を指定して入札するか、降りるかを選んでください");
+            ui.SetPrompt(GameText.Get("game.prompt.final_battle"));
         else
-            ui.SetPrompt("W/S か ↑/↓（コントローラーは十字キー）で金額を指定して入札するか、降りるかを選んでください（降りると見送り権を使います）");
+            ui.SetPrompt(GameText.Get("game.prompt.bid_or_pass"));
     }
 }

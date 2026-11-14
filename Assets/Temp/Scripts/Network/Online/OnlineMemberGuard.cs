@@ -92,7 +92,7 @@ public sealed class OnlineMemberGuard : IConnectionGuard
             else if (now - unverified[clientId] > graceSeconds)
             {
                 unverified.Remove(clientId);
-                Debug.LogWarning($"[Session] 部屋のメンバーと確認できない接続を切ります（clientId={clientId}）");
+                Debug.LogWarning(GameText.Format("log.session.unknown_client", clientId));
                 networkManager.DisconnectClient(clientId, UnverifiedReason);
             }
         }
@@ -125,7 +125,7 @@ public sealed class OnlineMemberGuard : IConnectionGuard
         }
         catch (Exception exception)
         {
-            Debug.LogWarning($"[Session] キックした人を部屋から外せませんでした: {exception.Message}");
+            Debug.LogWarning(GameText.Format("log.session.kick_remove_failed", exception.Message));
         }
     }
 }

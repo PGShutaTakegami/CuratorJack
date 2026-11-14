@@ -1,0 +1,26 @@
+Assets/Temp/Data/EffectCard/Connections.asset	Connections	Draw a goods card	门路	抽一张商品卡
+Assets/Temp/Data/EffectCard/FireSale.asset	Fire Sale	The affected player's next listing has its minimum starting price lowered by a random 1–5	甩卖	被附加者下一次上拍的最低起拍价随机降低 1~5
+Assets/Temp/Data/EffectCard/Indulgence.asset	Indulgence	Nullifies all of your buffs and debuffs once. Activates automatically	赎罪券	使自身的所有增益和减益无效一次。强制发动
+Assets/Temp/Data/EffectCard/Interference.asset	Interference	Can't attach cards to goods cards	插手	无法将卡附加到商品卡上
+Assets/Temp/Data/EffectCard/Markdown.asset	Valuation	After the affected goods are bought, the price goes up by 1–3	估价	被附加的商品购买后，价格增加 1~3
+Assets/Temp/Data/EffectCard/Pressure.asset	Pressure	Skip one goods card draw	施压	有一次无法抽取商品卡
+Assets/Temp/Data/EffectCard/Reversal.asset	Reversal	Reverses the order of listing turns	逆转	使上拍回合的顺序反转
+Assets/Temp/Data/EffectCard/SecondTurn.asset	Second Turn	Take another listing turn	再来一次	可以再进行一次上拍回合
+Assets/Temp/Data/EffectCard/WordOfMouth.asset	Word of Mouth	Draw an extra effect card	口碑	额外抽一张效果卡
+Assets/Temp/Data/GoodCard/Diamond.asset	Diamond	A gem card: Diamond\nThe highest rarity among gem cards\nQuite rare in an age of dwindling reserves	钻石	宝石卡：钻石\n宝石卡中稀有度最高\n在储量日渐减少的当今时代相当稀有
+Assets/Temp/Data/GoodCard/Emerald.asset	Emerald	A gem card: Emerald\nA low rarity among gem cards\nFairly common	祖母绿	宝石卡：祖母绿\n宝石卡中稀有度较低\n比较常见
+Assets/Temp/Data/GoodCard/Jar1.asset	Shabby Jar	An antique card: a battered jar\nA low rarity among antique cards\nWorn with age	简陋的壶	古董卡：破旧的壶\n古董卡中稀有度较低\n已经老化
+Assets/Temp/Data/GoodCard/Jar2.asset	Precious Jar	An antique card: a precious jar\nA mid rarity among antique cards\nPreserved in quite good condition	珍贵的壶	古董卡：珍贵的壶\n古董卡中稀有度中等\n保存状态相当良好
+Assets/Temp/Data/GoodCard/Jar3.asset	Luxurious Jar	An antique card: a luxurious jar\nThe highest rarity among antique cards\nExudes graceful elegance	豪华的壶	古董卡：豪华的壶\n古董卡中稀有度最高\n散发着优雅的气质
+Assets/Temp/Data/GoodCard/Picture1.asset	Forgery	A painting card: a landscape (forgery)\nA low rarity among painting cards\nA robot's copy of a painting once made by a human	赝品	绘画卡：风景画（赝品）\n绘画卡中稀有度较低\n由机器人复制的、人类曾经画下的画
+Assets/Temp/Data/GoodCard/Picture2.asset	Landscape	A painting card: a landscape\nA mid rarity among painting cards\nOne of the landscapes often painted in the age of humans. Now quite rare	风景画	绘画卡：风景画\n绘画卡中稀有度中等\n人类时代常见的风景画之一。如今相当稀有
+Assets/Temp/Data/GoodCard/Picture3.asset	Masterpiece	A painting card: a portrait\nThe highest rarity among painting cards\nDepicts the scientist who built the robot that brought about the age of robots	杰作	绘画卡：人物画\n绘画卡中稀有度最高\n画中是开发出开启机器人时代之机器人的博士
+Assets/Temp/Data/GoodCard/Rubby.asset	Ruby	A gem card: Ruby\nA mid rarity among gem cards\nIt seems to shine	红宝石	宝石卡：红宝石\n宝石卡中稀有度中等\n看起来闪闪发光
+Assets/Temp/Data/SpecialCard/GoldenBoon.asset	Golden Boon	Gain 20 coins	黄金律	金币增加 20 枚
+Assets/Temp/Data/SpecialCard/GraceToken.asset	Grace Token	Gain 1 pass	宽限之证	弃权券 +1 张
+Assets/Temp/Data/SpecialCard/InterferenceAll.asset	Interference All	Blocks card attaching for everyone except you	全体插手	封锁除自己以外所有人的附加卡
+Assets/Temp/Data/SpecialCard/PressureAll.asset	Pressure All	Everyone except you skips one goods card draw	全体施压	除自己以外的所有人有一次无法抽取商品卡
+Assets/Temp/Data/SpecialCard/Random.asset	Random	Randomly activates either Interference All or Pressure All	随机	随机发动全体插手或全体施压之一
+Assets/Temp/Data/Item/Magnifier.asset	Magnifier	See the effect cards attached to the current listing (only you can see them)	放大镜	查看当前拍品上附加的效果卡（仅自己可见）
+Assets/Temp/Data/Item/PowerPlug.asset	Power Plug	Give 1 shield to a chosen player (you can choose yourself). When they would use a pass, the shield is used instead. It disappears when this turn's auction ends	电插头	给选中的人（也可以选自己）贴上 1 枚护盾。使用弃权券时改为消耗护盾。本回合的竞拍结束后消失
+Assets/Temp/Data/Item/RemoteControl.asset	Remote Control	Paralyze one other player and skip their next listing turn	遥控器	选择除自己以外的 1 人使其麻痹，跳过其下一次上拍回合

@@ -26,7 +26,7 @@ public static class OnlineServices
         if (!AuthenticationService.Instance.IsSignedIn)
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
-        Debug.Log($"[Online] サインインしました（PlayerId={AuthenticationService.Instance.PlayerId}）");
+        Debug.Log(GameText.Format("log.online.signed_in", AuthenticationService.Instance.PlayerId));
     }
 
     /// <summary>同じ PC で複数起動したテスト用ウィンドウも別プレイヤーとして扱われるよう、起動元ごとにプロフィールを分ける。</summary>

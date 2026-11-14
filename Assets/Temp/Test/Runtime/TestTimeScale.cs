@@ -48,7 +48,7 @@ public static class TestTimeScale
         isControlling = true;
         if (Time.timeScale > 0f)
             Time.timeScale = Current;
-        Debug.Log($"[Test] ゲーム速度 x{Current}");
+        Debug.Log(GameText.Format("log.test.speed", Current));
     }
 }
 #endif

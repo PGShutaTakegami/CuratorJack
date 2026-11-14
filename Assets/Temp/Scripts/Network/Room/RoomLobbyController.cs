@@ -61,7 +61,7 @@ public class RoomLobbyController : MonoBehaviour
                 activeReloadCooldown = onlineReloadCooldown;
                 break;
             default:
-                Debug.LogWarning($"[Room] 部屋一覧は Local / OnlineNet 環境のみ対応です（現在: {EnvironmentRuntime.Current}）");
+                Debug.LogWarning(GameText.Format("log.room.unsupported_env", EnvironmentRuntime.Current));
                 enabled = false;
                 break;
         }
@@ -135,10 +135,10 @@ public class RoomLobbyController : MonoBehaviour
     {
         string roomName = request.RoomName.Length > 0
             ? request.RoomName
-            : $"{request.Capacity}人部屋 #{Random.Range(1000, 10000)}";
+            : GameText.Format("room.default_name", request.Capacity, Random.Range(1000, 10000));
         RoomInfo room = catalog.CreateRoom(request.Capacity, roomName, request.Message, request.Password);
         RoomConnectionContext.SetHost(room);
-        EnterRoom($"[Room] 部屋を作成します: {room.roomName}（定員 {room.capacity} 人{(room.hasPassword ? "・パスワードあり" : string.Empty)}）");
+        EnterRoom(GameText.Format(room.hasPassword ? "log.room.creating_password" : "log.room.creating", room.roomName, room.capacity));
     }
 
     void JoinRoom(RoomInfo room)
@@ -148,7 +148,7 @@ public class RoomLobbyController : MonoBehaviour
 
         if (room.IsFull)
         {
-            Debug.LogWarning("[Room] 入室できませんでした: 満員です");
+            Debug.LogWarning(GameText.Get("log.room.full"));
             return;
         }
 
@@ -174,7 +174,7 @@ public class RoomLobbyController : MonoBehaviour
     void EnterAsClient(RoomInfo room)
     {
         RoomConnectionContext.SetClient(room);
-        EnterRoom($"[Room] 部屋に入ります: {room.roomName}");
+        EnterRoom(GameText.Format("log.room.entering", room.roomName));
     }
 
     void EnterRoom(string message)
@@ -204,7 +204,7 @@ public class RoomLobbyController : MonoBehaviour
         }
         catch (System.Exception exception)
         {
-            Debug.LogWarning($"[Room] 部屋一覧を取得できませんでした: {exception.Message}");
+            Debug.LogWarning(GameText.Format("log.room.list_failed", exception.Message));
             return;
         }
         finally

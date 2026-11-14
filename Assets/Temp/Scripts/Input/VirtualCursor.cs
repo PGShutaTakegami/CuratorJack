@@ -47,7 +47,7 @@ public class VirtualCursor : MonoBehaviour
         VirtualCursor prefab = Resources.Load<VirtualCursor>(ResourcePath);
         if (prefab == null)
         {
-            Debug.LogWarning($"{nameof(VirtualCursor)}: Resources/{ResourcePath} が見つかりません。");
+            Debug.LogWarning(GameText.Format("log.resource_missing", nameof(VirtualCursor), ResourcePath));
             return;
         }
 

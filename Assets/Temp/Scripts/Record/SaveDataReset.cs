@@ -14,6 +14,6 @@ public static class SaveDataReset
         PlayerIconStore.Clear();
         GameSettingsStore.Clear();
         PlayerPrefs.Save();
-        Debug.LogWarning("[SaveData] 実績・戦績・名前・アイコン・設定をすべてリセットしました");
+        Debug.LogWarning(GameText.Get("log.save.reset"));
     }
 }

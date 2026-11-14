@@ -70,16 +70,16 @@ public class TestPlayConsole : MonoBehaviour
         if (!TestTimeScale.IsNormal || TestAutoPilot.IsOn || MatchSimulationRunner.IsRunning)
             GUI.Label(new Rect(16f, 36f, 600f, 24f), Badge());
         if (isVisible)
-            windowRect = GUI.Window(GetInstanceID(), windowRect, DrawWindow, "テストプレイ（F1 で閉じる）");
+            windowRect = GUI.Window(GetInstanceID(), windowRect, DrawWindow, GameText.Get("debug.console.title"));
     }
 
     string Badge()
     {
         var parts = new List<string> { $"x{TestTimeScale.Current}" };
         if (TestAutoPilot.IsOn)
-            parts.Add("オートプレイ");
+            parts.Add(GameText.Get("debug.console.autopilot"));
         if (MatchSimulationRunner.IsRunning)
-            parts.Add($"シミュレーション {MatchSimulationRunner.Current.Completed}/{MatchSimulationRunner.Current.Total}");
+            parts.Add(GameText.Format("debug.console.simulation_progress", MatchSimulationRunner.Current.Completed, MatchSimulationRunner.Current.Total));
         return string.Join("　", parts);
     }
 
@@ -96,12 +96,12 @@ public class TestPlayConsole : MonoBehaviour
     void DrawSpeed()
     {
         GUILayout.BeginHorizontal();
-        GUILayout.Label($"速度 x{TestTimeScale.Current}", GUILayout.Width(140f));
-        if (GUILayout.Button("遅く (F2)"))
+        GUILayout.Label(GameText.Format("debug.console.speed", TestTimeScale.Current), GUILayout.Width(140f));
+        if (GUILayout.Button(GameText.Get("debug.console.slower")))
             TestTimeScale.Slower();
-        if (GUILayout.Button("速く (F3)"))
+        if (GUILayout.Button(GameText.Get("debug.console.faster")))
             TestTimeScale.Faster();
-        if (GUILayout.Button("等倍 (F4)"))
+        if (GUILayout.Button(GameText.Get("debug.console.normal_speed")))
             TestTimeScale.ResetToNormal();
         GUILayout.EndHorizontal();
     }
@@ -110,18 +110,18 @@ public class TestPlayConsole : MonoBehaviour
     {
         if (!Refs.IsGameScene)
         {
-            GUILayout.Label("GameScene ではないため、ゲームの操作は使えません");
+            GUILayout.Label(GameText.Get("debug.console.not_game_scene"));
             return;
         }
 
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button(TestAutoPilot.IsOn ? "オートプレイ OFF (F5)" : "オートプレイ ON (F5)"))
+        if (GUILayout.Button(GameText.Get(TestAutoPilot.IsOn ? "debug.console.autopilot_off" : "debug.console.autopilot_on")))
             TestAutoPilot.Toggle(Refs);
         GUI.enabled = Refs.StartGate != null && Refs.StartGate.CanLocalStart && !Refs.HasStarted;
-        if (GUILayout.Button("スタート (F7)"))
+        if (GUILayout.Button(GameText.Get("debug.console.start")))
             Refs.StartGate.RequestStart();
         GUI.enabled = TestCheats.CanUse(Refs);
-        if (GUILayout.Button("待ち時間切れ (F6)"))
+        if (GUILayout.Button(GameText.Get("debug.console.force_timeout")))
             TestCheats.TimeOutNow(Refs);
         GUI.enabled = true;
         GUILayout.EndHorizontal();
@@ -130,16 +130,16 @@ public class TestPlayConsole : MonoBehaviour
     void DrawSimulation()
     {
         GUILayout.Space(6f);
-        GUILayout.Label("一括シミュレーション（全員 CPU・x16 で GameScene を読み直して回す）");
+        GUILayout.Label(GameText.Get("debug.console.batch_simulation"));
         GUILayout.BeginHorizontal();
-        simulationMatches = Stepper("試合", simulationMatches, 1, 100, 10);
-        simulationPlayers = Stepper("人数", simulationPlayers, 2, 4, 1);
+        simulationMatches = Stepper(GameText.Get("debug.console.matches"), simulationMatches, 1, 100, 10);
+        simulationPlayers = Stepper(GameText.Get("debug.console.players"), simulationPlayers, 2, 4, 1);
         if (MatchSimulationRunner.IsRunning)
         {
-            if (GUILayout.Button("中止"))
+            if (GUILayout.Button(GameText.Get("debug.console.stop")))
                 MatchSimulationRunner.Cancel();
         }
-        else if (GUILayout.Button("開始"))
+        else if (GUILayout.Button(GameText.Get("debug.console.begin")))
         {
             MatchSimulationRunner.Begin(simulationMatches, simulationPlayers);
         }
@@ -163,7 +163,7 @@ public class TestPlayConsole : MonoBehaviour
 
         GUILayout.Space(6f);
         PlayerState[] players = Refs.Game.Players.ToArray();
-        string[] labels = players.Select(player => player.PlayerNumber == Refs.LocalPlayer ? $"P{player.PlayerNumber}（自分）" : $"P{player.PlayerNumber}").ToArray();
+        string[] labels = players.Select(player => player.PlayerNumber == Refs.LocalPlayer ? GameText.Format("debug.console.player_self", player.PlayerNumber) : $"P{player.PlayerNumber}").ToArray();
         int selectedIndex = System.Array.FindIndex(players, player => player.PlayerNumber == selectedPlayer);
         selectedIndex = GUILayout.Toolbar(Mathf.Max(0, selectedIndex), labels);
         if (players.Length > 0)
@@ -177,8 +177,8 @@ public class TestPlayConsole : MonoBehaviour
     {
         int goods = player.Hand.Count(card => card.IsGoods);
         string statuses = string.Join(" ", Statuses.Where(status => player.StatusOf(status) > 0).Select(status => $"{status}:{player.StatusOf(status)}"));
-        string life = player.IsAlive ? string.Empty : "【脱落】";
-        return $"{life}{Refs.NameOf(player.PlayerNumber)}　コイン {player.Coins}　見送り権 {player.PassRights}　手札 グッズ{goods}/効果{player.Hand.Count - goods}　落札 {player.Collection.Count}　{statuses}";
+        string life = player.IsAlive ? string.Empty : GameText.Get("debug.console.dropped_out");
+        return life + GameText.Format("debug.console.player_line", Refs.NameOf(player.PlayerNumber), player.Coins, player.PassRights, goods, player.Hand.Count - goods, player.Collection.Count, statuses);
     }
 
     void DrawCheats()
@@ -187,22 +187,22 @@ public class TestPlayConsole : MonoBehaviour
             return;
         if (!TestCheats.CanUse(Refs))
         {
-            GUILayout.Label("状態の書き換えは SinglePlay のときだけ使えます");
+            GUILayout.Label(GameText.Get("debug.console.single_play_only"));
             return;
         }
 
         GUILayout.Space(6f);
-        GUILayout.Label($"P{selectedPlayer} に起きたことにする");
+        GUILayout.Label(GameText.Format("debug.console.apply_to", selectedPlayer));
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("コイン +10"))
+        if (GUILayout.Button(GameText.Get("debug.console.coins_plus")))
             TestCheats.AddCoins(Refs, selectedPlayer, 10);
-        if (GUILayout.Button("コイン -10"))
+        if (GUILayout.Button(GameText.Get("debug.console.coins_minus")))
             TestCheats.AddCoins(Refs, selectedPlayer, -10);
-        if (GUILayout.Button("見送り権 +1"))
+        if (GUILayout.Button(GameText.Get("debug.console.passes_plus")))
             TestCheats.AddPassRights(Refs, selectedPlayer, 1);
-        if (GUILayout.Button("見送り権 -1"))
+        if (GUILayout.Button(GameText.Get("debug.console.passes_minus")))
             TestCheats.AddPassRights(Refs, selectedPlayer, -1);
-        if (GUILayout.Button("リタイア"))
+        if (GUILayout.Button(GameText.Get("debug.console.retire")))
             TestCheats.Retire(Refs, selectedPlayer);
         GUILayout.EndHorizontal();
 
@@ -214,7 +214,7 @@ public class TestPlayConsole : MonoBehaviour
         }
         GUILayout.EndHorizontal();
 
-        GUILayout.Label("手札に加えるカード");
+        GUILayout.Label(GameText.Get("debug.console.add_card"));
         cardScroll = GUILayout.BeginScrollView(cardScroll, GUILayout.Height(220f));
         foreach (CardData card in Cards())
         {
@@ -234,8 +234,8 @@ public class TestPlayConsole : MonoBehaviour
     static string CardLabel(CardData card)
     {
         return card.Effect == CardEffect.None
-            ? $"グッズ：{card.Parameter.CardName}（{card.Rarity}・{card.Parameter.InitialPrice}）"
-            : $"効果：{card.Parameter.CardName}（{card.Effect}）";
+            ? GameText.Format("debug.console.goods_card", card.Parameter.CardName, card.Rarity, card.Parameter.InitialPrice)
+            : GameText.Format("debug.console.effect_card", card.Parameter.CardName, card.Effect);
     }
 }
 #endif

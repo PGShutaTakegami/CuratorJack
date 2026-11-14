@@ -44,7 +44,7 @@ public class SoundEffectPlayer : MonoBehaviour
         SoundEffectPlayer prefab = Resources.Load<SoundEffectPlayer>(ResourcePath);
         if (prefab == null)
         {
-            Debug.LogWarning($"{nameof(SoundEffectPlayer)}: Resources/{ResourcePath} が見つかりません。");
+            Debug.LogWarning(GameText.Format("log.resource_missing", nameof(SoundEffectPlayer), ResourcePath));
             return;
         }
 

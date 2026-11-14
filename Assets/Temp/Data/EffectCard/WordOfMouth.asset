@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: WordOfMouth
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u53E3\u30B3\u30DF"
-    englishName: 
+    englishName: Word of Mouth
     cardSprite: {fileID: 21300000, guid: e1fee142b3f8fc54589a1ad94eafefd7, type: 3}
     discription: "\u52B9\u679C\u30AB\u30FC\u30C9\u3092\u8FFD\u52A0\u30C9\u30ED\u30FC"
     initialPrice: 0
+    englishDescription: Draw an extra effect card
+    chineseSimplifiedName: "\u53E3\u7891"
+    chineseSimplifiedDescription: "\u989D\u5916\u62BD\u4E00\u5F20\u6548\u679C\u5361"
+    chineseTraditionalName: "\u53E3\u7891"
+    chineseTraditionalDescription: "\u984D\u5916\u62BD\u4E00\u5F35\u6548\u679C\u5361"
   rarity: 0
   effect: 1

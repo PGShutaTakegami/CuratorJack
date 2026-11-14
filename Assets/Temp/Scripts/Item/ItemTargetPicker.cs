@@ -143,7 +143,7 @@ public class ItemTargetPicker : MonoBehaviour
         text.alignment = TextAlignmentOptions.Center;
         text.textWrappingMode = TextWrappingModes.NoWrap;
         text.raycastTarget = false;
-        text.text = player == registry.LocalPlayerNumber ? "自分" : names.NameOf(player);
+        text.text = player == registry.LocalPlayerNumber ? GameText.Get("item.target.self") : names.NameOf(player);
 
         var button = go.GetComponent<Button>();
         button.targetGraphic = background;

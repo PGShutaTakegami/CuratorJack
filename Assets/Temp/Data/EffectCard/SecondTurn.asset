@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: SecondTurn
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "2\u5EA6\u76EE"
-    englishName: 
+    englishName: Second Turn
     cardSprite: {fileID: 21300000, guid: 3b6dc48123c17ad41b01f172d6a5fc7d, type: 3}
     discription: "\u3082\u3046\u4E00\u5EA6\u51FA\u54C1\u30BF\u30FC\u30F3\u306B\u3067\u304D\u308B"
     initialPrice: 0
+    englishDescription: Take another listing turn
+    chineseSimplifiedName: "\u518D\u6765\u4E00\u6B21"
+    chineseSimplifiedDescription: "\u53EF\u4EE5\u518D\u8FDB\u884C\u4E00\u6B21\u4E0A\u62CD\u56DE\u5408"
+    chineseTraditionalName: "\u518D\u4F86\u4E00\u6B21"
+    chineseTraditionalDescription: "\u53EF\u4EE5\u518D\u9032\u884C\u4E00\u6B21\u4E0A\u62CD\u56DE\u5408"
   rarity: 0
   effect: 9

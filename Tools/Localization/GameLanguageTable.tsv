@@ -1,0 +1,109 @@
+key	ja	en	zh-Hans	zh-Hant
+game.status.line	Player{0}  コイン {1}  見送り権 {2}  落札 {3}{4}	Player{0}  Coins {1}  Passes {2}  Wins {3}{4}	Player{0}  金币 {1}  弃权券 {2}  拍得 {3}{4}	Player{0}  金幣 {1}  棄權券 {2}  拍得 {3}{4}
+game.status.spectating_suffix	  （観戦中）	  (Spectating)	  （观战中）	  （觀戰中）
+game.you	あなた	You	你	你
+game.player	Player{0}	Player{0}	Player{0}	Player{0}
+game.rarity.low	低	Low	低	低
+game.rarity.middle	中	Mid	中	中
+game.rarity.high	高	High	高	高
+game.prompt.spectating	オークションを観戦中	Spectating the auction	正在观战拍卖	正在觀戰拍賣
+game.prompt.choose_goods	手札を広げて、出品するグッズカードを選んでください	Spread your hand and choose a goods card to list	展开手牌，选择要上拍的商品卡	展開手牌，選擇要上拍的商品卡
+game.prompt.attach_buff	{0}（最低 {1}）を出品します。バフデバフカードを使うならクリック、決まったら確定	Listing {0} (min {1}). Click to attach a buff/debuff, then confirm	上拍 {0}（底价 {1}）。要附加增益/减益卡就点击，决定后按确认	上拍 {0}（底價 {1}）。要附加增益/減益卡就點選，決定後按確認
+game.prompt.choose_raise	{0}（最低 {1}）を出品します。増額するか選んで確定	Listing {0} (min {1}). Choose whether to raise, then confirm	上拍 {0}（底价 {1}）。选择是否加价后按确认	上拍 {0}（底價 {1}）。選擇是否加價後按確認
+game.prompt.highest	最高額です。さらに金額を上げて入札することもできます（最高額のあいだは降りられません）	You are the highest bidder. You can raise your bid further (you can't pass while you hold the highest bid)	你是最高出价者。也可以继续加价出价（作为最高出价者时不能放弃）	你是最高出價者。也可以繼續加價出價（作為最高出價者時不能放棄）
+game.prompt.must_pass	コインが足りないため降りるしかありません（見送り権を使います）	Not enough coins — you must pass (uses a pass right)	金币不足，只能放弃（将使用弃权券）	金幣不足，只能放棄（將使用棄權券）
+game.prompt.bid_or_pass	W/S か ↑/↓（コントローラーは十字キー）で金額を指定して入札するか、降りるかを選んでください（降りると見送り権を使います）	Set an amount with W/S or ↑/↓ (D-pad on a controller) and bid, or pass (passing uses a pass)	用 W/S 或 ↑/↓（手柄用十字键）设定金额出价，或选择放弃（放弃会使用弃权券）	用 W/S 或 ↑/↓（手柄用十字鍵）設定金額出價，或選擇放棄（放棄會使用棄權券）
+game.auction.summary	最低 {0} / 最高額 {1} / 自分 {2} / 所持 {3}	Min {0} / High {1} / You {2} / Coins {3}	底价 {0} / 最高价 {1} / 你 {2} / 持有 {3}	底價 {0} / 最高價 {1} / 你 {2} / 持有 {3}
+game.auction.pass	降りる	Pass	放弃	放棄
+game.auction.no_bids	入札なし	No bids	无人出价	無人出價
+game.auction.highest_of	最高額 {0}（{1}）	High {0} ({1})	最高价 {0}（{1}）	最高價 {0}（{1}）
+game.auction.in_progress	オークション中：{0}（最低 {1}）　{2}　残り {3} 人	Auction: {0} (min {1})  {2}  {3} left	拍卖中：{0}（底价 {1}）　{2}　剩余 {3} 人	拍賣中：{0}（底價 {1}）　{2}　剩餘 {3} 人
+game.turn.header	ラウンド {0}　{1} のターン	Round {0} — turn of {1}	第 {0} 轮　{1} 的回合	第 {0} 輪　{1} 的回合
+game.turn.seller_turn	出品者の番です	Seller's turn	轮到卖家了	輪到賣家了
+game.turn.round_end	ラウンド {0} 終了	Round {0} ended	第 {0} 轮结束	第 {0} 輪結束
+game.turn.draw_phase	ドローフェーズ（生きている全員が 1 枚ずつ引きます）	Draw phase (each living player draws one)	抽牌阶段（所有存活玩家各抽 1 张）	抽牌階段（所有存活玩家各抽 1 張）
+game.turn.choosing_goods	{0} が出品する商品を選んでいます	{0} is choosing a listing	{0} 正在选择要上拍的商品	{0} 正在選擇要上拍的商品
+game.turn.seller_no_goods	{0} は出品できるグッズがないため見送り権を使いました	{0} had no goods to list and used a pass right	{0} 没有可以上拍的商品，使用了弃权券	{0} 沒有可以上拍的商品，使用了棄權券
+game.turn.no_buyer	落札者がいませんでした（{0} は消費）	No winner ({0} is discarded)	无人拍得（{0} 已消耗）	無人拍得（{0} 已消耗）
+game.turn.purchased	{0} が {1} を {2} コインで購入しました	{0} bought {1} for {2} coins	{0} 以 {2} 金币购得了 {1}	{0} 以 {2} 金幣購得了 {1}
+game.turn.dropped_out	{0} が脱落しました	{0} dropped out	{0} 被淘汰了	{0} 被淘汰了
+game.result.no_winner	勝者なし	No winner	无胜者	無勝者
+game.result.winner	勝者 {0}	Winner {0}	胜者 {0}	勝者 {0}
+game.result.ended	ゲーム終了　{0}	Game over — {0}	游戏结束　{0}	遊戲結束　{0}
+game.result.alive	生存	Alive	存活	存活
+game.result.dropout_order	{0}番目に脱落	Dropped out #{0}	第 {0} 个被淘汰	第 {0} 個被淘汰
+game.result.rank_line	{0}位　{1}　{2}　（コイン {3}　落札 {4}）	#{0}  {1}  {2}  (Coins {3}  Wins {4})	第 {0} 名　{1}　{2}　（金币 {3}　拍得 {4}）	第 {0} 名　{1}　{2}　（金幣 {3}　拍得 {4}）
+game.ui.confirm	確定	Confirm	确认	確認
+game.ui.bid	入札	Bid	出价	出價
+game.ui.pass	降りる	Pass	放弃	放棄
+game.turn.cpu_takeover	{0} の接続が切れたため、CPU が代わりに操作します	{0} disconnected, so a CPU will play for them	{0} 的连接已断开，将由电脑代为操作	{0} 的連線已斷開，將由電腦代為操作
+game.turn.pressure_blocked	{0} は圧力で出品カードを引けませんでした	{0} couldn't draw a goods card due to Pressure	{0} 受到施压，无法抽取商品卡	{0} 受到施壓，無法抽取商品卡
+game.turn.extra_header	ラウンド {0}　{1} の追加ターン（2度目）	Round {0} — extra turn for {1} (Second Turn)	第 {0} 轮　{1} 的追加回合（再来一次）	第 {0} 輪　{1} 的追加回合（再來一次）
+game.turn.extra_no_goods	{0} は出品できるグッズがないため、追加ターンはありません	{0} has no goods to list, so there is no extra turn	{0} 没有可以上拍的商品，因此没有追加回合	{0} 沒有可以上拍的商品，因此沒有追加回合
+game.turn.paralyzed	{0} はマヒしていて出品できません（ターンを飛ばします）	{0} is paralyzed and can't list (turn skipped)	{0} 处于麻痹状态，无法上拍（跳过回合）	{0} 處於麻痺狀態，無法上拍（跳過回合）
+game.turn.note_interfered	（横やり：効果カードを付けられません）	 (Interference: can't attach effect cards)	（插手：无法附加效果卡）	（插手：無法附加效果卡）
+game.turn.note_fire_sale	（投げ売り：最低出品額 -{0}）	 (Fire Sale: minimum price -{0})	（甩卖：底价 -{0}）	（甩賣：底價 -{0}）
+game.turn.proceeds_lost	（最後の 1v1 のため、代金は出品者に入りません）	 (Final 1v1: the seller receives no payment)	（最后的 1v1，货款不归卖家）	（最後的 1v1，貨款不歸賣家）
+game.turn.drained	最低出品額より {0} 多く落札したため、{1} のコインを {2} 削りました	Won {0} above the minimum price, draining {2} coins from {1}	比底价多出价 {0} 拍得，削减了 {1} 的 {2} 金币	比底價多出價 {0} 拍得，削減了 {1} 的 {2} 金幣
+game.turn.penalty_lost	見送り権を {0} 枚失いました	Lost {0} pass(es)	失去了 {0} 张弃权券	失去了 {0} 張棄權券
+game.turn.penalty_dropout	見送り権が足りず脱落しました	Not enough passes — eliminated	弃权券不足，被淘汰了	棄權券不足，被淘汰了
+game.turn.shortfall	{0} は {1} コインを払えず購入できませんでした。{2}（{3} は消費）	{0} couldn't pay {1} coins and failed to buy. {2} ({3} is discarded)	{0} 付不起 {1} 金币，购买失败。{2}（{3} 已消耗）	{0} 付不起 {1} 金幣，購買失敗。{2}（{3} 已消耗）
+effect.title.unsold_effects	落札者なし：{0} に発動する効果カード	No winner: effect cards that take effect on {0}	无人拍得：对 {0} 生效的效果卡	無人拍得：對 {0} 生效的效果卡
+effect.title.won_effects	{0} が落札した商品に付いていた効果カード	Effect cards attached to the item {0} won	{0} 拍得的商品上附加的效果卡	{0} 拍得的商品上附加的效果卡
+effect.title.unsold_special	落札者なし：{0} に発動するスペシャルカード	No winner: special card that takes effect on {0}	无人拍得：对 {0} 生效的特殊卡	無人拍得：對 {0} 生效的特殊卡
+effect.title.won_special	{0} が落札した商品のスペシャルカード	Special card of the item {0} won	{0} 拍得的商品的特殊卡	{0} 拍得的商品的特殊卡
+effect.title.transform	{0}（{1} → {2}）	{0} ({1} → {2})	{0}（{1} → {2}）	{0}（{1} → {2}）
+effect.indulgence_nullified	免罪符：{0} が受けた効果はすべて無効になりました	Indulgence: all effects on {0} were nullified	赎罪券：{0} 受到的效果全部无效了	贖罪券：{0} 受到的效果全部無效了
+effect.random_chosen	{0}：{1} が発動します	{0}: {1} takes effect	{0}：{1} 发动	{0}：{1} 發動
+effect.word_of_mouth	{0}：{1} が効果カードを 1 枚引きます	{0}: {1} draws 1 effect card	{0}：{1} 抽 1 张效果卡	{0}：{1} 抽 1 張效果卡
+effect.connections	{0}：{1} が出品カードを 1 枚引きます	{0}: {1} draws 1 goods card	{0}：{1} 抽 1 张商品卡	{0}：{1} 抽 1 張商品卡
+effect.indulgence	{0}：{1} が次に受ける効果は 1 回無効になります	{0}: the next effect on {1} will be nullified once	{0}：{1} 下次受到的效果将无效 1 次	{0}：{1} 下次受到的效果將無效 1 次
+effect.reversal	{0}：出品ターンの回る向きが逆になります	{0}: the turn order is reversed	{0}：上拍回合的顺序反转	{0}：上拍回合的順序反轉
+effect.fire_sale	{0}：{1} の次の出品は最低出品額が {2} 下がります	{0}: {1}'s next listing has its minimum price lowered by {2}	{0}：{1} 下次上拍的底价降低 {2}	{0}：{1} 下次上拍的底價降低 {2}
+effect.pressure	{0}：{1} は出品カードのドローが 1 回できません	{0}: {1} skips 1 goods card draw	{0}：{1} 有 1 次无法抽取商品卡	{0}：{1} 有 1 次無法抽取商品卡
+effect.second_turn	{0}：{1} はこのターンの後にもう一度出品します	{0}: {1} lists again after this turn	{0}：{1} 在本回合结束后再上拍一次	{0}：{1} 在本回合結束後再上拍一次
+effect.interference	{0}：{1} は次の出品で効果カードを付けられません	{0}: {1} can't attach effect cards on their next listing	{0}：{1} 下次上拍时无法附加效果卡	{0}：{1} 下次上拍時無法附加效果卡
+effect.golden_boon	{0}：{1} のコインが {2} 枚増えました	{0}: {1} gained {2} coins	{0}：{1} 的金币增加了 {2} 枚	{0}：{1} 的金幣增加了 {2} 枚
+effect.grace_token	{0}：{1} の見送り権が {2} 枚増えました	{0}: {1} gained {2} pass(es)	{0}：{1} 的弃权券增加了 {2} 张	{0}：{1} 的棄權券增加了 {2} 張
+effect.markdown_self	{0}：出品者が受け取ったため効果はありません	{0}: no effect because the seller received it	{0}：由卖家接收，因此没有效果	{0}：由賣家接收，因此沒有效果
+effect.markdown_paid	{0}：{1} が {2} に {3} コインを追加で払いました	{0}: {1} paid {2} an extra {3} coins	{0}：{1} 额外向 {2} 支付了 {3} 金币	{0}：{1} 額外向 {2} 支付了 {3} 金幣
+effect.markdown_paid_final	{0}：{1} が {2} コインを追加で払いました（最後の 1v1 のため出品者には入りません）	{0}: {1} paid an extra {2} coins (final 1v1: the seller receives nothing)	{0}：{1} 额外支付了 {2} 金币（最后的 1v1，不归卖家）	{0}：{1} 額外支付了 {2} 金幣（最後的 1v1，不歸賣家）
+effect.no_targets	{0}：対象のプレイヤーがいません	{0}: no players to target	{0}：没有可作用的玩家	{0}：沒有可作用的玩家
+effect.blocked_by_indulgence	{0}：{1} は免罪符で無効にしました	{0}: {1} nullified it with an Indulgence	{0}：{1} 用赎罪券使其无效了	{0}：{1} 用贖罪券使其無效了
+effect.name_separator	・	, 	、	、
+effect.remaining	（残り {0} 回）	 ({0} left)	（剩余 {0} 次）	（剩餘 {0} 次）
+effect.label.interference_all	全横やり	Interference All	全体插手	全體插手
+effect.label.pressure_all	全圧力	Pressure All	全体施压	全體施壓
+game.status.self	{0}  コイン {1}  落札 {2}	{0}  Coins {1}  Won {2}	{0}  金币 {1}  拍得 {2}	{0}  金幣 {1}  拍得 {2}
+game.prompt.interfered_confirm	{0}（最低 {1}）を出品します。横やりでバフデバフカードは付けられません。確定してください	Listing {0} (min {1}). Interference prevents attaching buff/debuff cards. Please confirm	上拍 {0}（底价 {1}）。受到插手，无法附加增益/减益卡。请确认	上拍 {0}（底價 {1}）。受到插手，無法附加增益/減益卡。請確認
+game.prompt.final_battle	FINAL BATTLE：最低額より多く入札して落札した分だけ、相手のコインを削れます。金額を指定して入札するか、降りるかを選んでください	FINAL BATTLE: winning above the minimum price drains your opponent's coins by the difference. Set an amount and bid, or pass	FINAL BATTLE：比底价多出价拍得的部分，可以削减对手的金币。请设定金额出价，或选择放弃	FINAL BATTLE：比底價多出價拍得的部分，可以削減對手的金幣。請設定金額出價，或選擇放棄
+game.prompt.pick_shield	シールドを付ける人を選んでください（右クリックでやめる）	Choose who gets the shield (right-click to cancel)	请选择要贴护盾的人（右键取消）	請選擇要貼護盾的人（右鍵取消）
+game.prompt.pick_paralyze	マヒさせる相手を選んでください（右クリックでやめる）	Choose who to paralyze (right-click to cancel)	请选择要麻痹的对手（右键取消）	請選擇要麻痺的對手（右鍵取消）
+game.auction.drain_suffix	 / 相手から削る {0}	 / Drain {0}	 / 削减对手 {0}	 / 削減對手 {0}
+game.headline.turn	{0} のターン	{0}'s turn	{0} 的回合	{0} 的回合
+game.headline.auction	{0} のオークションバトル中	Auction battle: {0}	{0} 正在进行拍卖对决	{0} 正在進行拍賣對決
+game.status_effect.item	{0}（{1}）	{0} ({1})	{0}（{1}）	{0}（{1}）
+game.status_effect.shield	シールド	Shield	护盾	護盾
+game.status_effect.paralysis	マヒ	Paralysis	麻痹	麻痺
+item.magnifier.none	{0}：{1} の出品に効果カードは付いていません	{0}: {1}'s listing has no effect cards attached	{0}：{1} 的拍品上没有附加效果卡	{0}：{1} 的拍品上沒有附加效果卡
+item.magnifier.attached	{0}：{1} の出品に付いている効果カード	{0}: effect cards attached to {1}'s listing	{0}：{1} 的拍品上附加的效果卡	{0}：{1} 的拍品上附加的效果卡
+item.target.self	自分	Yourself	自己	自己
+catalog.goods_stats	開始価格 {0}\nレアリティ {1}	Starting price {0}\nRarity {1}	起拍价 {0}\n稀有度 {1}	起拍價 {0}\n稀有度 {1}
+game.ui.start	スタート	Start	开始	開始
+game.ui.reset	やり直し	Reset	重置	重置
+game.ui.retry	リトライ	Retry	重试	重試
+game.ui.title	タイトル	Title	标题	標題
+catalog.tab.goods	商品	Goods	商品	商品
+catalog.tab.effect	エフェクト	Effects	效果	效果
+catalog.tab.special	スペシャル	Special	特殊	特殊
+catalog.tab.item	アイテム	Items	道具	道具
+game.pause.resume	再開	Resume	继续	繼續
+game.pause.retire	リタイア	Retire	认输	認輸
+game.pause.settings	設定	Settings	设置	設定
+game.pause.room_settings	ルーム設定	Room Settings	房间设置	房間設定
+game.pause.spectate	引き続き観戦	Keep Watching	继续观战	繼續觀戰
+game.pause.restart	最初から	Restart	从头开始	從頭開始
+game.pause.to_title	タイトルへ	Back to Title	返回标题	返回標題
+game.pause.retire_confirm	降参しますか？	Surrender?	要认输吗？	要認輸嗎？
+game.pause.yes	はい	Yes	是	是
+game.pause.no	いいえ	No	否	否

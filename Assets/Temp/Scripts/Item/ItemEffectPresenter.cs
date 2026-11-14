@@ -43,7 +43,7 @@ public class ItemEffectPresenter : MonoBehaviour
         switch (use.Item.Kind)
         {
             case ItemKind.Magnifier when use.Player == local:
-                StartCoroutine(ShowAttached(use.Listing));
+                StartCoroutine(ShowAttached(use.Listing, use.Item));
                 break;
             case ItemKind.PowerPlug when use.Target == local:
                 flash.Flash(plugFlashColor);
@@ -51,7 +51,7 @@ public class ItemEffectPresenter : MonoBehaviour
         }
     }
 
-    IEnumerator ShowAttached(Listing listing)
+    IEnumerator ShowAttached(Listing listing, ItemDefinition item)
     {
         yield return null;
         yield return new WaitWhile(() => (closeUp != null && closeUp.IsPlaying) || reveal.IsPlaying);
@@ -59,8 +59,8 @@ public class ItemEffectPresenter : MonoBehaviour
         CardData[] attached = listing.Buffs.Where(buff => buff.Data != null).Select(buff => buff.Data).ToArray();
         string seller = names.NameOf(listing.Seller);
         if (attached.Length == 0)
-            yield return reveal.PresentNone($"虫眼鏡：{seller} の出品に効果カードは付いていません");
+            yield return reveal.PresentNone(GameText.Format("item.magnifier.none", item.DisplayName, seller));
         else
-            yield return reveal.Present($"虫眼鏡：{seller} の出品に付いている効果カード", attached);
+            yield return reveal.Present(GameText.Format("item.magnifier.attached", item.DisplayName, seller), attached);
     }
 }

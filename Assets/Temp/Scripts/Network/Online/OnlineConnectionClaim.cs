@@ -56,7 +56,7 @@ public sealed class OnlineConnectionClaim
         }
         catch (Exception exception)
         {
-            Debug.LogWarning($"[Session] 接続番号を部屋に登録できませんでした。やり直します: {exception.Message}");
+            Debug.LogWarning(GameText.Format("log.session.claim_failed", exception.Message));
             nextTryAt = Time.realtimeSinceStartup + retrySeconds;
         }
         finally

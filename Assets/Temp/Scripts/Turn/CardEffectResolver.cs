@@ -47,8 +47,8 @@ public sealed class CardEffectResolver
         if (attached.Length > 0)
         {
             string title = recipient == seller
-                ? $"落札者なし：{nameOf(recipient)} に発動する効果カード"
-                : $"{nameOf(recipient)} が落札した商品に付いていた効果カード";
+                ? GameText.Format("effect.title.unsold_effects", nameOf(recipient))
+                : GameText.Format("effect.title.won_effects", nameOf(recipient));
             report.AddReveal(recipient, title, attached);
         }
         bool nullified = game.TryUseStatus(recipient, PlayerStatus.Indulgence);
@@ -60,7 +60,7 @@ public sealed class CardEffectResolver
 
         if (nullified)
         {
-            report.AddMessage($"免罪符：{nameOf(recipient)} が受けた効果はすべて無効になりました");
+            report.AddMessage(GameText.Format("effect.indulgence_nullified", nameOf(recipient)));
             return report;
         }
 
@@ -71,7 +71,7 @@ public sealed class CardEffectResolver
         }
         if (randomChoice != CardEffect.None)
         {
-            report.AddMessage($"{special.Parameter.CardName}：{LabelOf(randomChoice)} が発動します");
+            report.AddMessage(GameText.Format("effect.random_chosen", special.Parameter.CardName, LabelOf(randomChoice)));
             ApplyToOthers(randomChoice, recipient, report);
         }
         else if (special != null)
@@ -88,8 +88,8 @@ public sealed class CardEffectResolver
     void RevealSpecial(int recipient, int seller, CardData special, CardEffect randomChoice, EffectReport report)
     {
         string title = recipient == seller
-            ? $"落札者なし：{nameOf(recipient)} に発動するスペシャルカード"
-            : $"{nameOf(recipient)} が落札した商品のスペシャルカード";
+            ? GameText.Format("effect.title.unsold_special", nameOf(recipient))
+            : GameText.Format("effect.title.won_special", nameOf(recipient));
         CardData chosen = randomChoice != CardEffect.None ? specialOf(randomChoice) : null;
         if (chosen == null)
         {
@@ -97,7 +97,7 @@ public sealed class CardEffectResolver
             return;
         }
 
-        report.AddTransform(recipient, $"{title}（{special.Parameter.CardName} → {chosen.Parameter.CardName}）", new[] { special }, new[] { chosen });
+        report.AddTransform(recipient, GameText.Format("effect.title.transform", title, special.Parameter.CardName, chosen.Parameter.CardName), new[] { special }, new[] { chosen });
     }
 
     void Apply(CardData card, int recipient, int seller, EffectReport report)
@@ -108,49 +108,49 @@ public sealed class CardEffectResolver
         {
             case CardEffect.WordOfMouth:
                 report.AddDraw(recipient, CardManager.CardKinds.EffectCard);
-                report.AddMessage($"{label}：{who} が効果カードを 1 枚引きます");
+                report.AddMessage(GameText.Format("effect.word_of_mouth", label, who));
                 break;
             case CardEffect.Connections:
                 report.AddDraw(recipient, CardManager.CardKinds.GoodCard);
-                report.AddMessage($"{label}：{who} が出品カードを 1 枚引きます");
+                report.AddMessage(GameText.Format("effect.connections", label, who));
                 break;
             case CardEffect.Indulgence:
                 game.AddStatus(recipient, PlayerStatus.Indulgence, 1);
-                report.AddMessage($"{label}：{who} が次に受ける効果は 1 回無効になります");
+                report.AddMessage(GameText.Format("effect.indulgence", label, who));
                 break;
             case CardEffect.Reversal:
                 report.AddReversal();
-                report.AddMessage($"{label}：出品ターンの回る向きが逆になります");
+                report.AddMessage(GameText.Format("effect.reversal", label));
                 break;
             case CardEffect.FireSale:
                 int discount = random.Next(1, 6);
                 game.AddStatus(recipient, PlayerStatus.FireSaleDiscount, discount);
-                report.AddMessage($"{label}：{who} の次の出品は最低出品額が {discount} 下がります");
+                report.AddMessage(GameText.Format("effect.fire_sale", label, who, discount));
                 break;
             case CardEffect.Pressure:
                 game.AddStatus(recipient, PlayerStatus.Pressure, 1);
-                report.AddMessage($"{label}：{who} は出品カードのドローが 1 回できません{RemainingText(recipient, PlayerStatus.Pressure)}");
+                report.AddMessage(GameText.Format("effect.pressure", label, who) + RemainingText(recipient, PlayerStatus.Pressure));
                 break;
             case CardEffect.Markdown:
                 ApplyMarkdown(label, recipient, seller, report);
                 break;
             case CardEffect.SecondTurn:
                 game.AddStatus(recipient, PlayerStatus.ExtraTurn, 1);
-                report.AddMessage($"{label}：{who} はこのターンの後にもう一度出品します");
+                report.AddMessage(GameText.Format("effect.second_turn", label, who));
                 break;
             case CardEffect.Interference:
                 game.AddStatus(recipient, PlayerStatus.Interference, 1);
-                report.AddMessage($"{label}：{who} は次の出品で効果カードを付けられません{RemainingText(recipient, PlayerStatus.Interference)}");
+                report.AddMessage(GameText.Format("effect.interference", label, who) + RemainingText(recipient, PlayerStatus.Interference));
                 break;
             case CardEffect.GoldenBoon:
                 int before = game.TryGet(recipient, out PlayerState state) ? state.Coins : 0;
                 game.AddCoins(recipient, GoldenBoonCoins);
                 report.AddCoinChange(recipient, before, before + GoldenBoonCoins);
-                report.AddMessage($"{label}：{who} のコインが {GoldenBoonCoins} 枚増えました");
+                report.AddMessage(GameText.Format("effect.golden_boon", label, who, GoldenBoonCoins));
                 break;
             case CardEffect.GraceToken:
                 game.AddPassRights(recipient, GraceTokenPassRights);
-                report.AddMessage($"{label}：{who} の見送り権が {GraceTokenPassRights} 枚増えました");
+                report.AddMessage(GameText.Format("effect.grace_token", label, who, GraceTokenPassRights));
                 break;
             case CardEffect.InterferenceAll:
             case CardEffect.PressureAll:
@@ -167,15 +167,15 @@ public sealed class CardEffectResolver
     {
         if (recipient == seller)
         {
-            report.AddMessage($"{label}：出品者が受け取ったため効果はありません");
+            report.AddMessage(GameText.Format("effect.markdown_self", label));
             return;
         }
 
         bool sellerEarns = game.SellerEarnsProceeds;
         int paid = game.PayProceeds(recipient, seller, random.Next(1, 4));
         report.AddMessage(sellerEarns
-            ? $"{label}：{nameOf(recipient)} が {nameOf(seller)} に {paid} コインを追加で払いました"
-            : $"{label}：{nameOf(recipient)} が {paid} コインを追加で払いました（最後の 1v1 のため出品者には入りません）");
+            ? GameText.Format("effect.markdown_paid", label, nameOf(recipient), nameOf(seller), paid)
+            : GameText.Format("effect.markdown_paid_final", label, nameOf(recipient), paid));
     }
 
     /// <summary>全横やり・全圧力を、受け取った人以外の生きている全員（出品者も含む）にかける</summary>
@@ -188,7 +188,7 @@ public sealed class CardEffectResolver
             .ToArray();
         if (targets.Length == 0)
         {
-            report.AddMessage($"{label}：対象のプレイヤーがいません");
+            report.AddMessage(GameText.Format("effect.no_targets", label));
             return;
         }
 
@@ -197,7 +197,7 @@ public sealed class CardEffectResolver
         {
             if (game.TryUseStatus(target, PlayerStatus.Indulgence))
             {
-                report.AddMessage($"{label}：{nameOf(target)} は免罪符で無効にしました");
+                report.AddMessage(GameText.Format("effect.blocked_by_indulgence", label, nameOf(target)));
                 continue;
             }
 
@@ -216,25 +216,25 @@ public sealed class CardEffectResolver
 
         if (affected.Count == 0)
             return;
-        string names = string.Join("・", affected);
+        string names = string.Join(GameText.Get("effect.name_separator"), affected);
         report.AddMessage(effect == CardEffect.InterferenceAll
-            ? $"{label}：{names} は次の出品で効果カードを付けられません"
-            : $"{label}：{names} は出品カードのドローが 1 回できません");
+            ? GameText.Format("effect.interference", label, names)
+            : GameText.Format("effect.pressure", label, names));
     }
 
     /// <summary>横やり・圧力は受けた枚数だけ回数が重なる。2 回以上残っていれば、その回数を添える</summary>
     string RemainingText(int player, PlayerStatus status)
     {
         int remaining = game.TryGet(player, out PlayerState state) ? state.StatusOf(status) : 0;
-        return remaining > 1 ? $"（残り {remaining} 回）" : string.Empty;
+        return remaining > 1 ? GameText.Format("effect.remaining", remaining) : string.Empty;
     }
 
     static string LabelOf(CardEffect effect)
     {
         switch (effect)
         {
-            case CardEffect.InterferenceAll: return "全横やり";
-            case CardEffect.PressureAll: return "全圧力";
+            case CardEffect.InterferenceAll: return GameText.Get("effect.label.interference_all");
+            case CardEffect.PressureAll: return GameText.Get("effect.label.pressure_all");
             default: return effect.ToString();
         }
     }

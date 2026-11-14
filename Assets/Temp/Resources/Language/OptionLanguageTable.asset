@@ -16,84 +16,140 @@ MonoBehaviour:
   - key: option.title
     japanese: "\u30AA\u30D7\u30B7\u30E7\u30F3"
     english: Options
+    chineseSimplified: "\u9009\u9879"
+    chineseTraditional: "\u9078\u9805"
   - key: option.row.master_volume
     japanese: "\u30DE\u30B9\u30BF\u30FC\u30DC\u30EA\u30E5\u30FC\u30E0"
     english: Master Volume
+    chineseSimplified: "\u4E3B\u97F3\u91CF"
+    chineseTraditional: "\u4E3B\u97F3\u91CF"
   - key: option.row.voice_chat_volume
     japanese: "VC\u30DC\u30EA\u30E5\u30FC\u30E0"
     english: VC Volume
+    chineseSimplified: "\u8BED\u97F3\u97F3\u91CF"
+    chineseTraditional: "\u8A9E\u97F3\u97F3\u91CF"
   - key: option.row.se_volume
     japanese: "SE\u30DC\u30EA\u30E5\u30FC\u30E0"
     english: SE Volume
+    chineseSimplified: "\u97F3\u6548\u97F3\u91CF"
+    chineseTraditional: "\u97F3\u6548\u97F3\u91CF"
   - key: option.row.bgm_volume
     japanese: "BGM\u30DC\u30EA\u30E5\u30FC\u30E0"
     english: BGM Volume
+    chineseSimplified: "\u80CC\u666F\u97F3\u4E50\u97F3\u91CF"
+    chineseTraditional: "\u80CC\u666F\u97F3\u6A02\u97F3\u91CF"
   - key: option.row.resolution
     japanese: "\u89E3\u50CF\u5EA6"
     english: Resolution
+    chineseSimplified: "\u5206\u8FA8\u7387"
+    chineseTraditional: "\u89E3\u6790\u5EA6"
   - key: option.row.graphics_quality
     japanese: "\u753B\u8CEA"
     english: Graphics Quality
+    chineseSimplified: "\u753B\u8D28"
+    chineseTraditional: "\u756B\u8CEA"
   - key: option.row.window_mode
     japanese: "\u753B\u9762\u30E2\u30FC\u30C9"
     english: Display Mode
+    chineseSimplified: "\u663E\u793A\u6A21\u5F0F"
+    chineseTraditional: "\u986F\u793A\u6A21\u5F0F"
   - key: option.row.vibration
     japanese: "\u30B3\u30F3\u30C8\u30ED\u30FC\u30E9\u30FC\u632F\u52D5"
     english: Controller Vibration
+    chineseSimplified: "\u624B\u67C4\u632F\u52A8"
+    chineseTraditional: "\u624B\u67C4\u632F\u52D5"
   - key: option.row.output_device
     japanese: "\u51FA\u529B\u30C7\u30D0\u30A4\u30B9"
     english: Output Device
+    chineseSimplified: "\u8F93\u51FA\u8BBE\u5907"
+    chineseTraditional: "\u8F38\u51FA\u88DD\u7F6E"
   - key: option.row.microphone_device
     japanese: "\u30DE\u30A4\u30AF\u30C7\u30D0\u30A4\u30B9"
     english: Microphone
+    chineseSimplified: "\u9EA6\u514B\u98CE\u8BBE\u5907"
+    chineseTraditional: "\u9EA5\u514B\u98A8\u88DD\u7F6E"
   - key: option.row.noise_suppression
     japanese: "\u30CE\u30A4\u30BA\u30AD\u30E3\u30F3\u30BB\u30EA\u30F3\u30B0"
     english: Noise Suppression
+    chineseSimplified: "\u964D\u566A"
+    chineseTraditional: "\u964D\u566A"
   - key: option.row.talk_mode
     japanese: "VC \u9001\u4FE1\u30E2\u30FC\u30C9"
     english: VC Transmit Mode
+    chineseSimplified: "\u8BED\u97F3\u53D1\u9001\u6A21\u5F0F"
+    chineseTraditional: "\u8A9E\u97F3\u50B3\u9001\u6A21\u5F0F"
   - key: option.row.push_to_talk_key
     japanese: "\u30D7\u30C3\u30B7\u30E5\u30C8\u30A5\u30C8\u30FC\u30AF\u30AD\u30FC"
     english: Push-to-Talk Key
+    chineseSimplified: "\u6309\u952E\u8BF4\u8BDD\u952E"
+    chineseTraditional: "\u6309\u9375\u8AAA\u8A71\u9375"
   - key: option.row.language
     japanese: "\u8A00\u8A9E"
     english: Language
+    chineseSimplified: "\u8BED\u8A00"
+    chineseTraditional: "\u8A9E\u8A00"
   - key: option.back
     japanese: "\u623B\u308B"
     english: Back
+    chineseSimplified: "\u8FD4\u56DE"
+    chineseTraditional: "\u8FD4\u56DE"
   - key: option.quality.high
     japanese: "\u9AD8"
     english: High
+    chineseSimplified: "\u9AD8"
+    chineseTraditional: "\u9AD8"
   - key: option.quality.medium
     japanese: "\u4E2D"
     english: Medium
+    chineseSimplified: "\u4E2D"
+    chineseTraditional: "\u4E2D"
   - key: option.quality.low
     japanese: "\u4F4E"
     english: Low
+    chineseSimplified: "\u4F4E"
+    chineseTraditional: "\u4F4E"
   - key: option.window_mode.fullscreen
     japanese: "\u30D5\u30EB\u30B9\u30AF\u30EA\u30FC\u30F3"
     english: Fullscreen
+    chineseSimplified: "\u5168\u5C4F"
+    chineseTraditional: "\u5168\u5C4F"
   - key: option.window_mode.windowed
     japanese: "\u30A6\u30A3\u30F3\u30C9\u30A6"
     english: Windowed
+    chineseSimplified: "\u7A97\u53E3"
+    chineseTraditional: "\u8996\u7A97"
   - key: option.on
     japanese: ON
     english: ON
+    chineseSimplified: "\u5F00"
+    chineseTraditional: "\u958B"
   - key: option.off
     japanese: OFF
     english: OFF
+    chineseSimplified: "\u5173"
+    chineseTraditional: "\u95DC"
   - key: option.talk_mode.push_to_talk
     japanese: "\u30D7\u30C3\u30B7\u30E5\u30C8\u30A5\u30C8\u30FC\u30AF"
     english: Push to Talk
+    chineseSimplified: "\u6309\u952E\u8BF4\u8BDD"
+    chineseTraditional: "\u6309\u9375\u8AAA\u8A71"
   - key: option.talk_mode.open
     japanese: "\u5E38\u6642"
     english: Always On
+    chineseSimplified: "\u5E38\u5F00"
+    chineseTraditional: "\u5E38\u958B"
   - key: option.talk_mode.off
     japanese: OFF
     english: Off
+    chineseSimplified: "\u5173\u95ED"
+    chineseTraditional: "\u95DC\u9589"
   - key: option.default_device
     japanese: "\u65E2\u5B9A\u306E\u30C7\u30D0\u30A4\u30B9"
     english: Default Device
+    chineseSimplified: "\u9ED8\u8BA4\u8BBE\u5907"
+    chineseTraditional: "\u9810\u8A2D\u88DD\u7F6E"
   - key: option.waiting
     japanese: "\u5165\u529B\u5F85\u3061"
     english: Press a key
+    chineseSimplified: "\u8BF7\u6309\u952E"
+    chineseTraditional: "\u8ACB\u6309\u9375"

@@ -44,7 +44,7 @@ public static class AchievementService
             {
                 AchievementCatalog source = Catalog;
                 if (source == null)
-                    Debug.LogWarning($"[Achievement] Resources/{CatalogPath} が見つかりません");
+                    Debug.LogWarning(GameText.Format("log.resource_missing", "[Achievement]", CatalogPath));
                 book = new AchievementBook(source != null ? source.Achievements : null, AchievementProgress.FromJson(PlayerPrefs.GetString(PrefsKey, string.Empty)), () => DateTime.Now);
                 book.Unlocked += HandleUnlocked;
                 relay.Bind(book);
@@ -81,7 +81,7 @@ public static class AchievementService
     {
         PlayerPrefs.SetString(PrefsKey, book.Progress.ToJson());
         PlayerPrefs.Save();
-        Debug.Log($"[Achievement] 実績を解除しました: {definition.Id}");
+        Debug.Log(GameText.Format("log.achievement.unlocked", definition.Id));
         Unlocked?.Invoke(definition);
     }
 }

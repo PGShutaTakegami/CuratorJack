@@ -71,7 +71,7 @@ public class RoomSlotView : MonoBehaviour
             icon.enabled = iconSprite != null;
         }
         muteButton.gameObject.SetActive(showMute);
-        muteLabel.text = isMuted ? "解除" : "ミュート";
+        muteLabel.text = GameText.Get(isMuted ? "room.slot.unmute" : "room.slot.mute");
         kickButton.gameObject.SetActive(showKick);
         kickButton.SetAvailable(canKick);
     }

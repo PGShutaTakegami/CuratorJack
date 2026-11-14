@@ -135,14 +135,14 @@ public class TitleSelectManager : MonoBehaviour
     {
         if (splineContainer == null)
         {
-            Debug.LogError($"{nameof(TitleSelectManager)}: SplineContainer が未設定です。", this);
+            Debug.LogError(GameText.Format("log.field_missing", nameof(TitleSelectManager), "SplineContainer"), this);
             enabled = false;
             return;
         }
 
         if (selectOptions == null || selectOptions.Length == 0)
         {
-            Debug.LogError($"{nameof(TitleSelectManager)}: selectOptions が空です。", this);
+            Debug.LogError(GameText.Format("log.field_empty", nameof(TitleSelectManager), "selectOptions"), this);
             enabled = false;
             return;
         }
@@ -388,7 +388,7 @@ public class TitleSelectManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(humanMonitorSceneName))
         {
-            Debug.LogError($"{nameof(TitleSelectManager)}: HumanMonitor シーン名が空です。", this);
+            Debug.LogError(GameText.Format("log.field_empty", nameof(TitleSelectManager), "HumanMonitor"), this);
             return;
         }
 
@@ -402,7 +402,7 @@ public class TitleSelectManager : MonoBehaviour
         if (operation == null)
         {
             isLoadingHumanMonitor = false;
-            Debug.LogError($"{nameof(TitleSelectManager)}: シーン '{humanMonitorSceneName}' のロードに失敗しました。Build Settings を確認してください。", this);
+            Debug.LogError(GameText.Format("log.scene_load_failed", nameof(TitleSelectManager), humanMonitorSceneName), this);
             return;
         }
 

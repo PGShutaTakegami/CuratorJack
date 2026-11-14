@@ -1,0 +1,82 @@
+# table	key	ja	en	zh-Hans
+GameLanguageTable	game.status.self	{0}  コイン {1}  落札 {2}	{0}  Coins {1}  Won {2}	{0}  金币 {1}  拍得 {2}
+GameLanguageTable	game.prompt.highest	最高額です。さらに金額を上げて入札することもできます（最高額のあいだは降りられません）	You are the highest bidder. You can raise your bid further (you can't pass while you hold the highest bid)	你是最高出价者。也可以继续加价出价（作为最高出价者时不能放弃）
+GameLanguageTable	game.prompt.bid_or_pass	W/S か ↑/↓（コントローラーは十字キー）で金額を指定して入札するか、降りるかを選んでください（降りると見送り権を使います）	Set an amount with W/S or ↑/↓ (D-pad on a controller) and bid, or pass (passing uses a pass)	用 W/S 或 ↑/↓（手柄用十字键）设定金额出价，或选择放弃（放弃会使用弃权券）
+GameLanguageTable	game.prompt.interfered_confirm	{0}（最低 {1}）を出品します。横やりでバフデバフカードは付けられません。確定してください	Listing {0} (min {1}). Interference prevents attaching buff/debuff cards. Please confirm	上拍 {0}（底价 {1}）。受到插手，无法附加增益/减益卡。请确认
+GameLanguageTable	game.prompt.final_battle	FINAL BATTLE：最低額より多く入札して落札した分だけ、相手のコインを削れます。金額を指定して入札するか、降りるかを選んでください	FINAL BATTLE: winning above the minimum price drains your opponent's coins by the difference. Set an amount and bid, or pass	FINAL BATTLE：比底价多出价拍得的部分，可以削减对手的金币。请设定金额出价，或选择放弃
+GameLanguageTable	game.prompt.pick_shield	シールドを付ける人を選んでください（右クリックでやめる）	Choose who gets the shield (right-click to cancel)	请选择要贴护盾的人（右键取消）
+GameLanguageTable	game.prompt.pick_paralyze	マヒさせる相手を選んでください（右クリックでやめる）	Choose who to paralyze (right-click to cancel)	请选择要麻痹的对手（右键取消）
+GameLanguageTable	game.auction.drain_suffix	 / 相手から削る {0}	 / Drain {0}	 / 削减对手 {0}
+GameLanguageTable	game.headline.turn	{0} のターン	{0}'s turn	{0} 的回合
+GameLanguageTable	game.headline.auction	{0} のオークションバトル中	Auction battle: {0}	{0} 正在进行拍卖对决
+GameLanguageTable	game.status_effect.item	{0}（{1}）	{0} ({1})	{0}（{1}）
+GameLanguageTable	game.status_effect.shield	シールド	Shield	护盾
+GameLanguageTable	game.status_effect.paralysis	マヒ	Paralysis	麻痹
+GameLanguageTable	item.magnifier.none	{0}：{1} の出品に効果カードは付いていません	{0}: {1}'s listing has no effect cards attached	{0}：{1} 的拍品上没有附加效果卡
+GameLanguageTable	item.magnifier.attached	{0}：{1} の出品に付いている効果カード	{0}: effect cards attached to {1}'s listing	{0}：{1} 的拍品上附加的效果卡
+GameLanguageTable	item.target.self	自分	Yourself	自己
+GameLanguageTable	catalog.goods_stats	開始価格 {0}\nレアリティ {1}	Starting price {0}\nRarity {1}	起拍价 {0}\n稀有度 {1}
+TitleLanguageTable	room.slot.mute	ミュート	Mute	静音
+TitleLanguageTable	room.slot.unmute	解除	Unmute	取消静音
+TitleLanguageTable	room.password.wrong	パスワードが違います	Incorrect password	密码错误
+TitleLanguageTable	room.default_name	{0}人部屋 #{1}	{0}-player room #{1}	{0}人房间 #{1}
+NetworkLanguageTable	net.version_mismatch	ゲームのバージョンが違うため入れません	Can't join because the game version is different	游戏版本不同，无法加入
+NetworkLanguageTable	net.room_start_failed	部屋を開始できませんでした: {0}（{1}:{2}）	Could not start the room: {0} ({1}:{2})	无法开启房间：{0}（{1}:{2}）
+NetworkLanguageTable	net.room_join_failed	部屋に入れませんでした: {0}	Could not join the room: {0}	无法进入房间：{0}
+NetworkLanguageTable	net.rematch_join_failed	リトライ後の部屋に入れませんでした: {0}	Could not join the rematch room: {0}	无法进入重开后的房间：{0}
+NetworkLanguageTable	net.room_unavailable	部屋を用意できませんでした	Could not prepare a room	无法准备房间
+NetworkLanguageTable	net.rejected_full	参加を拒否されました: 満員です（最大 {0} 人）	Join refused: the room is full (max {0} players)	加入被拒绝：房间已满（最多 {0} 人）
+NetworkLanguageTable	net.rejected	参加を拒否されました: {0}	Join refused: {0}	加入被拒绝：{0}
+NetworkLanguageTable	net.local_session_failed	Local セッションを開始できませんでした（{0}:{1}）	Could not start the Local session ({0}:{1})	无法开启 Local 会话（{0}:{1}）
+NetworkLanguageTable	net.no_local_player	自分のプレイヤーが用意されなかったため、ロビーへ戻ります	Your player was not created, returning to the lobby	未能准备你的玩家，返回大厅
+NetworkLanguageTable	net.kicked	部屋主にキックされたため、ロビーへ戻ります	You were kicked by the host, returning to the lobby	你被房主踢出，返回大厅
+NetworkLanguageTable	net.host_takeover_failed	ホストを引き継げませんでした: {0}	Could not take over as host: {0}	无法接任主机：{0}
+NetworkLanguageTable	net.online_requires_lobby	OnlineNet ではロビーで部屋を選んでから GameScene に入ってください	In OnlineNet, choose a room in the lobby before entering GameScene	在 OnlineNet 中，请先在大厅选择房间再进入 GameScene
+NetworkLanguageTable	net.action.join_rematch	リトライ後の部屋に入室	join the rematch room	进入重开后的房间
+NetworkLanguageTable	net.action.create	部屋を作成	create a room	创建房间
+NetworkLanguageTable	net.action.join	部屋に入室	join the room	进入房间
+NetworkLanguageTable	net.action_failed	{0}できませんでした: {1}	Could not {0}: {1}	无法{0}：{1}
+NetworkLanguageTable	net.room_host_start_failed	部屋のホストを開始できませんでした	Could not start hosting the room	无法开始作为房间主机
+NetworkLanguageTable	net.game_started	ゲームが始まっています	The game has already started	游戏已经开始了
+NetworkLanguageTable	net.kicked_room	キックされた部屋には入れません	You can't join a room you were kicked from	无法进入你被踢出的房间
+NetworkLanguageTable	net.host_connect_failed	ホストに接続できませんでした	Could not connect to the host	无法连接到主机
+NetworkLanguageTable	net.host_disconnected	ホストとの接続が切れたため、ロビーへ戻ります	Lost connection to the host, returning to the lobby	与主机的连接已断开，返回大厅
+NetworkLanguageTable	net.migration_failed	ホストを引き継げなかったため、ロビーへ戻ります	Could not take over as host, returning to the lobby	无法接任主机，返回大厅
+LogLanguageTable	log.tutorial.no_first_goods	ターン 1 で出品するカードが手札にありません	The card to list on turn 1 is not in hand	手牌中没有第 1 回合要上拍的卡牌
+LogLanguageTable	log.tutorial.no_special_goods	スペシャルカードの案内に使うカードが手札にありません	The card for the special card guide is not in hand	手牌中没有用于讲解特殊卡的卡牌
+LogLanguageTable	log.tutorial.abort	[Tutorial] {0}。チュートリアルの案内を終えます	[Tutorial] {0}. Ending the tutorial guide	[Tutorial] {0}。结束教程引导
+LogLanguageTable	debug.save.title	セーブデータ	Save Data	存档数据
+LogLanguageTable	debug.save.games	プレイ {0} 回 / 勝利 {1} 回	Played {0} / Won {1}	游玩 {0} 次 / 胜利 {1} 次
+LogLanguageTable	debug.save.trades	落札 {0} / 売れた出品 {1} / アイテム {2}	Won bids {0} / Sold listings {1} / Items {2}	拍得 {0} / 售出拍品 {1} / 道具 {2}
+LogLanguageTable	debug.save.achievements	実績 {0} / {1}	Achievements {0} / {1}	成就 {0} / {1}
+LogLanguageTable	debug.save.refresh	表示を更新	Refresh	刷新显示
+LogLanguageTable	debug.save.reset	セーブデータをすべてリセット	Reset all save data	重置全部存档数据
+LogLanguageTable	log.session.room_host_started	[Session] 部屋のホストとして開始しました: {0}（{1}:{2}）	[Session] Started as room host: {0} ({1}:{2})	[Session] 已作为房间主机开始：{0}（{1}:{2}）
+LogLanguageTable	log.session.room_joined	[Session] 部屋に入室しました: {0}（{1}:{2}）	[Session] Joined room: {0} ({1}:{2})	[Session] 已进入房间：{0}（{1}:{2}）
+LogLanguageTable	log.session.rematch_searching	[Session] リトライ後の部屋を探しています	[Session] Looking for the rematch room	[Session] 正在寻找重开后的房间
+LogLanguageTable	log.session.rematch_joined	[Session] リトライ後の部屋に入室しました: {0}（{1}:{2}）	[Session] Joined the rematch room: {0} ({1}:{2})	[Session] 已进入重开后的房间：{0}（{1}:{2}）
+LogLanguageTable	log.session.rematch_recreated	[Session] リトライ後の部屋を作り直しました: {0}（{1}:{2}）	[Session] Recreated the rematch room: {0} ({1}:{2})	[Session] 已重新创建重开后的房间：{0}（{1}:{2}）
+LogLanguageTable	log.session.client_joined	[Session] クライアントとして参加しました（{0}:{1}）	[Session] Joined as client ({0}:{1})	[Session] 已作为客户端加入（{0}:{1}）
+LogLanguageTable	log.session.host_started	[Session] ホストとして開始しました（{0}:{1}）	[Session] Started as host ({0}:{1})	[Session] 已作为主机开始（{0}:{1}）
+LogLanguageTable	log.session.waiting_owner	[Session] 元の部屋主の戻りを待っています（それまで部屋主はいません）	[Session] Waiting for the original owner to return (no owner until then)	[Session] 正在等待原房主回来（在此之前没有房主）
+LogLanguageTable	log.session.move_to_earlier	[Session] 先に作り直された部屋があるため移ります: {0}	[Session] Moving to a room that was recreated earlier: {0}	[Session] 已有先重新创建的房间，正在移动：{0}
+LogLanguageTable	log.session.move_to_earlier_online	[Session] 先に作り直された部屋があるため移ります	[Session] Moving to a room that was recreated earlier	[Session] 已有先重新创建的房间，正在移动
+LogLanguageTable	log.session.became_owner	[Session] 元の部屋主が戻らなかったため、部屋主になりました	[Session] The original owner did not return, so you became the owner	[Session] 原房主没有回来，你成为了房主
+LogLanguageTable	log.session.owner_returned	[Session] 元の部屋主が戻ったため、ホストを渡します	[Session] The original owner returned, handing over host	[Session] 原房主已回来，移交主机
+LogLanguageTable	log.session.request_ownership	[Session] 元の部屋主として、部屋主に戻りたいと申し出ました	[Session] Requested to become owner again as the original owner	[Session] 作为原房主，申请重新成为房主
+LogLanguageTable	log.session.host_left_successor	[Session] ホストが部屋から抜けました。自分が新しいホストになります	[Session] The host left the room. You will become the new host	[Session] 主机离开了房间。你将成为新的主机
+LogLanguageTable	log.session.host_left_rejoin	[Session] ホストが部屋から抜けました。新しいホストへ入り直します	[Session] The host left the room. Rejoining the new host	[Session] 主机离开了房间。正在重新加入新的主机
+LogLanguageTable	log.session.host_taken_over	[Session] 部屋のホストを引き継ぎました: {0}	[Session] Took over as room host: {0}	[Session] 已接任房间主机：{0}
+LogLanguageTable	log.session.host_taken_over_online	[Session] 部屋のホストを引き継ぎました	[Session] Took over as room host	[Session] 已接任房间主机
+LogLanguageTable	log.session.rejoined_new_host	[Session] 新しいホストの部屋へ入り直しました: {0}	[Session] Rejoined the new host's room: {0}	[Session] 已重新进入新主机的房间：{0}
+LogLanguageTable	log.session.online_created	[Session] オンラインの部屋を作成しました: {0}（定員 {1} 人, id={2}）	[Session] Created an online room: {0} (capacity {1}, id={2})	[Session] 已创建在线房间：{0}（定员 {1} 人，id={2}）
+LogLanguageTable	log.session.online_joined	[Session] オンラインの部屋に入室しました: {0}	[Session] Joined the online room: {0}	[Session] 已进入在线房间：{0}
+LogLanguageTable	log.session.online_rematch_recreated	[Session] リトライ後の部屋を作り直しました: {0}（id={1}）	[Session] Recreated the rematch room: {0} (id={1})	[Session] 已重新创建重开后的房间：{0}（id={1}）
+LogLanguageTable	log.session.reconnected_new_host	[Session] 新しいホストへ繋ぎ直しました	[Session] Reconnected to the new host	[Session] 已重新连接到新的主机
+LogLanguageTable	log.session.transfer_to_earlier	自分より先に入った人へホストを渡します	Handing host over to a player who joined earlier	将主机移交给比自己先加入的人
+LogLanguageTable	log.session.transfer_failed	[Session] ホストを渡せなかったため、自分がホストを続けます: {0}	[Session] Could not hand over host, continuing as host: {0}	[Session] 无法移交主机，由自己继续担任主机：{0}
+LogLanguageTable	log.session.waiting_migration	[Session] ホストとの接続が切れました。ホストの引き継ぎを待っています	[Session] Lost connection to the host. Waiting for host migration	[Session] 与主机的连接已断开。正在等待主机迁移
+LogLanguageTable	log.session.lock_failed	[Session] 部屋をロックできませんでした: {0}	[Session] Could not lock the room: {0}	[Session] 无法锁定房间：{0}
+LogLanguageTable	log.session.republish_failed	[Session] 部屋の人数を公開し直せませんでした: {0}	[Session] Could not republish the player count: {0}	[Session] 无法重新公开房间人数：{0}
+LogLanguageTable	log.session.leave_timeout	[Session] 部屋から抜ける応答が返らないため、待たずにロビーへ戻ります	[Session] No response to leaving the room, returning to the lobby without waiting	[Session] 离开房间没有响应，不再等待，返回大厅
+LogLanguageTable	log.session.leave_failed	[Session] 部屋から抜けられませんでした: {0}	[Session] Could not leave the room: {0}	[Session] 无法离开房间：{0}

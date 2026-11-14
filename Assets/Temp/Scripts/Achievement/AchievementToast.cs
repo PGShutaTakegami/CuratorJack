@@ -55,7 +55,7 @@ public class AchievementToast : MonoBehaviour
         AchievementToast prefab = Resources.Load<AchievementToast>(ResourcePath);
         if (prefab == null)
         {
-            Debug.LogWarning($"{nameof(AchievementToast)}: Resources/{ResourcePath} が見つかりません。");
+            Debug.LogWarning(GameText.Format("log.resource_missing", nameof(AchievementToast), ResourcePath));
             return;
         }
 

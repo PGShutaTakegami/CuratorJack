@@ -16,13 +16,13 @@ public static class ScreenModeApplier
         if (settings.WindowMode == WindowMode.FullScreen)
         {
             Screen.SetResolution(display.x, display.y, FullScreenMode.FullScreenWindow);
-            Debug.Log($"[Display] フルスクリーンにしました（{display.x}x{display.y}）");
+            Debug.Log(GameText.Format("log.display.fullscreen", display.x, display.y));
             return;
         }
 
         Vector2Int size = FitWindow(settings.Resolution.Size(), display);
         Screen.SetResolution(size.x, size.y, FullScreenMode.Windowed);
-        Debug.Log($"[Display] ウィンドウにしました（{size.x}x{size.y}）");
+        Debug.Log(GameText.Format("log.display.windowed", size.x, size.y));
     }
 
     /// <summary>前回のウィンドウがモニターに収まらない大きさのまま覚えられていたら、収まる大きさへ縮める</summary>
@@ -37,7 +37,7 @@ public static class ScreenModeApplier
             return;
 
         Screen.SetResolution(fitted.x, fitted.y, FullScreenMode.Windowed);
-        Debug.Log($"[Display] ウィンドウが画面に収まらないため {fitted.x}x{fitted.y} に縮めました（前回 {current.x}x{current.y}）");
+        Debug.Log(GameText.Format("log.display.fitted", fitted.x, fitted.y, current.x, current.y));
     }
 
     public static Vector2Int FitWindow(Vector2Int requested, Vector2Int display)

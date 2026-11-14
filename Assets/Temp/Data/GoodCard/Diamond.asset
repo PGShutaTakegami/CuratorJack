@@ -12,10 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: Diamond
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u30C0\u30A4\u30E4\u30E2\u30F3\u30C9"
     englishName: Diamond
     cardSprite: {fileID: 21300000, guid: 2af91cd28e3170843a45a5f9ff4dd0e4, type: 3}
     discription: "\u5B9D\u77F3\u30AB\u30FC\u30C9\u306E\u30C0\u30A4\u30E4\u30E2\u30F3\u30C9\n\u5B9D\u77F3\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u6700\u9AD8\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u57CB\u8535\u91CF\u304C\u6E1B\u5C11\u3057\u3064\u3064\u3042\u308B\u4ECA\u306E\u6642\u4EE3\u3067\u306F\u304B\u306A\u308A\u5E0C\u5C11"
     initialPrice: 40
+    englishDescription: 'A gem card: Diamond
+
+      The highest rarity among gem
+      cards
+
+      Quite rare in an age of dwindling reserves'
+    chineseSimplifiedName: "\u94BB\u77F3"
+    chineseSimplifiedDescription: "\u5B9D\u77F3\u5361\uFF1A\u94BB\u77F3\n\u5B9D\u77F3\u5361\u4E2D\u7A00\u6709\u5EA6\u6700\u9AD8\n\u5728\u50A8\u91CF\u65E5\u6E10\u51CF\u5C11\u7684\u5F53\u4ECA\u65F6\u4EE3\u76F8\u5F53\u7A00\u6709"
+    chineseTraditionalName: "\u947D\u77F3"
+    chineseTraditionalDescription: "\u5BF6\u77F3\u5361\uFF1A\u947D\u77F3\n\u5BF6\u77F3\u5361\u4E2D\u7A00\u6709\u5EA6\u6700\u9AD8\n\u5728\u5132\u91CF\u65E5\u6F38\u6E1B\u5C11\u7684\u7576\u4ECA\u6642\u4EE3\u76F8\u7576\u7A00\u6709"
   rarity: 2
+  effect: 0

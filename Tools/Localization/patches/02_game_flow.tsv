@@ -1,0 +1,39 @@
+# table	key	ja	en	zh-Hans
+GameLanguageTable	game.turn.cpu_takeover	{0} の接続が切れたため、CPU が代わりに操作します	{0} disconnected, so a CPU will play for them	{0} 的连接已断开，将由电脑代为操作
+GameLanguageTable	game.turn.pressure_blocked	{0} は圧力で出品カードを引けませんでした	{0} couldn't draw a goods card due to Pressure	{0} 受到施压，无法抽取商品卡
+GameLanguageTable	game.turn.extra_header	ラウンド {0}　{1} の追加ターン（2度目）	Round {0} — extra turn for {1} (Second Turn)	第 {0} 轮　{1} 的追加回合（再来一次）
+GameLanguageTable	game.turn.extra_no_goods	{0} は出品できるグッズがないため、追加ターンはありません	{0} has no goods to list, so there is no extra turn	{0} 没有可以上拍的商品，因此没有追加回合
+GameLanguageTable	game.turn.paralyzed	{0} はマヒしていて出品できません（ターンを飛ばします）	{0} is paralyzed and can't list (turn skipped)	{0} 处于麻痹状态，无法上拍（跳过回合）
+GameLanguageTable	game.turn.note_interfered	（横やり：効果カードを付けられません）	 (Interference: can't attach effect cards)	（插手：无法附加效果卡）
+GameLanguageTable	game.turn.note_fire_sale	（投げ売り：最低出品額 -{0}）	 (Fire Sale: minimum price -{0})	（甩卖：底价 -{0}）
+GameLanguageTable	game.turn.proceeds_lost	（最後の 1v1 のため、代金は出品者に入りません）	 (Final 1v1: the seller receives no payment)	（最后的 1v1，货款不归卖家）
+GameLanguageTable	game.turn.drained	最低出品額より {0} 多く落札したため、{1} のコインを {2} 削りました	Won {0} above the minimum price, draining {2} coins from {1}	比底价多出价 {0} 拍得，削减了 {1} 的 {2} 金币
+GameLanguageTable	game.turn.penalty_lost	見送り権を {0} 枚失いました	Lost {0} pass(es)	失去了 {0} 张弃权券
+GameLanguageTable	game.turn.penalty_dropout	見送り権が足りず脱落しました	Not enough passes — eliminated	弃权券不足，被淘汰了
+GameLanguageTable	game.turn.shortfall	{0} は {1} コインを払えず購入できませんでした。{2}（{3} は消費）	{0} couldn't pay {1} coins and failed to buy. {2} ({3} is discarded)	{0} 付不起 {1} 金币，购买失败。{2}（{3} 已消耗）
+GameLanguageTable	effect.title.unsold_effects	落札者なし：{0} に発動する効果カード	No winner: effect cards that take effect on {0}	无人拍得：对 {0} 生效的效果卡
+GameLanguageTable	effect.title.won_effects	{0} が落札した商品に付いていた効果カード	Effect cards attached to the item {0} won	{0} 拍得的商品上附加的效果卡
+GameLanguageTable	effect.title.unsold_special	落札者なし：{0} に発動するスペシャルカード	No winner: special card that takes effect on {0}	无人拍得：对 {0} 生效的特殊卡
+GameLanguageTable	effect.title.won_special	{0} が落札した商品のスペシャルカード	Special card of the item {0} won	{0} 拍得的商品的特殊卡
+GameLanguageTable	effect.title.transform	{0}（{1} → {2}）	{0} ({1} → {2})	{0}（{1} → {2}）
+GameLanguageTable	effect.indulgence_nullified	免罪符：{0} が受けた効果はすべて無効になりました	Indulgence: all effects on {0} were nullified	赎罪券：{0} 受到的效果全部无效了
+GameLanguageTable	effect.random_chosen	{0}：{1} が発動します	{0}: {1} takes effect	{0}：{1} 发动
+GameLanguageTable	effect.word_of_mouth	{0}：{1} が効果カードを 1 枚引きます	{0}: {1} draws 1 effect card	{0}：{1} 抽 1 张效果卡
+GameLanguageTable	effect.connections	{0}：{1} が出品カードを 1 枚引きます	{0}: {1} draws 1 goods card	{0}：{1} 抽 1 张商品卡
+GameLanguageTable	effect.indulgence	{0}：{1} が次に受ける効果は 1 回無効になります	{0}: the next effect on {1} will be nullified once	{0}：{1} 下次受到的效果将无效 1 次
+GameLanguageTable	effect.reversal	{0}：出品ターンの回る向きが逆になります	{0}: the turn order is reversed	{0}：上拍回合的顺序反转
+GameLanguageTable	effect.fire_sale	{0}：{1} の次の出品は最低出品額が {2} 下がります	{0}: {1}'s next listing has its minimum price lowered by {2}	{0}：{1} 下次上拍的底价降低 {2}
+GameLanguageTable	effect.pressure	{0}：{1} は出品カードのドローが 1 回できません	{0}: {1} skips 1 goods card draw	{0}：{1} 有 1 次无法抽取商品卡
+GameLanguageTable	effect.second_turn	{0}：{1} はこのターンの後にもう一度出品します	{0}: {1} lists again after this turn	{0}：{1} 在本回合结束后再上拍一次
+GameLanguageTable	effect.interference	{0}：{1} は次の出品で効果カードを付けられません	{0}: {1} can't attach effect cards on their next listing	{0}：{1} 下次上拍时无法附加效果卡
+GameLanguageTable	effect.golden_boon	{0}：{1} のコインが {2} 枚増えました	{0}: {1} gained {2} coins	{0}：{1} 的金币增加了 {2} 枚
+GameLanguageTable	effect.grace_token	{0}：{1} の見送り権が {2} 枚増えました	{0}: {1} gained {2} pass(es)	{0}：{1} 的弃权券增加了 {2} 张
+GameLanguageTable	effect.markdown_self	{0}：出品者が受け取ったため効果はありません	{0}: no effect because the seller received it	{0}：由卖家接收，因此没有效果
+GameLanguageTable	effect.markdown_paid	{0}：{1} が {2} に {3} コインを追加で払いました	{0}: {1} paid {2} an extra {3} coins	{0}：{1} 额外向 {2} 支付了 {3} 金币
+GameLanguageTable	effect.markdown_paid_final	{0}：{1} が {2} コインを追加で払いました（最後の 1v1 のため出品者には入りません）	{0}: {1} paid an extra {2} coins (final 1v1: the seller receives nothing)	{0}：{1} 额外支付了 {2} 金币（最后的 1v1，不归卖家）
+GameLanguageTable	effect.no_targets	{0}：対象のプレイヤーがいません	{0}: no players to target	{0}：没有可作用的玩家
+GameLanguageTable	effect.blocked_by_indulgence	{0}：{1} は免罪符で無効にしました	{0}: {1} nullified it with an Indulgence	{0}：{1} 用赎罪券使其无效了
+GameLanguageTable	effect.name_separator	・	, 	、
+GameLanguageTable	effect.remaining	（残り {0} 回）	 ({0} left)	（剩余 {0} 次）
+GameLanguageTable	effect.label.interference_all	全横やり	Interference All	全体插手
+GameLanguageTable	effect.label.pressure_all	全圧力	Pressure All	全体施压

@@ -74,13 +74,13 @@ public class TurnHeadlineView : MonoBehaviour
 
     void ShowTurn()
     {
-        Show(seller == PlayerRegistry.NoPlayer ? string.Empty : $"{names.NameOf(seller)} のターン");
+        Show(seller == PlayerRegistry.NoPlayer ? string.Empty : GameText.Format("game.headline.turn", names.NameOf(seller)));
     }
 
     void ShowAuction()
     {
-        string bidders = string.Join("、", auction.ActivePlayers.Select(names.NameOf));
-        Show(string.IsNullOrEmpty(bidders) ? string.Empty : $"{bidders} のオークションバトル中");
+        string bidders = string.Join(GameText.Get("effect.name_separator"), auction.ActivePlayers.Select(names.NameOf));
+        Show(string.IsNullOrEmpty(bidders) ? string.Empty : GameText.Format("game.headline.auction", bidders));
     }
 
     /// <summary>文字に合わせて幅を決め、枠に収まれば中央に置き、収まらなければ右端から流し始める（流している途中なら位置はそのまま）</summary>

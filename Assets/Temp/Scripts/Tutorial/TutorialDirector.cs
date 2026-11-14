@@ -262,9 +262,9 @@ public class TutorialDirector : MonoBehaviour
         HandCard goods = FindInHand(firstGoods);
         HandCard buff = FindInHand(buffCard);
         HandCard debuff = FindInHand(debuffCard);
-        if (goods == null || buff == null || debuff == null)
+        if (goods == null)
         {
-            Abort("ターン 1 で案内するカードが手札にありません");
+            Abort(GameText.Get("log.tutorial.no_first_goods"));
             yield break;
         }
 
@@ -279,12 +279,18 @@ public class TutorialDirector : MonoBehaviour
 
         gate.AllowSelectGoods(goods);
         yield return Show("tutorial.seller.select_goods", TutorialNavLayout.Top, true, () => session.Goods == goods, ImageOf(goods));
-        gate.AllowAttachBuff(buff);
-        yield return Show("tutorial.seller.attach_buff", TutorialNavLayout.Top, true, () => session.Buffs.Contains(buff), ImageOf(buff));
+        if (buff != null)
+        {
+            gate.AllowAttachBuff(buff);
+            yield return Show("tutorial.seller.attach_buff", TutorialNavLayout.Top, true, () => session.Buffs.Contains(buff), ImageOf(buff));
+        }
         gate.AllowRaise();
         yield return Show("tutorial.seller.raise", TutorialNavLayout.Top, true, () => session.IsRaised, raisePanel);
-        gate.AllowAttachBuff(debuff);
-        yield return Show("tutorial.seller.attach_debuff", TutorialNavLayout.Top, true, () => session.Buffs.Contains(debuff), ImageOf(debuff));
+        if (debuff != null)
+        {
+            gate.AllowAttachBuff(debuff);
+            yield return Show("tutorial.seller.attach_debuff", TutorialNavLayout.Top, true, () => session.Buffs.Contains(debuff), ImageOf(debuff));
+        }
         gate.AllowConfirm();
         yield return Show("tutorial.seller.confirm", TutorialNavLayout.Top, true, () => session.IsConfirmed, confirmButton);
         EndGuidedListing();
@@ -303,7 +309,7 @@ public class TutorialDirector : MonoBehaviour
         if (rival != null)
         {
             rival.BidInNextAuction(raiseRounds + 1);
-            rival.AttachInNextListing(rivalBuffCard);
+            rival.AttachInNextListing(Activatable.IsActive(rivalBuffCard) ? rivalBuffCard : null);
         }
     }
 
@@ -385,11 +391,8 @@ public class TutorialDirector : MonoBehaviour
     /// <summary>練習用のアイテムを渡し、虫眼鏡 → 電気プラグ → リモコンの順に 1 つずつ使わせる。案内中は使っている途中のアイテムしか送らない</summary>
     IEnumerator RunItems()
     {
-        foreach (ItemDefinition item in practiceItems)
-        {
-            if (item != null)
-                game.TryGiveItem(Local, item);
-        }
+        foreach (ItemDefinition item in Activatable.ActiveOnly(practiceItems))
+            game.TryGiveItem(Local, item);
         if (itemTable != null)
             yield return itemTable.PresentAcquired(Local);
 
@@ -479,9 +482,9 @@ public class TutorialDirector : MonoBehaviour
             yield return RunFinalBattleRules();
 
         HandCard goods = FindInHand(specialGoods);
-        if (goods == null)
+        if (goods == null || goods.Special == null)
         {
-            Abort("スペシャルカードの案内に使うカードが手札にありません");
+            Abort(GameText.Get("log.tutorial.no_special_goods"));
             yield break;
         }
 
@@ -531,7 +534,7 @@ public class TutorialDirector : MonoBehaviour
 
     void Abort(string reason)
     {
-        Debug.LogWarning($"[Tutorial] {reason}。チュートリアルの案内を終えます");
+        Debug.LogWarning(GameText.Format("log.tutorial.abort", reason));
         Finish();
     }
 

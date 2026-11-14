@@ -1,0 +1,62 @@
+key	ja	en	zh-Hans	zh-Hant
+title.menu.single_play	シングルプレイ	Single Play	单人游戏	單人遊戲
+title.menu.multi_play	マルチプレイ	Multi Play	多人游戏	多人遊戲
+title.menu.option	オプション	Options	选项	選項
+title.menu.credit	クレジット	Credits	制作人员	製作人員
+title.menu.trophy	トロフィー	Trophies	奖杯	獎盃
+title.menu.quit	終了	Quit	退出	退出
+title.ready.not_ready	準備中{0}/{1}	Readying {0}/{1}	准备中{0}/{1}	準備中{0}/{1}
+title.ready.ready	準備完了{0}/{1}	Ready {0}/{1}	已准备{0}/{1}	已準備{0}/{1}
+title.lobby.start	ゲーム開始	Start Game	开始游戏	開始遊戲
+title.room.create	部屋を作る	Create Room	创建房间	建立房間
+title.room.join	参加する	Join	加入	加入
+title.room.full	満員です	Room is full	房间已满	房間已滿
+title.room.connect_failed	接続できませんでした	Could not connect	无法连接	無法連線
+title.players.with_cpu	自分 + コンピューター {0}人で開始しました	Started with you + {0} CPU player(s)	已由你 + {0} 名电脑玩家开始	已由你 + {0} 名電腦玩家開始
+title.menu.tutorial	チュートリアル	Tutorial	教程	教程
+title.under_construction	制作中	Under Construction	制作中	製作中
+room.slot.mute	ミュート	Mute	静音	靜音
+room.slot.unmute	解除	Unmute	取消静音	取消靜音
+room.password.wrong	パスワードが違います	Incorrect password	密码错误	密碼錯誤
+room.default_name	{0}人部屋 #{1}	{0}-player room #{1}	{0}人房间 #{1}	{0}人房間 #{1}
+room.settings.capacity	ルーム人数	Room Size	房间人数	房間人數
+room.settings.wait_time	待ち時間	Wait Time	等待时间	等待時間
+room.slot.kick	キック	Kick	踢出	踢出
+room.slot.empty	空き	Open	空位	空位
+room.slot.fill_cpu	CPUで埋める	Fill with CPU	用 CPU 填补	用 CPU 填補
+room.slot.closed	使用不可	Closed	不可用	不可用
+title.common.close	閉じる	Close	关闭	關閉
+title.common.cancel	キャンセル	Cancel	取消	取消
+title.single.start	開始	Start	开始	開始
+title.multi.play2	2人プレイ	2 Players	2 人游戏	2 人遊戲
+title.multi.play3	3人プレイ	3 Players	3 人游戏	3 人遊戲
+title.multi.play4	4人プレイ	4 Players	4 人游戏	4 人遊戲
+room.search.title	ルーム検索	Room Search	搜索房间	搜尋房間
+room.field.name	ルーム名	Room Name	房间名	房間名
+room.search.name_placeholder	ルーム名の一部を入力...	Enter part of a room name...	输入房间名的一部分...	輸入房間名的一部分...
+room.field.capacity	人数	Players	人数	人數
+room.option.any	指定なし	Any	不限	不限
+room.option.players2	2人	2 Players	2 人	2 人
+room.option.players3	3人	3 Players	3 人	3 人
+room.option.players4	4人	4 Players	4 人	4 人
+room.field.password	パスワード	Password	密码	密碼
+room.option.yes	あり	Yes	有	有
+room.option.no	なし	No	无	無
+room.search.clear	条件クリア	Clear Filters	清除条件	清除條件
+room.search.submit	検索	Search	搜索	搜尋
+room.create.name_placeholder	空欄なら自動で決まります	Leave blank to name it automatically	留空则自动命名	留空則自動命名
+room.create.password_placeholder	英数字16文字まで	Up to 16 letters or digits	最多 16 个字母或数字	最多 16 個字母或數字
+room.field.message	説明	Description	说明	說明
+room.create.message_placeholder	部屋の説明を入力...	Enter a room description...	输入房间说明...	輸入房間說明...
+room.create.submit	作成	Create	创建	建立
+room.password.title	パスワードを入力	Enter Password	输入密码	輸入密碼
+room.password.enter	入室	Enter	进入	進入
+title.quit.confirm	ゲームを終了する	Quit Game	退出游戏	退出遊戲
+title.profile.name_placeholder	名前を入力...	Enter your name...	输入名字...	輸入名字...
+title.icon.title	アイコンを描く	Draw Icon	绘制头像	繪製頭像
+title.icon.brightness	明るさ	Brightness	亮度	亮度
+title.icon.eraser	消しゴム	Eraser	橡皮擦	橡皮擦
+title.icon.clear	全部消す	Clear All	全部清除	全部清除
+title.icon.undo	1つ戻す	Undo	撤销	撤銷
+title.icon.redo	1つ進む	Redo	重做	重做
+title.icon.ok	決定	OK	确定	確定

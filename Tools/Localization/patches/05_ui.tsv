@@ -1,0 +1,61 @@
+GameLanguageTable	game.ui.start	スタート	Start	开始
+GameLanguageTable	game.ui.reset	やり直し	Reset	重置
+GameLanguageTable	game.ui.retry	リトライ	Retry	重试
+GameLanguageTable	game.ui.title	タイトル	Title	标题
+GameLanguageTable	catalog.tab.goods	商品	Goods	商品
+GameLanguageTable	catalog.tab.effect	エフェクト	Effects	效果
+GameLanguageTable	catalog.tab.special	スペシャル	Special	特殊
+GameLanguageTable	catalog.tab.item	アイテム	Items	道具
+GameLanguageTable	game.pause.resume	再開	Resume	继续
+GameLanguageTable	game.pause.retire	リタイア	Retire	认输
+GameLanguageTable	game.pause.settings	設定	Settings	设置
+GameLanguageTable	game.pause.room_settings	ルーム設定	Room Settings	房间设置
+GameLanguageTable	game.pause.spectate	引き続き観戦	Keep Watching	继续观战
+GameLanguageTable	game.pause.restart	最初から	Restart	从头开始
+GameLanguageTable	game.pause.to_title	タイトルへ	Back to Title	返回标题
+GameLanguageTable	game.pause.retire_confirm	降参しますか？	Surrender?	要认输吗？
+GameLanguageTable	game.pause.yes	はい	Yes	是
+GameLanguageTable	game.pause.no	いいえ	No	否
+TitleLanguageTable	room.settings.capacity	ルーム人数	Room Size	房间人数
+TitleLanguageTable	room.settings.wait_time	待ち時間	Wait Time	等待时间
+TitleLanguageTable	room.slot.kick	キック	Kick	踢出
+TitleLanguageTable	room.slot.empty	空き	Open	空位
+TitleLanguageTable	room.slot.fill_cpu	CPUで埋める	Fill with CPU	用 CPU 填补
+TitleLanguageTable	room.slot.closed	使用不可	Closed	不可用
+TitleLanguageTable	title.common.close	閉じる	Close	关闭
+TitleLanguageTable	title.common.cancel	キャンセル	Cancel	取消
+TitleLanguageTable	title.single.start	開始	Start	开始
+TitleLanguageTable	title.multi.play2	2人プレイ	2 Players	2 人游戏
+TitleLanguageTable	title.multi.play3	3人プレイ	3 Players	3 人游戏
+TitleLanguageTable	title.multi.play4	4人プレイ	4 Players	4 人游戏
+TitleLanguageTable	room.search.title	ルーム検索	Room Search	搜索房间
+TitleLanguageTable	room.field.name	ルーム名	Room Name	房间名
+TitleLanguageTable	room.search.name_placeholder	ルーム名の一部を入力...	Enter part of a room name...	输入房间名的一部分...
+TitleLanguageTable	room.field.capacity	人数	Players	人数
+TitleLanguageTable	room.option.any	指定なし	Any	不限
+TitleLanguageTable	room.option.players2	2人	2 Players	2 人
+TitleLanguageTable	room.option.players3	3人	3 Players	3 人
+TitleLanguageTable	room.option.players4	4人	4 Players	4 人
+TitleLanguageTable	room.field.password	パスワード	Password	密码
+TitleLanguageTable	room.option.yes	あり	Yes	有
+TitleLanguageTable	room.option.no	なし	No	无
+TitleLanguageTable	room.search.clear	条件クリア	Clear Filters	清除条件
+TitleLanguageTable	room.search.submit	検索	Search	搜索
+TitleLanguageTable	room.create.name_placeholder	空欄なら自動で決まります	Leave blank to name it automatically	留空则自动命名
+TitleLanguageTable	room.create.password_placeholder	英数字16文字まで	Up to 16 letters or digits	最多 16 个字母或数字
+TitleLanguageTable	room.field.message	説明	Description	说明
+TitleLanguageTable	room.create.message_placeholder	部屋の説明を入力...	Enter a room description...	输入房间说明...
+TitleLanguageTable	room.create.submit	作成	Create	创建
+TitleLanguageTable	room.password.title	パスワードを入力	Enter Password	输入密码
+TitleLanguageTable	room.password.enter	入室	Enter	进入
+TitleLanguageTable	title.quit.confirm	ゲームを終了する	Quit Game	退出游戏
+TitleLanguageTable	title.profile.name_placeholder	名前を入力...	Enter your name...	输入名字...
+TitleLanguageTable	title.icon.title	アイコンを描く	Draw Icon	绘制头像
+TitleLanguageTable	title.icon.brightness	明るさ	Brightness	亮度
+TitleLanguageTable	title.icon.eraser	消しゴム	Eraser	橡皮擦
+TitleLanguageTable	title.icon.clear	全部消す	Clear All	全部清除
+TitleLanguageTable	title.icon.undo	1つ戻す	Undo	撤销
+TitleLanguageTable	title.icon.redo	1つ進む	Redo	重做
+TitleLanguageTable	title.icon.ok	決定	OK	确定
+LogLanguageTable	debug.console.retire	リタイア	Retire	认输
+LogLanguageTable	log.game.retired	[Game] Player{0} がリタイアしました	[Game] Player{0} retired	[Game] Player{0} 已认输

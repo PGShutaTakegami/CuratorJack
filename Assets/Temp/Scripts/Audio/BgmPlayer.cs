@@ -50,7 +50,7 @@ public class BgmPlayer : MonoBehaviour
         BgmPlayer prefab = Resources.Load<BgmPlayer>(ResourcePath);
         if (prefab == null)
         {
-            Debug.LogWarning($"{nameof(BgmPlayer)}: Resources/{ResourcePath} が見つかりません。");
+            Debug.LogWarning(GameText.Format("log.resource_missing", nameof(BgmPlayer), ResourcePath));
             return;
         }
 

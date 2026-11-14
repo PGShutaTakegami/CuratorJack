@@ -217,7 +217,7 @@ public class TurnFlowController : MonoBehaviour
     /// <summary>切断した人の代わりに CPU が操作することを知らせる</summary>
     public void AnnounceCpuTakeover(int player)
     {
-        SetInfo($"{NameOf(player)} の接続が切れたため、CPU が代わりに操作します");
+        SetInfo(GameText.Format("game.turn.cpu_takeover", NameOf(player)));
     }
 
     void Awake()
@@ -238,7 +238,7 @@ public class TurnFlowController : MonoBehaviour
 
     void HandleGoodsDrawBlocked(int player)
     {
-        SetInfo($"{NameOf(player)} は圧力で出品カードを引けませんでした");
+        SetInfo(GameText.Format("game.turn.pressure_blocked", NameOf(player)));
     }
 
     void HandleSellerTurnStarted(int firstSeller)
@@ -250,7 +250,7 @@ public class TurnFlowController : MonoBehaviour
     {
         deathOrder.Add(player.PlayerNumber);
         pendingDropOuts.Enqueue(player.PlayerNumber);
-        SetInfo($"{NameOf(player.PlayerNumber)} が脱落しました");
+        SetInfo(GameText.Format("game.turn.dropped_out", NameOf(player.PlayerNumber)));
     }
 
     /// <summary>入力された名前（なければ「Player + 番号」）。自分も名前で表す</summary>
@@ -272,14 +272,14 @@ public class TurnFlowController : MonoBehaviour
 
         while (seller != PlayerRegistry.NoPlayer)
         {
-            turnHeader = $"ラウンド {round}　{NameOf(seller)} のターン";
+            turnHeader = GameText.Format("game.turn.header", round, NameOf(seller));
             if (game.TryUseStatus(seller, PlayerStatus.Paralysis))
             {
                 yield return ShowResult(ParalyzedText(seller));
             }
             else
             {
-                SetInfo("出品者の番です");
+                SetInfo(GameText.Get("game.turn.seller_turn"));
                 TurnStarted?.Invoke(seller);
                 sellerHighlight.Show(seller);
                 yield return PresentSeller(seller, isFirstTurn);
@@ -296,8 +296,8 @@ public class TurnFlowController : MonoBehaviour
 
             if (order.IsRoundComplete(game.IsAlive))
             {
-                turnHeader = $"ラウンド {round} 終了";
-                SetInfo("ドローフェーズ（生きている全員が 1 枚ずつ引きます）");
+                turnHeader = GameText.Format("game.turn.round_end", round);
+                SetInfo(GameText.Get("game.turn.draw_phase"));
                 yield return announcer.Show(drawPhaseMessage);
                 yield return drawPhase.DrawRound();
                 order.StartNewRound();
@@ -354,7 +354,7 @@ public class TurnFlowController : MonoBehaviour
     {
         while (game.AlivePlayers.Count() > 1 && TryFindExtraTurn(out int player))
         {
-            turnHeader = $"ラウンド {round}　{NameOf(player)} の追加ターン（2度目）";
+            turnHeader = GameText.Format("game.turn.extra_header", round, NameOf(player));
             if (game.TryUseStatus(player, PlayerStatus.Paralysis))
             {
                 yield return ShowResult(ParalyzedText(player));
@@ -364,12 +364,12 @@ public class TurnFlowController : MonoBehaviour
 
             if (!game.TryGet(player, out PlayerState state) || !state.HasGoods)
             {
-                yield return ShowResult($"{NameOf(player)} は出品できるグッズがないため、追加ターンはありません");
+                yield return ShowResult(GameText.Format("game.turn.extra_no_goods", NameOf(player)));
                 game.TryUseStatus(player, PlayerStatus.ExtraTurn);
                 continue;
             }
 
-            SetInfo("出品者の番です");
+            SetInfo(GameText.Get("game.turn.seller_turn"));
             TurnStarted?.Invoke(player);
             sellerHighlight.Show(player);
             yield return PresentSeller(player, false);
@@ -380,7 +380,7 @@ public class TurnFlowController : MonoBehaviour
         }
     }
 
-    string ParalyzedText(int player) => $"{NameOf(player)} はマヒしていて出品できません（ターンを飛ばします）";
+    string ParalyzedText(int player) => GameText.Format("game.turn.paralyzed", NameOf(player));
 
     bool TryFindExtraTurn(out int player)
     {
@@ -411,7 +411,7 @@ public class TurnFlowController : MonoBehaviour
         {
             game.ConsumePassRight(seller);
             if (!IsDecided)
-                yield return ShowResult($"{NameOf(seller)} は出品できるグッズがないため見送り権を使いました");
+                yield return ShowResult(GameText.Format("game.turn.seller_no_goods", NameOf(seller)));
             yield break;
         }
 
@@ -445,7 +445,7 @@ public class TurnFlowController : MonoBehaviour
         if (winner == PlayerRegistry.NoPlayer)
         {
             game.ApplyBuffs(seller, listing.Buffs);
-            yield return ShowResult($"落札者がいませんでした（{listing.Goods.DisplayName} は消費）");
+            yield return ShowResult(GameText.Format("game.turn.no_buyer", listing.Goods.DisplayName));
         }
         else if (isShortfall)
         {
@@ -479,9 +479,9 @@ public class TurnFlowController : MonoBehaviour
         bool interfered = StatusOf(seller, PlayerStatus.Interference) > 0;
         int discount = StatusOf(seller, PlayerStatus.FireSaleDiscount);
         var session = new ListingSession(game, seller, !interfered, discount);
-        string notes = (interfered ? "（横やり：効果カードを付けられません）" : string.Empty)
-            + (discount > 0 ? $"（投げ売り：最低出品額 -{discount}）" : string.Empty);
-        SetInfo($"{NameOf(seller)} が出品する商品を選んでいます{notes}");
+        string notes = (interfered ? GameText.Get("game.turn.note_interfered") : string.Empty)
+            + (discount > 0 ? GameText.Format("game.turn.note_fire_sale", discount) : string.Empty);
+        SetInfo(GameText.Format("game.turn.choosing_goods", NameOf(seller)) + notes);
         activeListing = session;
         Actions.BeginListing(session);
         agents[seller].BeginListing(session);
@@ -512,8 +512,8 @@ public class TurnFlowController : MonoBehaviour
         int leader = PlayerRegistry.NoPlayer;
         void ShowAuction()
         {
-            string highest = leader == PlayerRegistry.NoPlayer ? "入札なし" : $"最高額 {auction.HighestBid}（{NameOf(leader)}）";
-            SetInfo($"オークション中：{listing.Goods.DisplayName}（最低 {listing.MinPrice}）　{highest}　残り {auction.ActivePlayers.Count()} 人");
+            string highest = leader == PlayerRegistry.NoPlayer ? GameText.Get("game.auction.no_bids") : GameText.Format("game.auction.highest_of", auction.HighestBid, NameOf(leader));
+            SetInfo(GameText.Format("game.auction.in_progress", listing.Goods.DisplayName, listing.MinPrice, highest, auction.ActivePlayers.Count()));
         }
         ShowAuction();
         auction.BidPlaced += (player, amount) =>
@@ -529,7 +529,7 @@ public class TurnFlowController : MonoBehaviour
         auction.Folded += player =>
         {
             bidPaddles.Lower(player);
-            bidBoard.Show(player, "降りる");
+            bidBoard.Show(player, GameText.Get("game.auction.pass"));
             ShowAuction();
             game.ConsumePassRight(player);
         };
@@ -574,8 +574,8 @@ public class TurnFlowController : MonoBehaviour
         int coinsAfter = CoinsOf(buyer);
         game.ApplyBuffs(buyer, listing.Buffs);
 
-        string proceeds = sellerEarns ? string.Empty : "（最後の 1v1 のため、代金は出品者に入りません）";
-        SetInfo($"{NameOf(buyer)} が {listing.Goods.DisplayName} を {price} コインで購入しました{proceeds}");
+        string proceeds = sellerEarns ? string.Empty : GameText.Get("game.turn.proceeds_lost");
+        SetInfo(GameText.Format("game.turn.purchased", NameOf(buyer), listing.Goods.DisplayName, price) + proceeds);
         Sprite sprite = listing.Goods.Data != null ? listing.Goods.Data.Parameter.CardSprite : null;
         yield return winnerPresenter.Present(buyer, sprite, coinsBefore, coinsAfter);
     }
@@ -601,7 +601,7 @@ public class TurnFlowController : MonoBehaviour
         if (drained == 0)
             yield break;
 
-        SetInfo($"最低出品額より {amount} 多く落札したため、{NameOf(seller)} のコインを {drained} 削りました");
+        SetInfo(GameText.Format("game.turn.drained", amount, NameOf(seller), drained));
         yield return winnerPresenter.PresentCoins(seller, coinsBefore, CoinsOf(seller));
         yield return new WaitForSeconds(resultSeconds);
     }
@@ -614,8 +614,8 @@ public class TurnFlowController : MonoBehaviour
         if (IsDecided)
             yield break;
 
-        string outcome = game.IsAlive(winner) ? $"見送り権を {penalty} 枚失いました" : "見送り権が足りず脱落しました";
-        yield return ShowResult($"{NameOf(winner)} は {price} コインを払えず購入できませんでした。{outcome}（{listing.Goods.DisplayName} は消費）");
+        string outcome = game.IsAlive(winner) ? GameText.Format("game.turn.penalty_lost", penalty) : GameText.Get("game.turn.penalty_dropout");
+        yield return ShowResult(GameText.Format("game.turn.shortfall", NameOf(winner), price, outcome, listing.Goods.DisplayName));
     }
 
     int CoinsOf(int player) => game.TryGet(player, out PlayerState state) ? state.Coins : 0;
@@ -654,12 +654,12 @@ public class TurnFlowController : MonoBehaviour
     void ShowVictory()
     {
         PlayerState winner = game.AlivePlayers.FirstOrDefault();
-        string winnerText = winner == null ? "勝者なし" : $"勝者 {NameOf(winner.PlayerNumber)}";
+        string winnerText = winner == null ? GameText.Get("game.result.no_winner") : GameText.Format("game.result.winner", NameOf(winner.PlayerNumber));
         turnHeader = string.Empty;
-        SetInfo($"ゲーム終了　{winnerText}");
+        SetInfo(GameText.Format("game.result.ended", winnerText));
 
         ui.ShowVictory("GAME SET", winnerText, string.Join("\n", Standings()));
-        Debug.Log($"[Game] ゲーム終了。勝者 Player{winner?.PlayerNumber}");
+        Debug.Log(GameText.Format("log.game.finished", winner?.PlayerNumber));
         GameFinished?.Invoke();
     }
 
@@ -671,8 +671,8 @@ public class TurnFlowController : MonoBehaviour
 
         return ranked.Select((player, index) =>
         {
-            string state = player.IsAlive ? "生存" : $"{deathOrder.IndexOf(player.PlayerNumber) + 1}番目に脱落";
-            return $"{index + 1}位　{NameOf(player.PlayerNumber)}　{state}　（コイン {player.Coins}　落札 {player.Collection.Count}）";
+            string state = player.IsAlive ? GameText.Get("game.result.alive") : GameText.Format("game.result.dropout_order", deathOrder.IndexOf(player.PlayerNumber) + 1);
+            return GameText.Format("game.result.rank_line", index + 1, NameOf(player.PlayerNumber), state, player.Coins, player.Collection.Count);
         });
     }
 

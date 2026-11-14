@@ -7,7 +7,7 @@ using UnityEngine;
 public static class GameVersion
 {
     /// <summary>バージョンが違うためホストに断られたときに出す文言</summary>
-    public const string MismatchMessage = "ゲームのバージョンが違うため入れません";
+    public static string MismatchMessage => GameText.Get("net.version_mismatch");
 
     public static string Current => Application.version;
 

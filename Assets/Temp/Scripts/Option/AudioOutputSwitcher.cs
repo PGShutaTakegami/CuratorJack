@@ -28,14 +28,14 @@ public static class AudioOutputSwitcher
             string endpointId = string.IsNullOrEmpty(deviceName) ? string.Empty : WindowsAudioEndpoints.FindOutputDeviceId(deviceName);
             if (endpointId == null)
             {
-                Debug.LogWarning($"[Option] オーディオ出力デバイス「{deviceName}」が見つからないため、既定のデバイスを使います");
+                Debug.LogWarning(GameText.Format("log.option.output_missing", deviceName));
                 endpointId = string.Empty;
             }
             WindowsAppAudioRouting.SetOutputDevice(endpointId);
         }
         catch (Exception exception)
         {
-            Debug.LogWarning($"[Option] オーディオ出力デバイスを切り替えられませんでした: {exception.Message}");
+            Debug.LogWarning(GameText.Format("log.option.output_switch_failed", exception.Message));
             return;
         }
 

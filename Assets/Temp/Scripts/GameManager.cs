@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
         if (shielded > 0)
         {
             StatusChanged?.Invoke(player);
-            Debug.Log($"[Game] Player{playerNumber} は見送り権の代わりにシールド {shielded} 枚を使いました");
+            Debug.Log(GameText.Format("log.game.shield_used", playerNumber, shielded));
             ShieldConsumed?.Invoke(player, shielded);
         }
         count -= shielded;
@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
         StatusChanged?.Invoke(player);
         if (died)
         {
-            Debug.Log($"[Game] Player{playerNumber} は見送り権 {count} 枚を使えず死亡しました");
+            Debug.Log(GameText.Format("log.game.died", playerNumber, count));
             PlayerDied?.Invoke(player);
         }
         else
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
 
         player.Retire();
         StatusChanged?.Invoke(player);
-        Debug.Log($"[Game] Player{playerNumber} がリタイアしました");
+        Debug.Log(GameText.Format("log.game.retired", playerNumber));
         PlayerDied?.Invoke(player);
     }
 
@@ -170,7 +170,7 @@ public class GameManager : MonoBehaviour
 
         player.AddCoins(-drained);
         StatusChanged?.Invoke(player);
-        Debug.Log($"[Game] Player{playerNumber} のコインを {drained} 削りました");
+        Debug.Log(GameText.Format("log.game.drained", playerNumber, drained));
         return drained;
     }
 
@@ -187,8 +187,8 @@ public class GameManager : MonoBehaviour
         buyer.AddToCollection(goods);
         StatusChanged?.Invoke(buyer);
         StatusChanged?.Invoke(seller);
-        string proceeds = sellerEarns ? string.Empty : "。最後の 1v1 のため代金は出品者に入りません";
-        Debug.Log($"[Game] Player{buyerNumber} が {goods.DisplayName} を {price} コインで購入（出品者 Player{sellerNumber}）{proceeds}");
+        string proceeds = sellerEarns ? string.Empty : GameText.Get("log.game.proceeds_lost");
+        Debug.Log(GameText.Format("log.game.purchased", buyerNumber, goods.DisplayName, price, sellerNumber) + proceeds);
     }
 
     /// <summary>購入者から出品者へ追加の代金を払う（持っている分まで）。出品者に入るのは SellerEarnsProceeds のときだけ。払った額を返す。</summary>
@@ -284,7 +284,7 @@ public class GameManager : MonoBehaviour
             return false;
 
         ItemsChanged?.Invoke(player);
-        Debug.Log($"[Game] Player{playerNumber} がアイテム {item.DisplayName} を手に入れました");
+        Debug.Log(GameText.Format("log.game.item_got", playerNumber, item.DisplayName));
         return true;
     }
 
@@ -295,7 +295,7 @@ public class GameManager : MonoBehaviour
             return false;
 
         ItemsChanged?.Invoke(player);
-        Debug.Log($"[Game] Player{playerNumber} がアイテム {item.DisplayName} を使いました");
+        Debug.Log(GameText.Format("log.game.item_used", playerNumber, item.DisplayName));
         return true;
     }
 
@@ -307,6 +307,6 @@ public class GameManager : MonoBehaviour
 
         player.AddBuffs(buffs);
         StatusChanged?.Invoke(player);
-        Debug.Log($"[Game] Player{playerNumber} にバフデバフ {buffs.Count} 枚がかかりました");
+        Debug.Log(GameText.Format("log.game.buffs_applied", playerNumber, buffs.Count));
     }
 }

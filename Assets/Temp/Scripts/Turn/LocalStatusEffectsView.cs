@@ -94,7 +94,7 @@ public class LocalStatusEffectsView : MonoBehaviour
         {
             ItemDefinition item = itemCatalog != null ? itemCatalog.Items.FirstOrDefault(entry => entry != null && entry.Kind == kind) : null;
             sprite = item != null ? item.Icon : null;
-            displayName = item != null ? $"{item.DisplayName}（{StatusName(status)}）" : StatusName(status);
+            displayName = item != null ? GameText.Format("game.status_effect.item", item.DisplayName, StatusName(status)) : StatusName(status);
             return;
         }
 
@@ -114,7 +114,7 @@ public class LocalStatusEffectsView : MonoBehaviour
         }
     }
 
-    static string StatusName(PlayerStatus status) => status == PlayerStatus.Shield ? "シールド" : "マヒ";
+    static string StatusName(PlayerStatus status) => GameText.Get(status == PlayerStatus.Shield ? "game.status_effect.shield" : "game.status_effect.paralysis");
 
     static CardEffect EffectOf(PlayerStatus status)
     {

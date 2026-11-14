@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: InterferenceAll
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u5168\u6A2A\u3084\u308A"
-    englishName: 
+    englishName: Interference All
     cardSprite: {fileID: 21300000, guid: 886c838581519374aa6d908b846fb4fd, type: 3}
     discription: "\u81EA\u5206\u4EE5\u5916\u306E\u5168\u54E1\u306E\u30AB\u30FC\u30C9\u4ED8\u4E0E\u3092\u5C01\u3058\u308B"
     initialPrice: 0
+    englishDescription: Blocks card attaching for everyone except you
+    chineseSimplifiedName: "\u5168\u4F53\u63D2\u624B"
+    chineseSimplifiedDescription: "\u5C01\u9501\u9664\u81EA\u5DF1\u4EE5\u5916\u6240\u6709\u4EBA\u7684\u9644\u52A0\u5361"
+    chineseTraditionalName: "\u5168\u9AD4\u63D2\u624B"
+    chineseTraditionalDescription: "\u5C01\u9396\u9664\u81EA\u5DF1\u4EE5\u5916\u6240\u6709\u4EBA\u7684\u9644\u52A0\u5361"
   rarity: 0
   effect: 16

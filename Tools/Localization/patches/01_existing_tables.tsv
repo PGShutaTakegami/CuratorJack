@@ -1,0 +1,155 @@
+# table	key	ja	en	zh-Hans（空の列は今の値を残す）
+TitleLanguageTable	title.menu.single_play			单人游戏
+TitleLanguageTable	title.menu.multi_play			多人游戏
+TitleLanguageTable	title.menu.option			选项
+TitleLanguageTable	title.menu.credit			制作人员
+TitleLanguageTable	title.menu.trophy			奖杯
+TitleLanguageTable	title.menu.quit			退出
+TitleLanguageTable	title.ready.not_ready			准备中{0}/{1}
+TitleLanguageTable	title.ready.ready			已准备{0}/{1}
+TitleLanguageTable	title.lobby.start			开始游戏
+TitleLanguageTable	title.room.create			创建房间
+TitleLanguageTable	title.room.join			加入
+TitleLanguageTable	title.room.full			房间已满
+TitleLanguageTable	title.room.connect_failed			无法连接
+TitleLanguageTable	title.players.with_cpu			已由你 + {0} 名电脑玩家开始
+TitleLanguageTable	title.menu.tutorial			教程
+TitleLanguageTable	title.under_construction			制作中
+OptionLanguageTable	option.title			选项
+OptionLanguageTable	option.row.master_volume			主音量
+OptionLanguageTable	option.row.voice_chat_volume			语音音量
+OptionLanguageTable	option.row.se_volume			音效音量
+OptionLanguageTable	option.row.bgm_volume			背景音乐音量
+OptionLanguageTable	option.row.resolution			分辨率
+OptionLanguageTable	option.row.graphics_quality			画质
+OptionLanguageTable	option.row.window_mode			显示模式
+OptionLanguageTable	option.row.vibration			手柄振动
+OptionLanguageTable	option.row.output_device			输出设备
+OptionLanguageTable	option.row.microphone_device			麦克风设备
+OptionLanguageTable	option.row.noise_suppression			降噪
+OptionLanguageTable	option.row.talk_mode			语音发送模式
+OptionLanguageTable	option.row.push_to_talk_key			按键说话键
+OptionLanguageTable	option.row.language			语言
+OptionLanguageTable	option.back			返回
+OptionLanguageTable	option.quality.high			高
+OptionLanguageTable	option.quality.medium			中
+OptionLanguageTable	option.quality.low			低
+OptionLanguageTable	option.window_mode.fullscreen			全屏
+OptionLanguageTable	option.window_mode.windowed			窗口
+OptionLanguageTable	option.on			开
+OptionLanguageTable	option.off			关
+OptionLanguageTable	option.talk_mode.push_to_talk			按键说话
+OptionLanguageTable	option.talk_mode.open			常开
+OptionLanguageTable	option.talk_mode.off			关闭
+OptionLanguageTable	option.default_device			默认设备
+OptionLanguageTable	option.waiting			请按键
+GameLanguageTable	game.status.line			Player{0}  金币 {1}  弃权券 {2}  拍得 {3}{4}
+GameLanguageTable	game.status.spectating_suffix			  （观战中）
+GameLanguageTable	game.you			你
+GameLanguageTable	game.player			Player{0}
+GameLanguageTable	game.rarity.low			低
+GameLanguageTable	game.rarity.middle			中
+GameLanguageTable	game.rarity.high			高
+GameLanguageTable	game.prompt.spectating			正在观战拍卖
+GameLanguageTable	game.prompt.choose_goods			展开手牌，选择要上拍的商品卡
+GameLanguageTable	game.prompt.attach_buff			上拍 {0}（底价 {1}）。要附加增益/减益卡就点击，决定后按确认
+GameLanguageTable	game.prompt.choose_raise			上拍 {0}（底价 {1}）。选择是否加价后按确认
+GameLanguageTable	game.prompt.highest			你是最高出价者。其他玩家超过你之后，可以再次出价
+GameLanguageTable	game.prompt.must_pass			金币不足，只能放弃（将使用弃权券）
+GameLanguageTable	game.prompt.bid_or_pass			用 W/S 或 ↑/↓ 设定金额出价，或选择放弃（放弃会使用弃权券）
+GameLanguageTable	game.auction.summary			底价 {0} / 最高价 {1} / 你 {2} / 持有 {3}
+GameLanguageTable	game.auction.pass			放弃
+GameLanguageTable	game.auction.no_bids			无人出价
+GameLanguageTable	game.auction.highest_of			最高价 {0}（{1}）
+GameLanguageTable	game.auction.in_progress			拍卖中：{0}（底价 {1}）　{2}　剩余 {3} 人
+GameLanguageTable	game.turn.header			第 {0} 轮　{1} 的回合
+GameLanguageTable	game.turn.seller_turn			轮到卖家了
+GameLanguageTable	game.turn.round_end			第 {0} 轮结束
+GameLanguageTable	game.turn.draw_phase			抽牌阶段（所有存活玩家各抽 1 张）
+GameLanguageTable	game.turn.choosing_goods			{0} 正在选择要上拍的商品
+GameLanguageTable	game.turn.seller_no_goods			{0} 没有可以上拍的商品，使用了弃权券
+GameLanguageTable	game.turn.no_buyer			无人拍得（{0} 已消耗）
+GameLanguageTable	game.turn.purchased			{0} 以 {2} 金币购得了 {1}
+GameLanguageTable	game.turn.dropped_out			{0} 被淘汰了
+GameLanguageTable	game.result.no_winner			无胜者
+GameLanguageTable	game.result.winner			胜者 {0}
+GameLanguageTable	game.result.ended			游戏结束　{0}
+GameLanguageTable	game.result.alive			存活
+GameLanguageTable	game.result.dropout_order			第 {0} 个被淘汰
+GameLanguageTable	game.result.rank_line			第 {0} 名　{1}　{2}　（金币 {3}　拍得 {4}）
+GameLanguageTable	game.ui.confirm			确认
+GameLanguageTable	game.ui.bid			出价
+GameLanguageTable	game.ui.pass			放弃
+TutorialLanguageTable	tutorial.intro.welcome			欢迎来到 CuratorJack！\n一起来试试教程吧！
+TutorialLanguageTable	tutorial.click_hint			点击继续
+TutorialLanguageTable	tutorial.seller.open_hand			首先是卖家回合！\n先来看看自己的卡牌吧！
+TutorialLanguageTable	tutorial.seller.look_goods			来看看上拍卡吧！
+TutorialLanguageTable	tutorial.seller.card_detail			像这样就能查看\n卡牌的详细信息！
+TutorialLanguageTable	tutorial.seller.select_goods			选择这张卡牌吧！
+TutorialLanguageTable	tutorial.seller.attach_buff			接下来附加一张效果卡吧！
+TutorialLanguageTable	tutorial.seller.raise			附有效果卡的拍品\n可以添加附加价值！
+TutorialLanguageTable	tutorial.seller.attach_debuff			效果卡可以在上拍卡上\n附加任意张数！
+TutorialLanguageTable	tutorial.seller.confirm			按下确认来上拍吧！
+TutorialLanguageTable	tutorial.auction.intro			拍卖开始！除卖家以外的玩家\n要选择出价还是放弃！
+TutorialLanguageTable	tutorial.auction.sold			对手拍得了，所以附加的效果卡\n会对拍得的玩家生效！
+TutorialLanguageTable	tutorial.auction.unsold			如果没有人拍得，效果卡\n会对卖家，也就是你自己生效！
+TutorialLanguageTable	tutorial.auction.fold			放弃的玩家要使用1张弃权券！\n桌上的票数就是当前的弃权券（HP）！\n弃权券为0张时放弃就会被淘汰！
+TutorialLanguageTable	tutorial.info.open			按下信息标志，\n就能查看卡牌一览！按一下试试！
+TutorialLanguageTable	tutorial.info.catalog			用上方的标签可以切换商品、效果、特殊卡！\n点击窗口外面即可关闭！
+TutorialLanguageTable	tutorial.inspect.open			按下放大镜标志，就能近距离查看\n该玩家的桌面！按一下试试！
+TutorialLanguageTable	tutorial.inspect.view			票数是该玩家的弃权券（HP），\n叠放的卡牌是拍得的卡牌！
+TutorialLanguageTable	tutorial.bid.intro			这次来出价吧！用 W/S 或 ↑/↓ 决定金额，\n然后按下出价按钮！
+TutorialLanguageTable	tutorial.fold.leader			现在你是最高出价者！\n作为最高出价者时不能放弃！
+TutorialLanguageTable	tutorial.bid.raise			被超过了！\n提高金额再次出价吧！
+TutorialLanguageTable	tutorial.fold.outbid			价格越来越高了！\n再高就太贵了，放弃吧。按下放弃按钮！\n（会使用1张弃权券）
+TutorialLanguageTable	tutorial.bid.win			这次出价并拍下吧！\n决定金额后按下出价按钮！
+TutorialLanguageTable	tutorial.final.intro			只剩2人了，进入 FINAL BATTLE！\n从这里开始规则会有些变化！
+TutorialLanguageTable	tutorial.final.proceeds			即使被拍得，货款也不会给卖家，而是直接消失！\n抽到的增益/减益卡\n只会是减益卡，而且张数会增加！
+TutorialLanguageTable	tutorial.final.drain			两人的弃权券都为0张后，比底价多出价\n拍得的部分，可以削减卖家的金币！\n（任意一方还有弃权券时无法削减）
+TutorialLanguageTable	tutorial.special.open_hand			一轮结束，抽牌！抽到了稀有度「高」的\n卡牌！看看手牌吧！
+TutorialLanguageTable	tutorial.special.look			稀有度「高」的卡牌附有特殊卡！\n把光标移上去看看！
+TutorialLanguageTable	tutorial.special.hover			上方出现的就是特殊卡！\n把光标移上去就能看到效果！
+TutorialLanguageTable	tutorial.special.detail			特殊卡的效果也会对拍得者生效！\n如果没人拍得，则对卖家生效！
+TutorialLanguageTable	tutorial.free			从这里开始自由操作吧！\n坚持到最后1人就能获胜！
+TutorialLanguageTable	tutorial.clear			恭喜！你是最后1人，获得了胜利！\n教程完成！
+TutorialLanguageTable	tutorial.item.get			获得了道具！\n在拍卖中拍得就能获得1个道具。\n这次先给你3个用来练习！
+TutorialLanguageTable	tutorial.item.when			道具会放进左下角的格子里（最多3个）。\n拍卖期间，无论是卖家还是观战中，\n都可以点击格子或按 1・2・3 键使用！
+TutorialLanguageTable	tutorial.item.magnifier			试试放大镜吧！\n可以只让自己看到\n拍品上附加的效果卡！
+TutorialLanguageTable	tutorial.item.plug			试试电插头吧！\n可以给选中的人贴上1张护盾！
+TutorialLanguageTable	tutorial.item.plug_pick			选择要贴护盾的人吧！\n要给自己贴的话，请按下方的「自己」（右键取消）
+TutorialLanguageTable	tutorial.item.shield			贴上护盾了！\n要使用弃权券时，会改为使用护盾。\n本回合的拍卖结束后护盾消失。\n护盾存在期间，会显示在生效中的效果列表里！
+TutorialLanguageTable	tutorial.item.remote			试试遥控器吧！\n让选中的对手麻痹，\n跳过他的下一个上拍回合！
+TutorialLanguageTable	tutorial.item.remote_pick			选择要麻痹的对手吧！\n点击头上的名字（右键取消）
+TutorialLanguageTable	tutorial.item.paralysis			麻痹成功！\n麻痹的人会被青白色的电流包围，\n下一个上拍回合会被跳过！
+AchievementLanguageTable	achievement.toast.header			成就解锁
+AchievementLanguageTable	trophy.title			奖杯
+AchievementLanguageTable	trophy.progress			已解锁 {0} / {1}（{2}%）
+AchievementLanguageTable	trophy.hidden_name			？？？
+AchievementLanguageTable	trophy.hidden_description			隐藏成就
+AchievementLanguageTable	trophy.unlocked_at			{0:yyyy/MM/dd} 解锁
+AchievementLanguageTable	trophy.locked			未解锁
+AchievementLanguageTable	trophy.back			返回
+AchievementLanguageTable	achievement.tutorial_clear.name			见习策展人
+AchievementLanguageTable	achievement.tutorial_clear.description			完成教程。
+AchievementLanguageTable	achievement.first_purchase.name			初次拍得
+AchievementLanguageTable	achievement.first_purchase.description			首次在拍卖中拍得。
+AchievementLanguageTable	achievement.first_sale.name			成交
+AchievementLanguageTable	achievement.first_sale.description			自己的拍品首次被拍得。
+AchievementLanguageTable	achievement.final_battle.name			最后的两人
+AchievementLanguageTable	achievement.final_battle.description			进入 FINAL BATTLE。
+AchievementLanguageTable	achievement.first_win.name			名策展人
+AchievementLanguageTable	achievement.first_win.description			赢得一场游戏。
+AchievementLanguageTable	achievement.online_win.name			顶尖鉴定师
+AchievementLanguageTable	achievement.online_win.description			在多人游戏中获胜。
+AchievementLanguageTable	achievement.special_listing.name			招牌商品
+AchievementLanguageTable	achievement.special_listing.description			上拍一张附有特殊卡的卡牌。
+AchievementLanguageTable	achievement.collector.name			收藏家
+AchievementLanguageTable	achievement.collector.description			在一场游戏中拍得5张卡牌。
+AchievementLanguageTable	achievement.drain.name			榨干对手
+AchievementLanguageTable	achievement.drain.description			在 FINAL BATTLE 中削减对手的金币。
+AchievementLanguageTable	achievement.last_stand.name			背水一战
+AchievementLanguageTable	achievement.last_stand.description			在弃权券为0张的状态下获胜。
+AchievementLanguageTable	achievement.flawless.name			无伤胜利
+AchievementLanguageTable	achievement.flawless.description			一次也不使用弃权券就获胜。
+AchievementLanguageTable	achievement.retire.name			战略撤退
+AchievementLanguageTable	achievement.retire.description			中途退出一场游戏。

@@ -27,7 +27,7 @@ public static class GameSettingsStore
     public static void Clear()
     {
         PlayerPrefs.DeleteKey(SaveKey);
-        current = new GameSettings();
+        current = CreateDefault();
         Saved?.Invoke(current.Clone());
     }
 
@@ -38,12 +38,15 @@ public static class GameSettingsStore
     {
         string json = PlayerPrefs.GetString(SaveKey, string.Empty);
         if (string.IsNullOrEmpty(json))
-            return new GameSettings();
+            return CreateDefault();
 
         var settings = new GameSettings();
         JsonUtility.FromJsonOverwrite(json, settings);
         return settings;
     }
+
+    /// <summary>まだ保存が無いときの設定。言語は PC の言語に合わせる</summary>
+    static GameSettings CreateDefault() => new GameSettings { Language = LanguageCodes.FromSystem(Application.systemLanguage) };
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void ResetStatics()

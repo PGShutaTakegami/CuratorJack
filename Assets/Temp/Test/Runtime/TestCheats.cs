@@ -62,7 +62,7 @@ public static class TestCheats
             return;
 
         refs.Flow.Timeouts.TimeOut(refs.LocalPlayer);
-        Debug.Log("[Test] 待ち時間切れにしました");
+        Debug.Log(GameText.Get("log.test.timeout_forced"));
     }
 }
 #endif

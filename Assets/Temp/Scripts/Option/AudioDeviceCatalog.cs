@@ -17,7 +17,7 @@ public static class AudioDeviceCatalog
         }
         catch (Exception exception)
         {
-            Debug.LogWarning($"[Option] オーディオ出力デバイスを取得できませんでした: {exception.Message}");
+            Debug.LogWarning(GameText.Format("log.option.output_list_failed", exception.Message));
         }
 #endif
         return Array.Empty<string>();

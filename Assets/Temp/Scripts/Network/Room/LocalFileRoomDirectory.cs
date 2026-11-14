@@ -40,7 +40,7 @@ public sealed class LocalFileRoomDirectory : IRoomDirectory
         }
         catch (IOException e)
         {
-            Debug.LogWarning($"[Room] 部屋情報を書き込めませんでした: {e.Message}");
+            Debug.LogWarning(GameText.Format("log.room.write_failed", e.Message));
         }
     }
 

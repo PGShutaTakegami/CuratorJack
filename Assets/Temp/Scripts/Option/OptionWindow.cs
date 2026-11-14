@@ -17,7 +17,6 @@ using UnityEngine.UI;
 public class OptionWindow : MonoBehaviour
 {
     static readonly string[] ResolutionLabels = { "1920×1080 (FHD)", "1280×720 (HD)", "960×540" };
-    static readonly string[] LanguageLabels = { "日本語", "English" };
     static readonly string[] QualityKeys = { "option.quality.high", "option.quality.medium", "option.quality.low" };
     static readonly string[] WindowModeKeys = { "option.window_mode.fullscreen", "option.window_mode.windowed" };
     static readonly string[] OnOffKeys = { "option.on", "option.off" };
@@ -88,7 +87,7 @@ public class OptionWindow : MonoBehaviour
             row.FocusRequested += Select;
 
         resolution.Setup(ResolutionLabels);
-        language.Setup(LanguageLabels);
+        language.Setup(LanguageCodes.NativeNames);
 
         masterVolume.Changed += value => Change(s => s.MasterVolume = value, GameSettingsApplier.ApplyAudio);
         voiceChatVolume.Changed += value => Change(s => s.VoiceChatVolume = value);

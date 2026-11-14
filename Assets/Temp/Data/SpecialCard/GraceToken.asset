@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: GraceToken
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u7336\u4E88\u306E\u8A3C"
-    englishName: 
+    englishName: Grace Token
     cardSprite: {fileID: 21300000, guid: d17f69a344b81d043bf41cd6646a9cd6, type: 3}
     discription: "\u898B\u9001\u308A\u6A29\u30921\u679A+"
     initialPrice: 0
+    englishDescription: Gain 1 pass
+    chineseSimplifiedName: "\u5BBD\u9650\u4E4B\u8BC1"
+    chineseSimplifiedDescription: "\u5F03\u6743\u5238 +1 \u5F20"
+    chineseTraditionalName: "\u5BEC\u9650\u4E4B\u8B49"
+    chineseTraditionalDescription: "\u68C4\u6B0A\u5238 +1 \u5F35"
   rarity: 0
   effect: 13

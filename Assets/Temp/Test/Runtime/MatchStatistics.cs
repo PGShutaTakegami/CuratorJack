@@ -17,21 +17,21 @@ public sealed class MatchStatistics
     {
         MatchRecord[] finished = records.Where(record => !record.TimedOut).ToArray();
         var text = new StringBuilder();
-        text.AppendLine($"[Test] シミュレーション結果：{records.Count} 試合（打ち切り {records.Count - finished.Length}）");
+        text.AppendLine(GameText.Format("log.test.sim_result", records.Count, records.Count - finished.Length));
         if (finished.Length == 0)
             return text.ToString();
 
         int auctions = finished.Sum(record => record.Auctions);
         int sold = finished.Sum(record => record.SoldAuctions);
-        text.AppendLine($"平均ラウンド {finished.Average(record => record.Rounds):0.0}　平均ターン {finished.Average(record => record.Turns):0.0}　平均の長さ（等倍）{finished.Average(record => record.GameSeconds) / 60f:0.0} 分");
-        text.AppendLine($"落札率 {Percent(sold, auctions)}（{sold}/{auctions}）　平均落札額 {(sold == 0 ? 0f : (float)finished.Sum(record => record.TotalPrice) / sold):0.0}");
+        text.AppendLine(GameText.Format("log.test.sim_average", finished.Average(record => record.Rounds), finished.Average(record => record.Turns), finished.Average(record => record.GameSeconds) / 60f));
+        text.AppendLine(GameText.Format("log.test.sim_sales", Percent(sold, auctions), sold, auctions, sold == 0 ? 0f : (float)finished.Sum(record => record.TotalPrice) / sold));
 
         IEnumerable<int> players = finished.SelectMany(record => record.FinalCoins.Keys).Distinct().OrderBy(player => player);
         foreach (int player in players)
         {
             int wins = finished.Count(record => record.Winner == player);
             double coins = finished.Where(record => record.FinalCoins.ContainsKey(player)).Average(record => record.FinalCoins[player]);
-            text.AppendLine($"Player{player}：勝率 {Percent(wins, finished.Length)}（{wins} 勝）　平均最終コイン {coins:0.0}");
+            text.AppendLine(GameText.Format("log.test.sim_player", player, Percent(wins, finished.Length), wins, coins));
         }
         return text.ToString();
     }

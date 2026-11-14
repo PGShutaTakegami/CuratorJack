@@ -1,0 +1,137 @@
+key	ja	en	zh-Hans	zh-Hant
+log.tutorial.no_first_goods	ターン 1 で出品するカードが手札にありません	The card to list on turn 1 is not in hand	手牌中没有第 1 回合要上拍的卡牌	手牌中沒有第 1 回合要上拍的卡牌
+log.tutorial.no_special_goods	スペシャルカードの案内に使うカードが手札にありません	The card for the special card guide is not in hand	手牌中没有用于讲解特殊卡的卡牌	手牌中沒有用於講解特殊卡的卡牌
+log.tutorial.abort	[Tutorial] {0}。チュートリアルの案内を終えます	[Tutorial] {0}. Ending the tutorial guide	[Tutorial] {0}。结束教程引导	[Tutorial] {0}。結束教程引導
+debug.save.title	セーブデータ	Save Data	存档数据	存檔資料
+debug.save.games	プレイ {0} 回 / 勝利 {1} 回	Played {0} / Won {1}	游玩 {0} 次 / 胜利 {1} 次	遊玩 {0} 次 / 勝利 {1} 次
+debug.save.trades	落札 {0} / 売れた出品 {1} / アイテム {2}	Won bids {0} / Sold listings {1} / Items {2}	拍得 {0} / 售出拍品 {1} / 道具 {2}	拍得 {0} / 售出拍品 {1} / 道具 {2}
+debug.save.achievements	実績 {0} / {1}	Achievements {0} / {1}	成就 {0} / {1}	成就 {0} / {1}
+debug.save.refresh	表示を更新	Refresh	刷新显示	重新整理顯示
+debug.save.reset	セーブデータをすべてリセット	Reset all save data	重置全部存档数据	重置全部存檔資料
+log.session.room_host_started	[Session] 部屋のホストとして開始しました: {0}（{1}:{2}）	[Session] Started as room host: {0} ({1}:{2})	[Session] 已作为房间主机开始：{0}（{1}:{2}）	[Session] 已作為房間主機開始：{0}（{1}:{2}）
+log.session.room_joined	[Session] 部屋に入室しました: {0}（{1}:{2}）	[Session] Joined room: {0} ({1}:{2})	[Session] 已进入房间：{0}（{1}:{2}）	[Session] 已進入房間：{0}（{1}:{2}）
+log.session.rematch_searching	[Session] リトライ後の部屋を探しています	[Session] Looking for the rematch room	[Session] 正在寻找重开后的房间	[Session] 正在尋找重開後的房間
+log.session.rematch_joined	[Session] リトライ後の部屋に入室しました: {0}（{1}:{2}）	[Session] Joined the rematch room: {0} ({1}:{2})	[Session] 已进入重开后的房间：{0}（{1}:{2}）	[Session] 已進入重開後的房間：{0}（{1}:{2}）
+log.session.rematch_recreated	[Session] リトライ後の部屋を作り直しました: {0}（{1}:{2}）	[Session] Recreated the rematch room: {0} ({1}:{2})	[Session] 已重新创建重开后的房间：{0}（{1}:{2}）	[Session] 已重新建立重開後的房間：{0}（{1}:{2}）
+log.session.client_joined	[Session] クライアントとして参加しました（{0}:{1}）	[Session] Joined as client ({0}:{1})	[Session] 已作为客户端加入（{0}:{1}）	[Session] 已作為客戶端加入（{0}:{1}）
+log.session.host_started	[Session] ホストとして開始しました（{0}:{1}）	[Session] Started as host ({0}:{1})	[Session] 已作为主机开始（{0}:{1}）	[Session] 已作為主機開始（{0}:{1}）
+log.session.waiting_owner	[Session] 元の部屋主の戻りを待っています（それまで部屋主はいません）	[Session] Waiting for the original owner to return (no owner until then)	[Session] 正在等待原房主回来（在此之前没有房主）	[Session] 正在等待原房主回來（在此之前沒有房主）
+log.session.move_to_earlier	[Session] 先に作り直された部屋があるため移ります: {0}	[Session] Moving to a room that was recreated earlier: {0}	[Session] 已有先重新创建的房间，正在移动：{0}	[Session] 已有先重新建立的房間，正在移動：{0}
+log.session.move_to_earlier_online	[Session] 先に作り直された部屋があるため移ります	[Session] Moving to a room that was recreated earlier	[Session] 已有先重新创建的房间，正在移动	[Session] 已有先重新建立的房間，正在移動
+log.session.became_owner	[Session] 元の部屋主が戻らなかったため、部屋主になりました	[Session] The original owner did not return, so you became the owner	[Session] 原房主没有回来，你成为了房主	[Session] 原房主沒有回來，你成為了房主
+log.session.owner_returned	[Session] 元の部屋主が戻ったため、ホストを渡します	[Session] The original owner returned, handing over host	[Session] 原房主已回来，移交主机	[Session] 原房主已回來，移交主機
+log.session.request_ownership	[Session] 元の部屋主として、部屋主に戻りたいと申し出ました	[Session] Requested to become owner again as the original owner	[Session] 作为原房主，申请重新成为房主	[Session] 作為原房主，申請重新成為房主
+log.session.host_left_successor	[Session] ホストが部屋から抜けました。自分が新しいホストになります	[Session] The host left the room. You will become the new host	[Session] 主机离开了房间。你将成为新的主机	[Session] 主機離開了房間。你將成為新的主機
+log.session.host_left_rejoin	[Session] ホストが部屋から抜けました。新しいホストへ入り直します	[Session] The host left the room. Rejoining the new host	[Session] 主机离开了房间。正在重新加入新的主机	[Session] 主機離開了房間。正在重新加入新的主機
+log.session.host_taken_over	[Session] 部屋のホストを引き継ぎました: {0}	[Session] Took over as room host: {0}	[Session] 已接任房间主机：{0}	[Session] 已接任房間主機：{0}
+log.session.host_taken_over_online	[Session] 部屋のホストを引き継ぎました	[Session] Took over as room host	[Session] 已接任房间主机	[Session] 已接任房間主機
+log.session.rejoined_new_host	[Session] 新しいホストの部屋へ入り直しました: {0}	[Session] Rejoined the new host's room: {0}	[Session] 已重新进入新主机的房间：{0}	[Session] 已重新進入新主機的房間：{0}
+log.session.online_created	[Session] オンラインの部屋を作成しました: {0}（定員 {1} 人, id={2}）	[Session] Created an online room: {0} (capacity {1}, id={2})	[Session] 已创建在线房间：{0}（定员 {1} 人，id={2}）	[Session] 已建立線上房間：{0}（定員 {1} 人，id={2}）
+log.session.online_joined	[Session] オンラインの部屋に入室しました: {0}	[Session] Joined the online room: {0}	[Session] 已进入在线房间：{0}	[Session] 已進入線上房間：{0}
+log.session.online_rematch_recreated	[Session] リトライ後の部屋を作り直しました: {0}（id={1}）	[Session] Recreated the rematch room: {0} (id={1})	[Session] 已重新创建重开后的房间：{0}（id={1}）	[Session] 已重新建立重開後的房間：{0}（id={1}）
+log.session.reconnected_new_host	[Session] 新しいホストへ繋ぎ直しました	[Session] Reconnected to the new host	[Session] 已重新连接到新的主机	[Session] 已重新連線到新的主機
+log.session.transfer_to_earlier	自分より先に入った人へホストを渡します	Handing host over to a player who joined earlier	将主机移交给比自己先加入的人	將主機移交給比自己先加入的人
+log.session.transfer_failed	[Session] ホストを渡せなかったため、自分がホストを続けます: {0}	[Session] Could not hand over host, continuing as host: {0}	[Session] 无法移交主机，由自己继续担任主机：{0}	[Session] 無法移交主機，由自己繼續擔任主機：{0}
+log.session.waiting_migration	[Session] ホストとの接続が切れました。ホストの引き継ぎを待っています	[Session] Lost connection to the host. Waiting for host migration	[Session] 与主机的连接已断开。正在等待主机迁移	[Session] 與主機的連線已斷開。正在等待主機遷移
+log.session.lock_failed	[Session] 部屋をロックできませんでした: {0}	[Session] Could not lock the room: {0}	[Session] 无法锁定房间：{0}	[Session] 無法鎖定房間：{0}
+log.session.republish_failed	[Session] 部屋の人数を公開し直せませんでした: {0}	[Session] Could not republish the player count: {0}	[Session] 无法重新公开房间人数：{0}	[Session] 無法重新公開房間人數：{0}
+log.session.leave_timeout	[Session] 部屋から抜ける応答が返らないため、待たずにロビーへ戻ります	[Session] No response to leaving the room, returning to the lobby without waiting	[Session] 离开房间没有响应，不再等待，返回大厅	[Session] 離開房間沒有響應，不再等待，返回大廳
+log.session.leave_failed	[Session] 部屋から抜けられませんでした: {0}	[Session] Could not leave the room: {0}	[Session] 无法离开房间：{0}	[Session] 無法離開房間：{0}
+log.test.sim_result	[Test] シミュレーション結果：{0} 試合（打ち切り {1}）	[Test] Simulation results: {0} matches ({1} timed out)	[Test] 模拟结果：{0} 场（中止 {1} 场）	[Test] 模擬結果：{0} 場（中止 {1} 場）
+log.test.sim_average	平均ラウンド {0:0.0}　平均ターン {1:0.0}　平均の長さ（等倍）{2:0.0} 分	Avg rounds {0:0.0}　Avg turns {1:0.0}　Avg length (1x) {2:0.0} min	平均轮数 {0:0.0}　平均回合 {1:0.0}　平均时长（原速）{2:0.0} 分钟	平均輪數 {0:0.0}　平均回合 {1:0.0}　平均時長（原速）{2:0.0} 分鐘
+log.test.sim_sales	落札率 {0}（{1}/{2}）　平均落札額 {3:0.0}	Sale rate {0} ({1}/{2})　Avg winning bid {3:0.0}	拍得率 {0}（{1}/{2}）　平均成交价 {3:0.0}	拍得率 {0}（{1}/{2}）　平均成交價 {3:0.0}
+log.test.sim_player	Player{0}：勝率 {1}（{2} 勝）　平均最終コイン {3:0.0}	Player{0}: Win rate {1} ({2} wins)　Avg final coins {3:0.0}	Player{0}：胜率 {1}（{2} 胜）　平均最终金币 {3:0.0}	Player{0}：勝率 {1}（{2} 勝）　平均最終金幣 {3:0.0}
+log.test.sim_start	[Test] シミュレーション開始：{0} 人 × {1} 試合（x{2}）	[Test] Simulation started: {0} players × {1} matches (x{2})	[Test] 模拟开始：{0} 人 × {1} 场（x{2}）	[Test] 模擬開始：{0} 人 × {1} 場（x{2}）
+log.test.sim_no_scene	[Test] SinglePlay の GameScene を用意できなかったため、シミュレーションを中止します	[Test] Could not prepare the SinglePlay GameScene, stopping the simulation	[Test] 无法准备 SinglePlay 的 GameScene，模拟中止	[Test] 無法準備 SinglePlay 的 GameScene，模擬中止
+log.test.sim_timed_out	打ち切り	Timed out	中止	中止
+log.test.sim_winner	勝者 Player{0}	Winner Player{0}	胜者 Player{0}	勝者 Player{0}
+log.test.sim_match	[Test] 試合 {0}/{1}：{2}　ラウンド {3}　ターン {4}　実時間 {5:0.0} 秒	[Test] Match {0}/{1}: {2}　Rounds {3}　Turns {4}　Real time {5:0.0} s	[Test] 第 {0}/{1} 场：{2}　轮数 {3}　回合 {4}　实际用时 {5:0.0} 秒	[Test] 第 {0}/{1} 場：{2}　輪數 {3}　回合 {4}　實際用時 {5:0.0} 秒
+log.test.sim_saved	[Test] 結果を保存しました：{0}	[Test] Results saved: {0}	[Test] 结果已保存：{0}	[Test] 結果已儲存：{0}
+log.test.timeout_forced	[Test] 待ち時間切れにしました	[Test] Forced the wait to time out	[Test] 已强制等待超时	[Test] 已強制等待超時
+log.test.autopilot_on	[Test] オートプレイ ON（Player{0} を CPU が操作）	[Test] Autoplay ON (CPU controls Player{0})	[Test] 自动游玩 开（由 CPU 操作 Player{0}）	[Test] 自動遊玩 開（由 CPU 操作 Player{0}）
+log.test.autopilot_off	[Test] オートプレイ OFF	[Test] Autoplay OFF	[Test] 自动游玩 关	[Test] 自動遊玩 關
+log.test.speed	[Test] ゲーム速度 x{0}	[Test] Game speed x{0}	[Test] 游戏速度 x{0}	[Test] 遊戲速度 x{0}
+debug.console.title	テストプレイ（F1 で閉じる）	Test Play (F1 to close)	测试游玩（按 F1 关闭）	測試遊玩（按 F1 關閉）
+debug.console.autopilot	オートプレイ	Autoplay	自动游玩	自動遊玩
+debug.console.simulation_progress	シミュレーション {0}/{1}	Simulation {0}/{1}	模拟 {0}/{1}	模擬 {0}/{1}
+debug.console.speed	速度 x{0}	Speed x{0}	速度 x{0}	速度 x{0}
+debug.console.slower	遅く (F2)	Slower (F2)	减速 (F2)	減速 (F2)
+debug.console.faster	速く (F3)	Faster (F3)	加速 (F3)	加速 (F3)
+debug.console.normal_speed	等倍 (F4)	1x (F4)	原速 (F4)	原速 (F4)
+debug.console.not_game_scene	GameScene ではないため、ゲームの操作は使えません	Not in GameScene, so game controls are unavailable	当前不是 GameScene，无法使用游戏操作	當前不是 GameScene，無法使用遊戲操作
+debug.console.autopilot_on	オートプレイ ON (F5)	Autoplay ON (F5)	自动游玩 开 (F5)	自動遊玩 開 (F5)
+debug.console.autopilot_off	オートプレイ OFF (F5)	Autoplay OFF (F5)	自动游玩 关 (F5)	自動遊玩 關 (F5)
+debug.console.start	スタート (F7)	Start (F7)	开始 (F7)	開始 (F7)
+debug.console.force_timeout	待ち時間切れ (F6)	Force timeout (F6)	强制超时 (F6)	強制超時 (F6)
+debug.console.batch_simulation	一括シミュレーション（全員 CPU・x16 で GameScene を読み直して回す）	Batch simulation (all CPU, reloads GameScene at x16)	批量模拟（全员 CPU，以 x16 重新载入 GameScene 运行）	批次模擬（全員 CPU，以 x16 重新載入 GameScene 執行）
+debug.console.matches	試合	Matches	场数	場數
+debug.console.players	人数	Players	人数	人數
+debug.console.stop	中止	Stop	中止	中止
+debug.console.begin	開始	Begin	开始	開始
+debug.console.player_self	P{0}（自分）	P{0} (You)	P{0}（自己）	P{0}（自己）
+debug.console.dropped_out	【脱落】	[Out]	【淘汰】	【淘汰】
+debug.console.player_line	{0}　コイン {1}　見送り権 {2}　手札 グッズ{3}/効果{4}　落札 {5}　{6}	{0}　Coins {1}　Passes {2}　Hand Goods{3}/Effects{4}　Won {5}　{6}	{0}　金币 {1}　弃权券 {2}　手牌 商品{3}/效果{4}　拍得 {5}　{6}	{0}　金幣 {1}　棄權券 {2}　手牌 商品{3}/效果{4}　拍得 {5}　{6}
+debug.console.single_play_only	状態の書き換えは SinglePlay のときだけ使えます	State editing is only available in SinglePlay	仅在 SinglePlay 时可修改状态	僅在 SinglePlay 時可修改狀態
+debug.console.apply_to	P{0} に起きたことにする	Apply to P{0}	应用到 P{0}	應用到 P{0}
+debug.console.coins_plus	コイン +10	Coins +10	金币 +10	金幣 +10
+debug.console.coins_minus	コイン -10	Coins -10	金币 -10	金幣 -10
+debug.console.passes_plus	見送り権 +1	Passes +1	弃权券 +1	棄權券 +1
+debug.console.passes_minus	見送り権 -1	Passes -1	弃权券 -1	棄權券 -1
+debug.console.retire	リタイア	Retire	认输	認輸
+debug.console.add_card	手札に加えるカード	Card to add to hand	加入手牌的卡	加入手牌的卡
+debug.console.goods_card	グッズ：{0}（{1}・{2}）	Goods: {0} ({1}, {2})	商品：{0}（{1}・{2}）	商品：{0}（{1}・{2}）
+debug.console.effect_card	効果：{0}（{1}）	Effect: {0} ({1})	效果：{0}（{1}）	效果：{0}（{1}）
+log.loading.load_failed	[LoadingScreen] {0} を読み込めませんでした。ビルド設定に追加されているか確認してください	[LoadingScreen] Could not load {0}. Check that it is added to the Build Settings	[LoadingScreen] 无法载入 {0}。请确认是否已添加到构建设置	[LoadingScreen] 無法載入 {0}。請確認是否已新增到構建設定
+log.loading.no_view	[LoadingScreen] {0} に LoadingScreenView がありません	[LoadingScreen] {0} has no LoadingScreenView	[LoadingScreen] {0} 中没有 LoadingScreenView	[LoadingScreen] {0} 中沒有 LoadingScreenView
+log.resource_missing	{0}: Resources/{1} が見つかりません。	{0}: Resources/{1} not found.	{0}：找不到 Resources/{1}。	{0}：找不到 Resources/{1}。
+log.field_missing	{0}: {1} が未設定です。	{0}: {1} is not assigned.	{0}：未设置 {1}。	{0}：未設定 {1}。
+log.field_empty	{0}: {1} が空です。	{0}: {1} is empty.	{0}：{1} 为空。	{0}：{1} 為空。
+log.scene_load_failed	{0}: シーン '{1}' のロードに失敗しました。Build Settings を確認してください。	{0}: Failed to load scene '{1}'. Check the Build Settings.	{0}：载入场景“{1}”失败。请检查 Build Settings。	{0}：載入場景“{1}”失敗。請檢查 Build Settings。
+log.game.shield_used	[Game] Player{0} は見送り権の代わりにシールド {1} 枚を使いました	[Game] Player{0} used {1} shield(s) instead of passes	[Game] Player{0} 使用了 {1} 张护盾代替弃权券	[Game] Player{0} 使用了 {1} 張護盾代替棄權券
+log.game.died	[Game] Player{0} は見送り権 {1} 枚を使えず死亡しました	[Game] Player{0} could not pay {1} pass(es) and was eliminated	[Game] Player{0} 无法使用 {1} 张弃权券，已淘汰	[Game] Player{0} 無法使用 {1} 張棄權券，已淘汰
+log.game.retired	[Game] Player{0} がリタイアしました	[Game] Player{0} retired	[Game] Player{0} 已认输	[Game] Player{0} 已認輸
+log.game.drained	[Game] Player{0} のコインを {1} 削りました	[Game] Drained {1} coins from Player{0}	[Game] 削减了 Player{0} 的 {1} 金币	[Game] 削減了 Player{0} 的 {1} 金幣
+log.game.proceeds_lost	。最後の 1v1 のため代金は出品者に入りません	. Final 1v1, so the seller receives nothing	。因最后的 1v1，卖家不获得款项	。因最後的 1v1，賣家不獲得款項
+log.game.purchased	[Game] Player{0} が {1} を {2} コインで購入（出品者 Player{3}）	[Game] Player{0} bought {1} for {2} coins (seller Player{3})	[Game] Player{0} 以 {2} 金币购得 {1}（卖家 Player{3}）	[Game] Player{0} 以 {2} 金幣購得 {1}（賣家 Player{3}）
+log.game.item_got	[Game] Player{0} がアイテム {1} を手に入れました	[Game] Player{0} obtained item {1}	[Game] Player{0} 获得了道具 {1}	[Game] Player{0} 獲得了道具 {1}
+log.game.item_used	[Game] Player{0} がアイテム {1} を使いました	[Game] Player{0} used item {1}	[Game] Player{0} 使用了道具 {1}	[Game] Player{0} 使用了道具 {1}
+log.game.buffs_applied	[Game] Player{0} にバフデバフ {1} 枚がかかりました	[Game] {1} buff/debuff card(s) applied to Player{0}	[Game] Player{0} 受到了 {1} 张增益/减益	[Game] Player{0} 受到了 {1} 張增益/減益
+log.game.finished	[Game] ゲーム終了。勝者 Player{0}	[Game] Game over. Winner Player{0}	[Game] 游戏结束。胜者 Player{0}	[Game] 遊戲結束。勝者 Player{0}
+log.launch.unknown_screen	[LaunchArguments] 不明な画面指定です: {0}	[LaunchArguments] Unknown screen: {0}	[LaunchArguments] 未知的画面指定：{0}	[LaunchArguments] 未知的畫面指定：{0}
+log.local_test.no_build	[LocalTest] テスト用ビルドがありません。メニュー Tools/CJ/Local テストビルドを作成 を実行してください。	[LocalTest] No test build found. Run the menu Tools/CJ/Local テストビルドを作成.	[LocalTest] 没有测试用构建。请执行菜单 Tools/CJ/Local テストビルドを作成。	[LocalTest] 沒有測試用構建。請執行選單 Tools/CJ/Local テストビルドを作成。
+log.local_test.launched	[LocalTest] 追加ウィンドウを {0} 個起動しました	[LocalTest] Launched {0} extra window(s)	[LocalTest] 已启动 {0} 个额外窗口	[LocalTest] 已啟動 {0} 個額外視窗
+log.monitor.unregistered	{0}: {1} に対応する画面が未登録です。	{0}: No screen registered for {1}.	{0}：未登记与 {1} 对应的画面。	{0}：未登記與 {1} 對應的畫面。
+log.achievement.unlocked	[Achievement] 実績を解除しました: {0}	[Achievement] Achievement unlocked: {0}	[Achievement] 已解锁成就：{0}	[Achievement] 已解鎖成就：{0}
+log.option.output_missing	[Option] オーディオ出力デバイス「{0}」が見つからないため、既定のデバイスを使います	[Option] Audio output device "{0}" not found, using the default device	[Option] 找不到音频输出设备“{0}”，将使用默认设备	[Option] 找不到音訊輸出裝置“{0}”，將使用預設裝置
+log.option.output_switch_failed	[Option] オーディオ出力デバイスを切り替えられませんでした: {0}	[Option] Could not switch the audio output device: {0}	[Option] 无法切换音频输出设备：{0}	[Option] 無法切換音訊輸出裝置：{0}
+log.option.output_list_failed	[Option] オーディオ出力デバイスを取得できませんでした: {0}	[Option] Could not get audio output devices: {0}	[Option] 无法获取音频输出设备：{0}	[Option] 無法獲取音訊輸出裝置：{0}
+log.vc.joined	[VC] 部屋の VC に参加しました（{0}）	[VC] Joined the room voice chat ({0})	[VC] 已加入房间语音（{0}）	[VC] 已加入房間語音（{0}）
+log.vc.join_failed	[VC] VC に参加できませんでした。{0} 秒後にもう一度試します: {1}	[VC] Could not join voice chat. Retrying in {0} s: {1}	[VC] 无法加入语音。{0} 秒后重试：{1}	[VC] 無法加入語音。{0} 秒後重試：{1}
+log.vc.left	[VC] 部屋の VC から抜けました	[VC] Left the room voice chat	[VC] 已离开房间语音	[VC] 已離開房間語音
+log.vc.leave_failed	[VC] VC から抜けられませんでした: {0}	[VC] Could not leave voice chat: {0}	[VC] 无法离开语音：{0}	[VC] 無法離開語音：{0}
+log.vc.shutdown_failed	[VC] VC の終了に失敗しました: {0}	[VC] Failed to shut down voice chat: {0}	[VC] 关闭语音失败：{0}	[VC] 關閉語音失敗：{0}
+log.vc.device_failed	[VC] デバイスを切り替えられませんでした: {0}	[VC] Could not switch the device: {0}	[VC] 无法切换设备：{0}	[VC] 無法切換裝置：{0}
+log.single_play.started	[SinglePlay] 自分 + コンピューター {0} 人で開始しました	[SinglePlay] Started with you + {0} computer player(s)	[SinglePlay] 已以自己 + {0} 名电脑开始	[SinglePlay] 已以自己 + {0} 名電腦開始
+log.single_play.choose_count	[SinglePlay] 先に人数を選択してください	[SinglePlay] Choose the number of players first	[SinglePlay] 请先选择人数	[SinglePlay] 請先選擇人數
+log.single_play.starting	[SinglePlay] ゲームを開始します（合計 {0} 人）	[SinglePlay] Starting the game ({0} players total)	[SinglePlay] 开始游戏（共 {0} 人）	[SinglePlay] 開始遊戲（共 {0} 人）
+log.display.fullscreen	[Display] フルスクリーンにしました（{0}x{1}）	[Display] Switched to fullscreen ({0}x{1})	[Display] 已切换为全屏（{0}x{1}）	[Display] 已切換為全屏（{0}x{1}）
+log.display.windowed	[Display] ウィンドウにしました（{0}x{1}）	[Display] Switched to windowed ({0}x{1})	[Display] 已切换为窗口（{0}x{1}）	[Display] 已切換為視窗（{0}x{1}）
+log.display.fitted	[Display] ウィンドウが画面に収まらないため {0}x{1} に縮めました（前回 {2}x{3}）	[Display] Window did not fit the screen, shrunk to {0}x{1} (was {2}x{3})	[Display] 窗口超出屏幕，已缩小为 {0}x{1}（上次 {2}x{3}）	[Display] 視窗超出螢幕，已縮小為 {0}x{1}（上次 {2}x{3}）
+log.draw.pressure_blocked	[Draw] Player{0} は圧力で出品カードを引けませんでした	[Draw] Player{0} could not draw a goods card due to Pressure	[Draw] Player{0} 因施压无法抽取商品卡	[Draw] Player{0} 因施壓無法抽取商品卡
+log.session.match_started	[Session] {0} 人でターンの進行を始めました（シード {1}）	[Session] Started turns with {0} players (seed {1})	[Session] 已以 {0} 人开始回合进行（种子 {1}）	[Session] 已以 {0} 人開始回合進行（種子 {1}）
+log.session.cpu_takeover	[Session] Player{0} が切断したため、CPU に切り替えました	[Session] Player{0} disconnected, switched to CPU	[Session] Player{0} 已断开，切换为 CPU	[Session] Player{0} 已斷開，切換為 CPU
+log.save.reset	[SaveData] 実績・戦績・名前・アイコン・設定をすべてリセットしました	[SaveData] Reset all achievements, records, name, icon and settings	[SaveData] 已重置全部成就、战绩、名字、头像和设置	[SaveData] 已重置全部成就、戰績、名字、頭像和設定
+log.session.claim_failed	[Session] 接続番号を部屋に登録できませんでした。やり直します: {0}	[Session] Could not register the connection number to the room. Retrying: {0}	[Session] 无法将连接编号登记到房间。正在重试：{0}	[Session] 無法將連線編號登記到房間。正在重試：{0}
+log.session.unknown_client	[Session] 部屋のメンバーと確認できない接続を切ります（clientId={0}）	[Session] Disconnecting a connection not verified as a room member (clientId={0})	[Session] 断开无法确认为房间成员的连接（clientId={0}）	[Session] 斷開無法確認為房間成員的連線（clientId={0}）
+log.session.kick_remove_failed	[Session] キックした人を部屋から外せませんでした: {0}	[Session] Could not remove the kicked player from the room: {0}	[Session] 无法将被踢出的人移出房间：{0}	[Session] 無法將被踢出的人移出房間：{0}
+log.online.signed_in	[Online] サインインしました（PlayerId={0}）	[Online] Signed in (PlayerId={0})	[Online] 已登录（PlayerId={0}）	[Online] 已登入（PlayerId={0}）
+log.session.cpu_filled	[Session] Player{0} を CPU で埋めました（席={1}）	[Session] Filled Player{0} with CPU (seat={1})	[Session] 已用 CPU 填补 Player{0}（座位={1}）	[Session] 已用 CPU 填補 Player{0}（座位={1}）
+log.session.player_joined	[Session] Player{0} が参加（clientId={1}, 席={2}）	[Session] Player{0} joined (clientId={1}, seat={2})	[Session] Player{0} 已加入（clientId={1}，座位={2}）	[Session] Player{0} 已加入（clientId={1}，座位={2}）
+log.session.player_left	[Session] Player{0} が退出（clientId={1}）	[Session] Player{0} left (clientId={1})	[Session] Player{0} 已离开（clientId={1}）	[Session] Player{0} 已離開（clientId={1}）
+log.room.write_failed	[Room] 部屋情報を書き込めませんでした: {0}	[Room] Could not write room info: {0}	[Room] 无法写入房间信息：{0}	[Room] 無法寫入房間資訊：{0}
+log.room.unsupported_env	[Room] 部屋一覧は Local / OnlineNet 環境のみ対応です（現在: {0}）	[Room] Room list only supports Local / OnlineNet (current: {0})	[Room] 房间列表仅支持 Local / OnlineNet 环境（当前：{0}）	[Room] 房間列表僅支援 Local / OnlineNet 環境（當前：{0}）
+log.room.creating	[Room] 部屋を作成します: {0}（定員 {1} 人）	[Room] Creating room: {0} (capacity {1})	[Room] 创建房间：{0}（容纳 {1} 人）	[Room] 建立房間：{0}（容納 {1} 人）
+log.room.creating_password	[Room] 部屋を作成します: {0}（定員 {1} 人・パスワードあり）	[Room] Creating room: {0} (capacity {1}, password)	[Room] 创建房间：{0}（容纳 {1} 人・有密码）	[Room] 建立房間：{0}（容納 {1} 人・有密碼）
+log.room.full	[Room] 入室できませんでした: 満員です	[Room] Could not enter: the room is full	[Room] 无法进入：房间已满	[Room] 無法進入：房間已滿
+log.room.entering	[Room] 部屋に入ります: {0}	[Room] Entering room: {0}	[Room] 进入房间：{0}	[Room] 進入房間：{0}
+log.room.list_failed	[Room] 部屋一覧を取得できませんでした: {0}	[Room] Could not get the room list: {0}	[Room] 无法获取房间列表：{0}	[Room] 無法獲取房間列表：{0}

@@ -72,7 +72,7 @@ public class MonitorManager : MonoBehaviour
     {
         int index = (int)select;
         if (selectedCanvas == null || index < 0 || index >= selectedCanvas.Length || selectedCanvas[index] == null)
-            Debug.LogWarning($"{nameof(MonitorManager)}: {select} に対応する画面が未登録です。", this);
+            Debug.LogWarning(GameText.Format("log.monitor.unregistered", nameof(MonitorManager), select), this);
 
         if (selectedCanvas == null)
             return;

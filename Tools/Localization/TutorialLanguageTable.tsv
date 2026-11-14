@@ -1,0 +1,42 @@
+key	ja	en	zh-Hans	zh-Hant
+tutorial.intro.welcome	CuratorJackへようこそ！\nチュートリアルをやってみよう！	Welcome to CuratorJack!\nLet's try the tutorial!	欢迎来到 CuratorJack！\n一起来试试教程吧！	歡迎來到 CuratorJack！\n一起來試試教程吧！
+tutorial.click_hint	クリックで次へ	Click to continue	点击继续	點選繼續
+tutorial.seller.open_hand	まずは出品者ターン！\nまずは自分のカードを見てみよう！	First up is the seller's turn!\nLet's start by looking at your cards!	首先是卖家回合！\n先来看看自己的卡牌吧！	首先是賣家回合！\n先來看看自己的卡牌吧！
+tutorial.seller.look_goods	出品カードを見てみよう！	Let's look at a listing card!	来看看上拍卡吧！	來看看上拍卡吧！
+tutorial.seller.card_detail	このようにカードの詳細を\n見ることができるよ！	This is how you can see\na card's details!	像这样就能查看\n卡牌的详细信息！	像這樣就能檢視\n卡牌的詳細資訊！
+tutorial.seller.select_goods	カードを選択してみよう！	Let's select the card!	选择这张卡牌吧！	選擇這張卡牌吧！
+tutorial.seller.attach_buff	次はエフェクトカードをつけてみよう！	Next, let's attach an effect card!	接下来附加一张效果卡吧！	接下來附加一張效果卡吧！
+tutorial.seller.raise	エフェクトカードがついている出品には\n付加価値をつけることができるよ！	Listings with effect cards\ncan be given added value!	附有效果卡的拍品\n可以添加附加价值！	附有效果卡的拍品\n可以新增附加價值！
+tutorial.seller.attach_debuff	エフェクトカードは出品カードに\n何枚でもつけることができるよ！	You can attach as many effect cards\nas you like to a listing card!	效果卡可以在上拍卡上\n附加任意张数！	效果卡可以在上拍卡上\n附加任意張數！
+tutorial.seller.confirm	確定を押して出品してみよう！	Press confirm to list it!	按下确认来上拍吧！	按下確認來上拍吧！
+tutorial.auction.intro	オークション開始！出品者以外のプレイヤーが\n入札するか降りるかを選ぶよ！	The auction begins! Everyone except the seller\nchooses to bid or fold!	拍卖开始！除卖家以外的玩家\n要选择出价还是放弃！	拍賣開始！除賣家以外的玩家\n要選擇出價還是放棄！
+tutorial.auction.sold	相手が落札したので、付けたエフェクトカードは\n落札したプレイヤーに発動するよ！	An opponent won the auction, so the attached\neffect cards take effect on the winner!	对手拍得了，所以附加的效果卡\n会对拍得的玩家生效！	對手拍得了，所以附加的效果卡\n會對拍得的玩家生效！
+tutorial.auction.unsold	もし誰も落札しなかったときは、エフェクトカードは\n出品者の自分に発動するよ！	If nobody wins the auction, the effect cards\ntake effect on you, the seller!	如果没有人拍得，效果卡\n会对卖家，也就是你自己生效！	如果沒有人拍得，效果卡\n會對賣家，也就是你自己生效！
+tutorial.auction.fold	降りたプレイヤーは見送り権を1枚使うよ！\n机の上のチケットの枚数が今の見送り権（HP）！\n見送り権が0枚のときに降りると脱落！	Players who fold use up one pass!\nThe tickets on the desk show the passes (HP) left.\nFolding with zero passes knocks you out!	放弃的玩家要使用1张弃权券！\n桌上的票数就是当前的弃权券（HP）！\n弃权券为0张时放弃就会被淘汰！	放棄的玩家要使用1張棄權券！\n桌上的票數就是當前的棄權券（HP）！\n棄權券為0張時放棄就會被淘汰！
+tutorial.info.open	インフォメーションマークを押すと、\nカードの一覧が見られるよ！押してみよう！	Press the information mark\nto see the list of cards! Give it a try!	按下信息标志，\n就能查看卡牌一览！按一下试试！	按下資訊標誌，\n就能檢視卡牌一覽！按一下試試！
+tutorial.info.catalog	上のタブで商品・エフェクト・スペシャルを切り替えられるよ！\nウィンドウの外を押すと閉じるよ！	Use the tabs at the top to switch between goods, effects and specials!\nClick outside the window to close it!	用上方的标签可以切换商品、效果、特殊卡！\n点击窗口外面即可关闭！	用上方的標籤可以切換商品、效果、特殊卡！\n點選視窗外面即可關閉！
+tutorial.inspect.open	虫眼鏡マークを押すと、そのプレイヤーの\n手元を近くで見られるよ！押してみよう！	Press a magnifier mark to take a closer look\nat that player's spot!	按下放大镜标志，就能近距离查看\n该玩家的桌面！按一下试试！	按下放大鏡標誌，就能近距離檢視\n該玩家的桌面！按一下試試！
+tutorial.inspect.view	チケットの枚数がそのプレイヤーの見送り権（HP）、\n積まれているカードが落札したカードだよ！	The tickets are that player's passes (HP),\nand the stacked cards are the cards they won!	票数是该玩家的弃权券（HP），\n叠放的卡牌是拍得的卡牌！	票數是該玩家的棄權券（HP），\n疊放的卡牌是拍得的卡牌！
+tutorial.bid.intro	今度は入札してみよう！W/S か ↑/↓ で金額を決めて、\n入札ボタンを押そう！	Now let's try bidding! Set the amount with W/S or ↑/↓,\nthen press the bid button!	这次来出价吧！用 W/S 或 ↑/↓ 决定金额，\n然后按下出价按钮！	這次來出價吧！用 W/S 或 ↑/↓ 決定金額，\n然後按下出價按鈕！
+tutorial.fold.leader	今は自分が最高額！\n最高額のあいだは降りられないよ！	You're the highest bidder now!\nYou can't fold while you hold the highest bid!	现在你是最高出价者！\n作为最高出价者时不能放弃！	現在你是最高出價者！\n作為最高出價者時不能放棄！
+tutorial.bid.raise	上回られた！\n金額を上げて入札し返そう！	You've been outbid!\nRaise the amount and bid back!	被超过了！\n提高金额再次出价吧！	被超過了！\n提高金額再次出價吧！
+tutorial.fold.outbid	値段がどんどん上がってきた！\nこれ以上は高すぎるので降りよう。降りるボタンを押そう！\n（見送り権を1枚使うよ）	The price keeps climbing!\nIt's getting too expensive, so let's fold. Press the fold button!\n(It uses one pass.)	价格越来越高了！\n再高就太贵了，放弃吧。按下放弃按钮！\n（会使用1张弃权券）	價格越來越高了！\n再高就太貴了，放棄吧。按下放棄按鈕！\n（會使用1張棄權券）
+tutorial.bid.win	今度は入札して落札してみよう！\n金額を決めて、入札ボタンを押そう！	This time, bid and win the auction!\nSet the amount and press the bid button!	这次出价并拍下吧！\n决定金额后按下出价按钮！	這次出價並拍下吧！\n決定金額後按下出價按鈕！
+tutorial.final.intro	残りが2人になったので FINAL BATTLE！\nここからはルールが少し変わるよ！	Only two players remain: FINAL BATTLE!\nSome rules change from here!	只剩2人了，进入 FINAL BATTLE！\n从这里开始规则会有些变化！	只剩2人了，進入 FINAL BATTLE！\n從這裡開始規則會有些變化！
+tutorial.final.proceeds	落札されても代金は出品者に入らず消えるよ！\nドローのバフデバフカードは\nデバフカードだけになり、枚数も増えるよ！	Winning bids no longer pay the seller; the coins vanish!\nDrawn effect cards are debuffs only,\nand you get more of them!	即使被拍得，货款也不会给卖家，而是直接消失！\n抽到的增益/减益卡\n只会是减益卡，而且张数会增加！	即使被拍得，貨款也不會給賣家，而是直接消失！\n抽到的增益/減益卡\n只會是減益卡，而且張數會增加！
+tutorial.final.drain	2人とも見送り権が0枚になると、最低額より多く入札して\n落札した分だけ、出品者のコインを削れるよ！\n（どちらかが見送り権を持っている間は削れない）	Once both players have zero passes, bidding above the minimum\ndrains the seller's coins by the difference!\n(No draining while either player still has a pass.)	两人的弃权券都为0张后，比底价多出价\n拍得的部分，可以削减卖家的金币！\n（任意一方还有弃权券时无法削减）	兩人的棄權券都為0張後，比底價多出價\n拍得的部分，可以削減賣家的金幣！\n（任意一方還有棄權券時無法削減）
+tutorial.special.open_hand	1周したのでドロー！レアリティ「高」の\nカードを引いたよ！手札を見てみよう！	A full round passed, so everyone drew!\nYou got a top-rarity card! Let's look at your hand!	一轮结束，抽牌！抽到了稀有度「高」的\n卡牌！看看手牌吧！	一輪結束，抽牌！抽到了稀有度「高」的\n卡牌！看看手牌吧！
+tutorial.special.look	レアリティ「高」のカードには、スペシャルカードが\n付いているよ！カーソルを合わせてみよう！	Top-rarity cards come with a special card!\nHover over the card!	稀有度「高」的卡牌附有特殊卡！\n把光标移上去看看！	稀有度「高」的卡牌附有特殊卡！\n把游標移上去看看！
+tutorial.special.hover	上に出たのがスペシャルカード！\nカーソルを合わせると効果が見られるよ！	The card shown above is the special card!\nHover over it to see its effect!	上方出现的就是特殊卡！\n把光标移上去就能看到效果！	上方出現的就是特殊卡！\n把游標移上去就能看到效果！
+tutorial.special.detail	スペシャルカードの効果も、落札した人に発動するよ！\n誰も落札しなければ出品者に発動するよ！	Special cards also take effect on the winner!\nIf nobody wins, they take effect on the seller!	特殊卡的效果也会对拍得者生效！\n如果没人拍得，则对卖家生效！	特殊卡的效果也會對拍得者生效！\n如果沒人拍得，則對賣家生效！
+tutorial.free	ここからは自由に操作してみよう！\n最後の1人まで残れば勝利だよ！	From here on, play however you like!\nBe the last one standing to win!	从这里开始自由操作吧！\n坚持到最后1人就能获胜！	從這裡開始自由操作吧！\n堅持到最後1人就能獲勝！
+tutorial.clear	おめでとう！最後の1人になったので勝利！\nチュートリアルクリア！	Congratulations! You're the last one standing!\nTutorial complete!	恭喜！你是最后1人，获得了胜利！\n教程完成！	恭喜！你是最後1人，獲得了勝利！\n教程完成！
+tutorial.item.get	アイテムを手に入れた！\nオークションで落札すると、アイテムを1つもらえるよ。\n今回は練習用に3つ渡すね！	You got items!\nWin an auction to get one item.\nHere are three to practice with!	获得了道具！\n在拍卖中拍得就能获得1个道具。\n这次先给你3个用来练习！	獲得了道具！\n在拍賣中拍得就能獲得1個道具。\n這次先給你3個用來練習！
+tutorial.item.when	アイテムは左下のマスに入るよ（最大3つ）。\nオークションの間なら、出品者でも観戦中でも\nマスのクリックか 1・2・3 キーで使えるよ！	Items go in the slots at the bottom left (up to 3).\nDuring an auction, anyone can use them\nby clicking a slot or pressing 1, 2 or 3!	道具会放进左下角的格子里（最多3个）。\n拍卖期间，无论是卖家还是观战中，\n都可以点击格子或按 1・2・3 键使用！	道具會放進左下角的格子裡（最多3個）。\n拍賣期間，無論是賣家還是觀戰中，\n都可以點選格子或按 1・2・3 鍵使用！
+tutorial.item.magnifier	虫眼鏡を使ってみよう！\n出品に付いている効果カードを\n自分だけ見ることができるよ！	Try the magnifier!\nIt lets only you see the effect cards\nattached to the listing!	试试放大镜吧！\n可以只让自己看到\n拍品上附加的效果卡！	試試放大鏡吧！\n可以只讓自己看到\n拍品上附加的效果卡！
+tutorial.item.plug	電気プラグを使ってみよう！\n選んだ人にシールドを1枚貼れるよ！	Try the power plug!\nIt gives one shield to the player you choose!	试试电插头吧！\n可以给选中的人贴上1张护盾！	試試電插頭吧！\n可以給選中的人貼上1張護盾！
+tutorial.item.plug_pick	シールドを付ける人を選ぼう！\n自分に付けるなら下の「自分」を押してね（右クリックでやめる）	Choose who gets the shield!\nTo shield yourself, press the button at the bottom (right-click to cancel).	选择要贴护盾的人吧！\n要给自己贴的话，请按下方的「自己」（右键取消）	選擇要貼護盾的人吧！\n要給自己貼的話，請按下方的「自己」（右鍵取消）
+tutorial.item.shield	シールドが貼られた！\n見送り権を使うとき、代わりにシールドが使われるよ。\nこのターンの落札が終わると消えるよ。\n残っている間は、かかっている効果の一覧に出ているよ！	Shield up!\nWhen you would use a pass ticket, the shield is used instead.\nIt disappears when this turn's auction ends.\nWhile it lasts, it is shown in your active effects list!	贴上护盾了！\n要使用弃权券时，会改为使用护盾。\n本回合的拍卖结束后护盾消失。\n护盾存在期间，会显示在生效中的效果列表里！	貼上護盾了！\n要使用棄權券時，會改為使用護盾。\n本回合的拍賣結束後護盾消失。\n護盾存在期間，會顯示在生效中的效果列表裡！
+tutorial.item.remote	リモコンを使ってみよう！\n選んだ相手をマヒさせて、\nその人の次の出品ターンを飛ばせるよ！	Try the remote!\nParalyze a player to skip\ntheir next listing turn!	试试遥控器吧！\n让选中的对手麻痹，\n跳过他的下一个上拍回合！	試試遙控器吧！\n讓選中的對手麻痺，\n跳過他的下一個上拍回合！
+tutorial.item.remote_pick	マヒさせる相手を選ぼう！\n頭の上の名前を押してね（右クリックでやめる）	Choose who to paralyze!\nClick a name above their head (right-click to cancel).	选择要麻痹的对手吧！\n点击头上的名字（右键取消）	選擇要麻痺的對手吧！\n點選頭上的名字（右鍵取消）
+tutorial.item.paralysis	マヒさせた！\nマヒした人は青白い電気に包まれて、\n次の出品ターンが飛ばされるよ！	Paralyzed!\nThey are wrapped in blue-white sparks,\nand their next listing turn is skipped!	麻痹成功！\n麻痹的人会被青白色的电流包围，\n下一个上拍回合会被跳过！	麻痺成功！\n麻痺的人會被青白色的電流包圍，\n下一個上拍回合會被跳過！

@@ -111,9 +111,9 @@ public class CardInfoOverlay : MonoBehaviour
     {
         switch (rarity)
         {
-            case GoodsRarity.Low: return "低";
-            case GoodsRarity.Middle: return "中";
-            default: return "高";
+            case GoodsRarity.Low: return GameText.Get("game.rarity.low");
+            case GoodsRarity.Middle: return GameText.Get("game.rarity.middle");
+            default: return GameText.Get("game.rarity.high");
         }
     }
 }

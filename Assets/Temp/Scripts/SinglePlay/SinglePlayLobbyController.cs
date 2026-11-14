@@ -65,13 +65,13 @@ public class SinglePlayLobbyController : MonoBehaviour
 
         if (selectedTotalPlayers <= 0)
         {
-            Debug.LogWarning("[SinglePlay] 先に人数を選択してください");
+            Debug.LogWarning(GameText.Get("log.single_play.choose_count"));
             return;
         }
 
         isStarting = true;
         SinglePlayContext.Set(selectedTotalPlayers);
-        Debug.Log($"[SinglePlay] ゲームを開始します（合計 {selectedTotalPlayers} 人）");
+        Debug.Log(GameText.Format("log.single_play.starting", selectedTotalPlayers));
         SceneFader.LoadScene(gameSceneName);
     }
 }

@@ -12,18 +12,18 @@ public static class SaveDataDebugSection
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void Register()
     {
-        DevDebugRegistry.RegisterSection(SectionId, "セーブデータ", Build, 10);
+        DevDebugRegistry.RegisterSection(SectionId, GameText.Get("debug.save.title"), Build, 10);
     }
 
     static void Build(DevDebugMenuContext context)
     {
         PlayerRecord record = PlayerRecordService.Current;
         AchievementBook book = AchievementService.Book;
-        context.AddLabel($"プレイ {record.GamesPlayed} 回 / 勝利 {record.Wins} 回", 15);
-        context.AddLabel($"落札 {record.Purchases} / 売れた出品 {record.Sales} / アイテム {record.ItemsUsed}", 15);
-        context.AddLabel($"実績 {book.UnlockedCount} / {book.Definitions.Count}", 15);
-        context.AddButton("RefreshSaveData", "表示を更新", new Color(0.25f, 0.4f, 0.65f, 1f), Register);
-        context.AddButton("ResetSaveData", "セーブデータをすべてリセット", new Color(0.7f, 0.25f, 0.1f, 1f), () =>
+        context.AddLabel(GameText.Format("debug.save.games", record.GamesPlayed, record.Wins), 15);
+        context.AddLabel(GameText.Format("debug.save.trades", record.Purchases, record.Sales, record.ItemsUsed), 15);
+        context.AddLabel(GameText.Format("debug.save.achievements", book.UnlockedCount, book.Definitions.Count), 15);
+        context.AddButton("RefreshSaveData", GameText.Get("debug.save.refresh"), new Color(0.25f, 0.4f, 0.65f, 1f), Register);
+        context.AddButton("ResetSaveData", GameText.Get("debug.save.reset"), new Color(0.7f, 0.25f, 0.1f, 1f), () =>
         {
             SaveDataReset.ResetAll();
             Register();

@@ -106,7 +106,7 @@ public class PlayerSessionService : MonoBehaviour
         cpu.name = $"CPU_Player{playerNumber}";
         cpu.GetComponent<NetworkObject>().Spawn(true);
         cpu.GetComponent<NetworkSessionPlayer>().AssignCpuByServer(playerNumber, seat);
-        Debug.Log($"[Session] Player{playerNumber} を CPU で埋めました（席={seat}）");
+        Debug.Log(GameText.Format("log.session.cpu_filled", playerNumber, seat));
         return true;
     }
 
@@ -208,7 +208,7 @@ public class PlayerSessionService : MonoBehaviour
             return;
 
         player.AssignByServer(playerNumber, seatByPlayer[playerNumber]);
-        Debug.Log($"[Session] Player{playerNumber} が参加（clientId={clientId}, 席={seatByPlayer[playerNumber]}）");
+        Debug.Log(GameText.Format("log.session.player_joined", playerNumber, clientId, seatByPlayer[playerNumber]));
     }
 
     void HandleClientDisconnected(ulong clientId)
@@ -220,6 +220,6 @@ public class PlayerSessionService : MonoBehaviour
             return;
 
         seatByPlayer.Remove(playerNumber);
-        Debug.Log($"[Session] Player{playerNumber} が退出（clientId={clientId}）");
+        Debug.Log(GameText.Format("log.session.player_left", playerNumber, clientId));
     }
 }

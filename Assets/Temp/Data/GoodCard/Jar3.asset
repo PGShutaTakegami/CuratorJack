@@ -12,10 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1cae3970dfdf8be4aa3d94153c328bbd, type: 3}
   m_Name: Jar3
   m_EditorClassIdentifier: Assembly-CSharp::CardData
+  active: 1
   parameter:
     cardName: "\u8C6A\u83EF\u306A\u58FA"
     englishName: Luxurious Jar
     cardSprite: {fileID: 21300000, guid: 99116a517f8bc2042bf1eeecf436d1b7, type: 3}
     discription: "\u9AA8\u8463\u54C1\u30AB\u30FC\u30C9\u306E\u8C6A\u83EF\u306A\u58FA\n\u9AA8\u8463\u54C1\u30AB\u30FC\u30C9\u306E\u4E2D\u3067\u306F\u6700\u9AD8\u306E\u30EC\u30A2\u30EA\u30C6\u30A3\n\u512A\u96C5\u306A\u6C17\u54C1\u304C\u611F\u3058\u3089\u308C\u308B"
     initialPrice: 30
+    englishDescription: 'An antique card: a luxurious jar
+
+      The highest rarity
+      among antique cards
+
+      Exudes graceful elegance'
+    chineseSimplifiedName: "\u8C6A\u534E\u7684\u58F6"
+    chineseSimplifiedDescription: "\u53E4\u8463\u5361\uFF1A\u8C6A\u534E\u7684\u58F6\n\u53E4\u8463\u5361\u4E2D\u7A00\u6709\u5EA6\u6700\u9AD8\n\u6563\u53D1\u7740\u4F18\u96C5\u7684\u6C14\u8D28"
+    chineseTraditionalName: "\u8C6A\u83EF\u7684\u58FA"
+    chineseTraditionalDescription: "\u53E4\u8463\u5361\uFF1A\u8C6A\u83EF\u7684\u58FA\n\u53E4\u8463\u5361\u4E2D\u7A00\u6709\u5EA6\u6700\u9AD8\n\u6563\u767C\u8457\u512A\u96C5\u7684\u6C23\u8CEA"
   rarity: 2
+  effect: 0

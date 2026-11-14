@@ -22,7 +22,6 @@ public class RoomPasswordPrompt : MonoBehaviour, IBackInputHandler
 
     [SerializeField] private Button cancelButton;
 
-    [SerializeField] private string wrongPasswordMessage = "パスワードが違います";
 
     readonly PressThrottle submitThrottle = new PressThrottle();
     Func<string, bool> tryEnter;
@@ -92,7 +91,7 @@ public class RoomPasswordPrompt : MonoBehaviour, IBackInputHandler
             return;
         }
 
-        errorText.text = wrongPasswordMessage;
+        errorText.text = GameText.Get("room.password.wrong");
         passwordField.text = string.Empty;
         passwordField.ActivateInputField();
     }
